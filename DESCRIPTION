@@ -1,0 +1,54 @@
+Package: vetsyn
+Title: Tools for syndromic surveillance implementation
+Version: 0.0.1
+Date: 2013-06-19
+Authors@R: c(
+    person("Stefan",
+    "Widgrem",
+    role = c("aut")),
+    person("Fernanda",
+    "Dorea",
+    role = c("aut", "cre"),
+    email = "fernanda.dorea@sva.se"))
+Description: A package to implement syndromic surveillance from health data.
+    Tools are available to carry out retrospective analysis of events data, and
+    implement prospective, real-time analysis.
+License: GPL (>= 2)
+Type: Package
+LazyLoad: yes
+Depends:
+    R (>= 3.0.0),
+    methods
+Imports:
+    fitdistrplus,
+    timeDate,
+    caTools,
+    qcc,
+    abind,
+    ISOweek,
+    knitr,
+    MASS
+Suggests:
+    testthat
+Collate:
+    'syndromic.r'
+    'internal_functions.r'
+    'retro_summary.r'
+    'subsetting.r'
+    'show.r'
+    'raw_to_syndromic.r'
+    'syndromic-function.r'
+    'dim.r'
+    'clean_baseline.r'
+    'clean_baseline_perc.r'
+    'holt_winters.r'
+    'ewma.r'
+    'pre_process_glm.r'
+    'cusum.r'
+    'shewhart.R'
+    'update_syndromic.r'
+    'alarmometer.r'
+    'plot.r'
+    'plot_syndromic.r'
+    'syndromic_page.r'
+    'syndromic_alarm.r'

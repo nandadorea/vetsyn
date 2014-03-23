@@ -52,3 +52,6 @@ Collate:
     'plot_syndromic.r'
     'syndromic_page.r'
     'syndromic_alarm.r'
+    'lab.daily-data.r'
+    'lab.daily.update-data.r'
+    'observed-data.r'

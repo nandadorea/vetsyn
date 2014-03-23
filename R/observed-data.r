@@ -13,4 +13,4 @@
 #' @format a \code{matrix} .
 #' @source package \code{vetsyn}
 #' @author National Veterinary Institute of Sweden (SVA), 2013
-#' 
+NULL

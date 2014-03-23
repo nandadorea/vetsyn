@@ -6,37 +6,35 @@
 ##' is normally used for decomposition and forecasting, but here
 ##' it is employed as part of an iterative process to allow 
 ##' detection of outbreak signals. The additional features compared
-##' to the basic \code{HoltWinters()} algorithm are: 
-##' 
-##'  \describe{
-##'  \item{iterative application} {the algorithm is applied to a
+##' to the basic HoltWinters() algorithm are: 
+##' \itemize{
+##'  \item{iterative application:} {  the algorithm is applied to a
 ##'  range of time points in an iterative manner, so if syndromic
 ##'  data needs to be evaluated for the past 30 days, for instance,
 ##'  the function is called once and the internal loops evaluate
 ##'  one day at a time.}
-##'  \item{Detection of deviations} {in this implementation the
+##'  \item{Detection of deviations:} {  in this implementation the
 ##'  \code{n} days ahead forecast of the algorithm is used as an 
 ##'  outbreak signal detector - observations above a confidence
 ##'  interval are flagged as "aberrations". }
-##'  \item{baseline}{it is possible to point to an outbrak-free
+##'  \item{baseline:}{  it is possible to point to an outbrak-free
 ##'  time series (baseline) which will serve to train the algorithm
 ##'  and calculate the forecast, which is then compared to the actual
 ##'  observed data that is being analysed}
-##'  \item{recording of the detection limits}{the minimum value that 
+##'  \item{recording of the detection limits:}{  the minimum value that 
 ##'  would have generated an alarm in each time point can be recorded
 ##'  in the UCL slot of the \code{syndromic} object provided}
-##'  \item{data correction}{in case an observation is found to be greater
+##'  \item{data correction:}{  in case an observation is found to be greater
 ##'  than the confidence interval of the forecast, the user can 
 ##'  choose to update the outbreak-free baseline by substituting the
 ##'  observed value withteh UCL value}
-##'  \item{multiple limits}{the user can apply the algorithm with multiple
+##'  \item{multiple limits:}{  the user can apply the algorithm with multiple
 ##'   detection limits - that is to say, different
 ##'  confidence intervals}
 ##'  }
 ##'
 ##' @name holt_winters_synd
 ##' @docType methods
-##' @seealso \code{\link{syndromic}}
 ##' @aliases holt_winters_synd
 ##' @aliases holt_winters_synd-methods
 ##' @aliases holt_winters_synd,syndromic-method
@@ -107,6 +105,9 @@
 ##' the recording.
 ##' 
 ##' @seealso HoltWinters
+##' @seealso ewma_synd
+##' @seealso shew_synd
+##' @seealso cusum_synd
 ##' 
 ##' @return An object of the class \code{syndromic} which contains all 
 ##' elements form the object provided in x, but in which

@@ -5,6 +5,13 @@
 ##' a syndromic object, please refer to the help page for the syndromic class.
 ##'
 ##' @title update_syndromic
+##' 
+##' @name update_syndromic
+##' @docType methods
+##' @aliases update_syndromic
+##' @aliases update_syndromic-methods
+##' @aliases update_syndromic,syndromic-method
+##' 
 ##' @param x the syndromic object to be updated (if one is not already existing,
 ##' please use "raw_to_syndromic" or "syndromic")
 ##' @param id indicates a variable (or multiple variables) which should
@@ -42,20 +49,21 @@
 ##' @param data Optional argument. If used the other arguments can be specified
 ##' as column names within the dataset provided through this argument
 ##'
-##' @return an updated object of the class \code{syndromic} with the following slots:
-##' \describe{
-##'  \item{observed}{The previous observed matrix is updated adding lines corresponding
-##'  to the new events found in the new dataset.}
-##'  \item{dates}{also updated to include extra dates}
-##'  \item{baseline}{if a baseline matrix was available lines are added, 
-##'  with data copied from @observed}
-##'  \item{alarms}{the same number of lines added to observed are added, 
+##' @return an updated object of the class \code{syndromic} with the following slots: 
+##' (1) OBSERVED: The previous observed matrix is updated adding lines corresponding
+##'  to the new events found in the new dataset;
+##'  (2) DATES: also updated to include extra dates;
+##'  (3) BASELINE: if a baseline matrix was available lines are added, 
+##'  with data copied from the slot observed;
+##'  (4) ALARMS: the same number of lines added to observed are added, 
 ##'  but given a value of NA to make clear that aberration detection analyses
-##'  were not yet carried out in these data}
-##'  \item{UCL and LCL}{same as alarms}
-##'    }
+##'  were not yet carried out in these data;
+##'  (5) UCL and (6) LCL: same as alarms.
+##'    
 ##' @import ISOweek
 ##' @import abind
+##' @export
+##' 
 ##' @examples
 ##' data(lab.daily)
 ##' data(lab.daily.update)
@@ -65,8 +73,6 @@
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-
-
 
 
 
@@ -296,3 +302,4 @@ setMethod('update_syndromic',
   return(y)
 }
 )
+

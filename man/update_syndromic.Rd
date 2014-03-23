@@ -1,5 +1,8 @@
+\docType{methods}
 \name{update_syndromic}
 \alias{update_syndromic}
+\alias{update_syndromic-methods}
+\alias{update_syndromic,syndromic-method}
 \title{update_syndromic}
 \arguments{
   \item{x}{the syndromic object to be updated (if one is
@@ -63,12 +66,16 @@
 }
 \value{
   an updated object of the class \code{syndromic} with the
-  following slots: \describe{ \item{observed}{The previous
-  observed matrix is updated adding lines corresponding to
-  the new events found in the new dataset.}
-  \item{dates}{also updated to include extra dates}
-  \item{baseline}{if a baseline matrix was available lines
-  are added, with data copied from
+  following slots: (1) OBSERVED: The previous observed
+  matrix is updated adding lines corresponding to the new
+  events found in the new dataset; (2) DATES: also updated
+  to include extra dates; (3) BASELINE: if a baseline
+  matrix was available lines are added, with data copied
+  from the slot observed; (4) ALARMS: the same number of
+  lines added to observed are added, but given a value of
+  NA to make clear that aberration detection analyses were
+  not yet carried out in these data; (5) UCL and (6) LCL:
+  same as alarms.
 }
 \description{
   \code{update_syndromic}

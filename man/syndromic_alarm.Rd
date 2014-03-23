@@ -125,7 +125,8 @@ my.syndromic <- holt_winters_synd(x=my.syndromic,
                                 frequency=5,
                                 baseline.window=260)
                plot.all=TRUE,
-               email.alarm.to="<dorea.meyer
+               email.alarm.to="<dorea.meyer'at'gmail.com>",
+               email.noalarm.to="<dorea.meyer'at'gmail.com>")
 }
 \seealso{
   \code{\link{syndromic}}

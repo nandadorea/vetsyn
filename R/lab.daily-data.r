@@ -16,4 +16,4 @@
 #' @format a \code{data.frame} 
 #' @source package \code{vetsyn}
 #' @author National Veterinary Institute of Sweden (SVA), 2013
-#' 
+NULL

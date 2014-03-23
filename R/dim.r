@@ -2,7 +2,6 @@
 ##'
 ##' Get dimension information for a syndromic object.
 ##'
-##'
 ##' @name dim-methods
 ##' @aliases dim
 ##' @aliases dim-methods
@@ -11,23 +10,12 @@
 ##' @keywords methods
 ##' @export
 ##' @import methods
-##' @return a vector with three items:
-##' \describe{
-##'   \item{1}{
-##'     The number of time points monitored (the number of rows
-##'     for all slots of the object).
-##'   }
-##'   \item{2}{
-##'     The number of syndromic groups monitored,
-##'     as determined by the number of columns in the slot
-##'     \code{observed}.
-##'   }
-##'   \item{3}{
-##'     The number of detection algorithms used,
-##'     as determined by the third dimension of the slot
-##'     \code{alarms}.
-##'   }
-##'
+##' @return a vector with three items: (1) The number of time points monitored 
+##' (the number of rows for all slots of the object); (2)The number of 
+##' syndromic groups monitored, as determined by the number of columns in the slot
+##' observed; (3) The number of detection algorithms used,
+##' as determined by the third dimension of the slot alarms. 
+##' 
 ##' @examples
 ##' data(lab.daily)
 ##' my.syndromic <- raw_to_syndromic (id=lab.daily$SubmissionID,
@@ -39,8 +27,9 @@
 ##' ## note the use of "," instead of ":"
 ##' subset <- my.syndromic[1,10]
 ##'
-setMethod("dim","syndromic",
-          function(x)
+setMethod('dim',
+          signature(x = 'syndromic'),
+          function (x)
       {
           cat(sprintf("****** Syndromic object:******\n"))
           cat(sprintf("Number of time points (rows) = %s \n",

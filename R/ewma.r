@@ -5,20 +5,19 @@
 ##' it is employed as part of an iterative process to allow 
 ##' detection of outbreak signals. The additional features compared
 ##' to the regular \code{ewma()} algorithm are: 
-##' 
-##'  \describe{
-##'  \item{pre-processing}{Instead of applying ewma directly to the time-series,
+##'  \itemize{
+##'  \item{pre-processing:}{  Instead of applying ewma directly to the time-series,
 ##'  it is possible to choose one of two pre-processing methods: (1) modeling
 ##'  and removing temporal effects with a GLM regression model (families
 ##'  "poisson","nbinom" or "gaussian"); (2) differencing to remove for 
 ##'  instance day-of-week effects. The user can of course also set pre-processing
 ##'  to FALSE, and apply no temporal effects removal to the data.}
-##'  \item{iterative application} {the algorithm is applied to a
+##'  \item{iterative application:} {  the algorithm is applied to a
 ##'  range of time points in an iterative manner, so if syndromic
 ##'  data needs to be evaluated for the past 30 days, for instance,
 ##'  the function is called once and the internal loops evaluate
 ##'  one day at a time.}
-##'  \item{Detection of deviations one day at a time} {in this 
+##'  \item{Detection of deviations one day at a time:} {  in this 
 ##'  implementation rather than running the algorithm to multiple time
 ##'  units in a "batch", it applies the algorithm one time unit (e.g., day)
 ##'   at a time, so that aberrations detected in any given time unit
@@ -29,11 +28,11 @@
 ##'   \code{syndromic} object being analysed), the corrected baseline
 ##'   will always considered as trainig data, rather than the
 ##'   observed data (which may contain aberrations)}
-##'   \item{guard-band}{The user can set a guard-band between the
+##'   \item{guard-band:}{  The user can set a guard-band between the
 ##'   time unit being evaluated and the start of the window used
 ##'   as training data, in order to avoid contamination of the baseline
 ##'   with undetected outbreak-signals}.  
-##'  \item{recording of the detection limits}{that is already a feature
+##'  \item{recording of the detection limits:}{  that is already a feature
 ##'  of the \code{ewma()} function, and in the syndromic application
 ##'  the LCL and UCL limits are stored in the appropriate slot of the object
 ##'  \code{syndromic}. The main innovation here is that if pre-processing
@@ -41,19 +40,18 @@
 ##'  the values back to the scale of the original data, rathee than being recorded
 ##'  in the scale of the residuals of pre-processing, which are the actual
 ##'  values used by the control-chart method.}
-##'  \item{data correction}{in case an observation is found to be greater
+##'  \item{data correction:}{  in case an observation is found to be greater
 ##'  than the confidence interval of the forecast, the user can 
 ##'  choose to update the outbreak-free baseline by substituting the
 ##'  observed value with the UCL value. As mentioned before, this feature
 ##'  should not be used if the baseline was already constructed using another algorithm}
-##'  \item{multiple limits}{the user can apply the algorithm with multiple
+##'  \item{multiple limits:}{  the user can apply the algorithm with multiple
 ##'   detection limits - that is to say, different
 ##'  confidence intervals}
-##'  }
+##' } 
 ##'
 ##' @name ewma_synd
 ##' @docType methods
-##' @seealso \link{holt_winters_synd}
 ##' @aliases ewma_synd
 ##' @aliases ewma_synd-methods
 ##' @aliases ewma_synd,syndromic-method
@@ -133,7 +131,8 @@
 ##' are used, the cycle of repetitions need to be set. The default is 365, for yearly cycles.
 ##' 
 ##' @seealso pre_process_glm
-##' @seealso ewma
+##' @seealso shew_synd
+##' @seealso ewma_synd
 ##' @seealso holt_winters_synd
 ##' 
 ##' @return An object of the class \code{syndromic} which contains all 

@@ -92,8 +92,8 @@
 ##'                                 baseline.window=260)
 ##syndromic_alarm(x=my.syndromic,
 ##'                plot.all=TRUE,
-##'                email.alarm.to="<dorea.meyer@gmail.com>",
-##'                email.noalarm.to="<dorea.meyer@gmail.com>")
+##'                email.alarm.to="<dorea.meyer'at'gmail.com>",
+##'                email.noalarm.to="<dorea.meyer'at'gmail.com>")
 ##'                
 
 

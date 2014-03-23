@@ -134,21 +134,19 @@
   \code{limits.xbar.one()}. Here it is employed as part of
   an iterative process to allow detection of outbreak
   signals. The additional features compared to the regular
-  xbar algorithm are:
-}
-\details{
-  \describe{ \item{pre-processing}{Instead of applying the
-  xbar (Shewhart) control chart directly to the
-  time-series, it is possible to choose one of two
-  pre-processing methods: (1) modeling and removing
-  temporal effects with a GLM regression model (families
-  "poisson","nbinom" or "gaussian"); (2) differencing to
-  remove for instance day-of-week effects. The user can of
-  course also set pre-processing to FALSE, and apply no
-  temporal effects removal to the data.} \item{iterative
-  application} {the algorithm is applied to a range of time
-  points in an iterative manner, so if syndromic data needs
-  to be evaluated for the past 30 days, for instance, the
+  xbar algorithm are: \itemize{
+  \item{pre-processing}{Instead of applying the xbar
+  (Shewhart) control chart directly to the time-series, it
+  is possible to choose one of two pre-processing methods:
+  (1) modeling and removing temporal effects with a GLM
+  regression model (families "poisson","nbinom" or
+  "gaussian"); (2) differencing to remove for instance
+  day-of-week effects. The user can of course also set
+  pre-processing to FALSE, and apply no temporal effects
+  removal to the data.} \item{iterative application} {the
+  algorithm is applied to a range of time points in an
+  iterative manner, so if syndromic data needs to be
+  evaluated for the past 30 days, for instance, the
   function is called once and the internal loops evaluate
   one day at a time.} \item{Detection of deviations one day
   at a time} {in this implementation rather than running
@@ -220,11 +218,11 @@ my.syndromic2 <- shew_synd(x=my.syndromic,
                           diff.window=5)
 }
 \seealso{
-  \link{holt_winters_synd}
-
   pre_process_glm
 
-  shew
+  ewma_synd
+
+  cusum_synd
 
   holt_winters_synd
 }

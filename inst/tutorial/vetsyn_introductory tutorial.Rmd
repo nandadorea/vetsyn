@@ -64,6 +64,7 @@ It is expected that the construction of a _**syndromic object**_ starts when the
 
 
 ```{r observed.to.syndromic}
+
 my.syndromic <- syndromic(observed,min.date="03/01/2011",max.date="28/05/2013")
 ```
 
@@ -175,18 +176,6 @@ my.syndromic.short <- my.syndromic[1,5]
   my.syndromic.short@dates
 
 ```
-
-If a user tries to coerce a syndromic object into a matrix, only the data in the slot @observed will be saved into the matrix.
-When coercing to a data frame, the first column of the data frame will be copied from the first column of @dates (the dates corresponding to each row) and the data in @observed will be pasted into the following columns.
-
-```{r coerce}
-
-head(my.syndromic@observed)
-head(as.matrix(my.syndromic))
-head(as.data.frame(my.syndromic))
-
-```
-
 
 
 Once all your observed data are into a syndromic object, you are ready to start analysis.

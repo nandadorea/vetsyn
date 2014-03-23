@@ -114,27 +114,4 @@ setClass('syndromic',
 
 
 
-setAs(from='syndromic',
-      to='data.frame',
-      def=function(from)
-  {
-      if(dim(from@dates)[1] > 0L) ({
-          df <- data.frame(dates=from@dates[,1],
-                            from@observed)}) else ({
-                           df <- data.frame(from@observed)
-                            })
-          return(df)
-      }
-   )
-
-
-
-setAs(from='syndromic',
-      to='matrix',
-      def=function(from)
-      {
-        mtx <- from@observed                       
-        return(mtx)
-      }
-)
 

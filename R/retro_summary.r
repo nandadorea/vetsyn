@@ -147,6 +147,7 @@ setMethod('retro_summary',
               
               cat("```{r}\n", file=rmd)
               cat("#create time series\n", file=rmd)
+              cat(paste("s=",s,"\n", sep=""),file=rmd)
               cat("days    <-  matrix.days[,s]\n", file=rmd)
               cat("days.ts <-  ts(days, start = c(x@dates$year[1], x@dates$yday[1]),\n", file=rmd)
               cat("               frequency = frequency)\n", file=rmd)

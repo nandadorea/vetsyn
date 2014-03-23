@@ -253,13 +253,13 @@ The non-parametric version works in a similar way, but percentiles are used inst
 ```{r baseline_perc}
 
 # change the percentile used for correction (default is 0.95)
-my.syndromic2 <- (my.syndromic, 
-                  syndromes=2
+my.syndromic2 <- clean_baseline_perc(my.syndromic, 
+                  syndromes=2,
                   limit=0.90)
 
 # change the number of time points included in the running window
   #default is 120
-my.syndromic2 <- (my.syndromic, 
+my.syndromic2 <- clean_baseline_perc(my.syndromic, 
                   run.window=90,
                   plot=FALSE)
 

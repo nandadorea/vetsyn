@@ -17,7 +17,8 @@
 ##' columns corresponding to syndromic groups
 ##' @param dates.df a data frame where the first column contain dates
 ##' @param date.format the date format in the dates variable, by default "%Y-%m-%d".
-##'  
+##' 
+##' @export 
 ##' @import ISOweek
 ##' @examples
 ##' data(lab.daily)
@@ -25,7 +26,7 @@
 ##'                                   syndromes.var=lab.daily$Syndrome,
 ##'                                   dates.var=lab.daily$DateofSubmission,
 ##'                                   date.format="%d/%m/%Y")
-##'weekly <- convert_days_to_week(my.syndromic@observed; my.syndromic@dates)
+##' weekly <- convert_days_to_week(my.syndromic'at'observed; my.syndromic'at'dates)
 ##'
 
 
@@ -46,3 +47,4 @@ convert_days_to_week <- function(counts.df,
   
   return(synd.week)
 }
+

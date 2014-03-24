@@ -55,3 +55,4 @@ Collate:
     'lab.daily-data.r'
     'lab.daily.update-data.r'
     'observed-data.r'
+    'convert_days_to_week.r'

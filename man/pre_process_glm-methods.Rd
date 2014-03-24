@@ -86,7 +86,7 @@ pre_processed_data <- pre_process_glm(my.syndromic
 
 pre_processed_data <- pre_process_glm(my.syndromic,
                               family="nbinom")
-setBaseline(my.syndromic)<- my.syndromic
+pre_processed_data <- pre_process_glm(my.syndromic,slot="baseline")
 }
 \references{
   Fernanda C. Dorea, Crawford W. Revie, Beverly J. McEwen,

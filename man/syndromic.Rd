@@ -85,7 +85,8 @@
   columns correspond to each syndromic group to be
   monitored, and the numbers refer to the number of
   observatiosn per group per time point. For an example of
-  data formatted this way use date(observed).
+  data formatted this way use date(observed). For data not
+  formatted use directly the function "raw_to_syndromic".
 }
 \details{
   The dates are expected to be a \code{data.frame} with the

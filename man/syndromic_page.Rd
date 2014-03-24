@@ -26,7 +26,9 @@
   UCL.}
 
   \item{algorithms}{an optional parameter specifying which
-  dimensions of the}
+  dimensions of the alarm slot to plot and sum for a final
+  alarm score. If not specified (NULL), all are plotted. If
+  set to zero, none are plotted.}
 
   \item{limit}{the parameter specifying the limit above
   which alarms are considered meaningful. Only important if
@@ -42,7 +44,8 @@
   an alarm. By default 1 is used. It can be provided as a
   single value (if all syndromes are to have the same
   limit) or as a vector with length equal to the number of
-  syndromes in use (number of columns in}
+  syndromes in use (number of columns in the slot
+  observed)}
 
   \item{file.name}{an optional text to add to the date
   being evaluated, as the name of the file to be saved.}
@@ -63,7 +66,7 @@
   if provided in the previous argument.}
 
   \item{syndromes.var}{the variable (column) in data to
-  match to the syndromes found in}
+  match to the syndromes found in the slot observed}
 
   \item{dates.var}{the variable (column) in data to look
   for dates, in order to find the data from last week.}

@@ -21,10 +21,9 @@ my.syndromic <- raw_to_syndromic (id=lab.daily$SubmissionID,
                                   syndromes.var=lab.daily$Syndrome,
                                   dates.var=lab.daily$DateofSubmission,
                                   date.format="\%d/\%m/\%Y")
-## create a subset that only includes the first 10 time points
-## (all the slots are trimmed from rows 1 to 10)
-## note the use of "," instead of ":"
-subset <- my.syndromic[1,10]
+dim(my.syndromic)
+columns <- dim(my.syndromic)[2]
+print(columns)
 }
 \keyword{methods}
 

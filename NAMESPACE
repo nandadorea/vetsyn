@@ -1,4 +1,6 @@
 export(alarmometer)
+export(convert_days_to_week)
+export(raw_to_syndromic)
 export(syndromic)
 exportClasses(syndromic)
 exportMethods("[")

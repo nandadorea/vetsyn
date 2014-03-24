@@ -26,20 +26,3 @@ dates_df <- function (min.date, max.date,
 }
 
 
-
-convert_days_to_week <- function(counts.df,
-                                dates.df,date.format="%Y-%m-%d") {
-
-  if (length(dates.df$week)==0||length(dates.df$year)==0){
-    dates.vector <- strptime (as.character(dates.df[1]), format = date.format)
-    year <- (dates.vector+1900)
-    week <- as.numeric(substring(ISOweek(dates.vector),7,8))
-  } else {
-    year <- dates.df$year
-    week <- dates.df$week
-  }
-
-  synd.week<- aggregate(counts.df,by=list(week=week, year=year),sum)
-
-  return(synd.week)
-}

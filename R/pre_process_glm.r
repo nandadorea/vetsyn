@@ -78,7 +78,6 @@
 ##'
 ##'pre_processed_data <- pre_process_glm(my.syndromic,
 ##'                               family="nbinom")
-##'setBaseline(my.syndromic)<- my.syndromic@observed
 ##'pre_processed_data <- pre_process_glm(my.syndromic,slot="baseline")
                              
 

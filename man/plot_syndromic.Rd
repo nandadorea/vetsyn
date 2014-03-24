@@ -26,7 +26,9 @@
   UCL.}
 
   \item{algorithms}{an optional parameter specifying which
-  dimensions of the}
+  dimensions of the alarm slot to plot. If not specified
+  (NULL), all are plotted. If set to zero, none are
+  plotted.}
 
   \item{limit}{an optional parameter establishing a score
   above which alarms are considered worth of notice. Notice

@@ -24,7 +24,7 @@
 ##' @param UCL the dimension of the slot UCL, from the syndromic object, from which
 ##' the user wants to plot the UCL. Set to NULL or to 0 if it is not desired to plot the UCL.
 ##' @param algorithms an optional parameter specifying which dimensions
-##' of the @alarm slot to plot and sum for a final alarm score. 
+##' of the alarm slot to plot and sum for a final alarm score. 
 ##' If not specified (NULL), all are plotted. If set 
 ##' to zero, none are plotted.
 ##' @param limit the parameter specifying the limit above which alarms are 
@@ -37,7 +37,7 @@
 ##' establishes the minimum value (in his 0-6 scale) that in considered an alarm. By default
 ##' 1 is used. It can be provided as a single value (if all syndromes are to have
 ##' the same limit) or as a vector with length equal to the number of syndromes
-##' in use (number of columns in @observed)
+##' in use (number of columns in the slot observed)
 ##' @param file.name an optional text to add to the date being evaluated, as
 ##' the name of the file to be saved.
 ##' @param title a tile for the html page. If not given the value in "file.name" is used.
@@ -47,7 +47,7 @@
 ##' @param data the original data to tabulate in case "data.page" has been set to TRUE.
 ##' @param date.format the date format in the original data, if provided in the previous argument.
 ##' @param syndromes.var the variable (column) in data to match to the syndromes
-##' found in @observed
+##' found in the slot observed
 ##' @param dates.var the variable (column) in data to look for dates, in order to
 ##' find the data from last week.
 ##' @param color.null a color for the table of alarms, used in cells giving the number

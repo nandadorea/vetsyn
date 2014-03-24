@@ -1,11 +1,9 @@
 #' @name lab.daily.update
 #' @title Daily submissions to an animal diagnostic laboratory
 #' @description This dataset is similar to "lab.daily", but only the last month
-#' of events are included, plus one day, in order to reflect the update of 
+#' of events are included, plus one new day, in order to reflect the update of 
 #' information day by day, which constitutes a common scenario when implementing
-#' syndromic surveillance. This dataset simulates the availability of an extra day
-#' of data. Both datasets were extracted from the database of laboratory test
-#' submissions of the National Veterinary Institute of Sweden (SVA). The actual 
+#' syndromic surveillance. The actual 
 #' dates have been altered and the animal species is not given, in order to 
 #' comply with the institute's privacy policies. Further, all test information
 #' has been removed and only the final syndromic classification is given. Only

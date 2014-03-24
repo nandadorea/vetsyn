@@ -26,7 +26,7 @@
 ##' @param UCL the dimension of the slot UCL, from the syndromic object, from which
 ##' the user wants to plot the UCL. Set to NULL or to 0 if it is not desired to plot the UCL.
 ##' @param algorithms an optional parameter specifying which dimensions
-##' of the @alarm slot to plot. If not specified (NULL), all are plotted. If set 
+##' of the alarm slot to plot. If not specified (NULL), all are plotted. If set 
 ##' to zero, none are plotted.
 ##' @param limit an optional parameter establishing a score above which
 ##' alarms are considered worth of notice. Notice that this is not a

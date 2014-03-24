@@ -2,7 +2,7 @@
 ##'
 ##' Main class of the package, stores syndromic surveillance objects.
 ##' The \code{syndromic} class stores observed data in a format appropriate
-##' for monitoring, and contains several slots to store  input and outputs of 
+##' for monitoring, and contains several slots to store input and outputs of 
 ##' analysis (temporal monitoring).
 ##' Functions are available to create an object of the class syndromic from data 
 ##' already cleaned and prepared for monitoring, or alternatively from raw observed data.

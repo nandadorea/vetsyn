@@ -220,16 +220,15 @@ The main goal is to identify a regression model that works well with the tempora
 
 In the reference cited above, we also described a method to clean the baseline from outbreak signals and excessive noise. You can apply it to your data to create an _**outbreak-free baseline**_ using the  *clean_baseline* function. A non-parametric version is also available - *clean_baseline_perc()*.
 
-The parametric version requires the user to provide a regression family and a regression formula (as should have been ientified in the previous step). The data in the slot _@observed_ are then used to fit a regression model based on that formula. Any observations above the confidence intrval set in the _limit_ argument are removed and substituted by the limit of such confidence interval. The remaining time-series in then saved into the slot _@baseline_. The results are plotted unless the user sets _plot=FALSE_. 
+The parametric version requires the user to provide a regression family and a regression formula (as should have been ientified in the previous step). The data in the slot _@observed_ are then used to fit a regression model based on that formula. Any observations above the confidence interval set in the _limit_ argument are removed and substituted by the limit of such confidence interval. The remaining time series in then saved into the slot _@baseline_. The results are plotted unless the user sets _plot=FALSE_. 
 
-It is not uncommon that the different syndromes in the syndromic object will have different characteristics, and therefore demand varied models. Therefore, the user should apply *clean_baseline* listing out which specific syndromic groups are targetted. If not syndromic group is specified, the process will be appplied to all columns in the _@observed_.
+It is not uncommon that the different syndromes in the syndromic object will have different characteristics, and therefore demand varied models. Therefore, the user should apply *clean_baseline* listing out which specific syndromic groups are targetted. If no syndromic group is specified, the process will be appplied to all columns in the _@observed_.
 
 
 ```{r baseline}
 
 #minimal set up
     ##will be applied to all syndromic groups 
-    ##the default model is
     ##when a user does not specify, the default formula for regression is
           ##"dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7"
 
@@ -278,20 +277,52 @@ At this point you have observed data and a baseline to train outbreak-signal det
 
 ## Holt Winters (data-driven, no pre-processing necessary)
 
-If baseline slot totally empty, will fill it all with NA. Then only for the syndromes evaluated, it will pull from observed.
+For information about this data-driven algorithm please see the help for the function:
 
-If alarms empty (for some or all dimensions needed), will fill with NA (so that only days actually evaluated will have a number, be it 0 or alarm). 
+        _HoltWinters()_
+        
+And the reference: 
+*Elbert Y, Burkom HS. (2009) Development and evaluation of a data-adaptive alerting algorithm for univariate temporal biosurveillance data. Statistics in Medicine 28 (26).*
 
-Multiple limits can be used and the alarms add. But if re-evaluating data, it resets to zero and then starts adding again.
+This function applies the _HoltWinters() function to the data in the context of syndromic surveillance, adding the following deatures: 
 
-Note how just saves to the same object - just processing one of the slots (but could save int a new one if wanted)
+* __Iterative application:__  The algorithm is applied to a range of time points in an iterative manner, so if syndromic data needs to be evaluated for the past 30 days, for instance, the function is called once and the internal loops evaluate one day at a time. This garantees that the syndromic evaluation of a given time point only occurs after all previous time points have been evaluated, and if applicable, the outbreak-free baseline has been corrected. 
 
-----> Explain the options
+* __Detecion of deviations:__ In this implementation the n-days-ahead forecast of the algorithm is used as an outbreak signal detector - observations above a confidence interval are flagged as "aberrations". 
 
-correct baseline (in this tutorial made with holt winters)
+* __Baseline:__ It is possible to point to an outbrak-free time series (baseline) which will serve to train the algorithm and calculate the forecast, which is then compared to the actual observed data that is being analysed. This happen through the syndromic object. If the slot _@baseline_ of the syndromic objects is not empty, then it's used as training data (rather than the data in _@observed_, which may contain aberrations). If the slot _@baseline_ is empty for the syndrome under evaluation, then that slot is filled with the data in _@observed_.
+
+* __Recording of the detection limits:__ The minimum value that would have generated an alarm in each time point can be recorded in the UCL slot of the _syndromic_ object provided
+
+* __Data correction:__ In case an observation is found to be greater than the confidence interval of the forecast, the user can choose to update the outbreak-free baseline (in _@baseline_) by substituting the  observed value with the detection limit. 
+
+* __Multiple limits:__ The user can apply the algorithm with multiple detection limits - that is to say, different confidence intervals. 
+
+For more information see:
+
+Dórea, F. C., Revie, C. W., McEwen, B. J., McNab, W. B. and Sanchez, J. 2013b. Syndromic surveillance using veterinary laboratory data: data pre-processing and algorithm performance evaluation. J R S Interface. 10: 20130114. DOI:10.1098/rsif.2013.0114
+
+Dórea, F. C., Sanchez, J., McEwen, B. J., McNab, W. B. and Revie, C. W. 2013c. Syndromic surveillance using veterinary laboratory data: algorithm combination and customization of alerts for specific syndromes. PLoS ONE 01/2013; 8(12):e82183
+
+More details of how to set various arguments are provided following the example below: 
 
 ```{r holt_winters}
 
+
+#Applying to all syndromes in this tutorial's example
+  #algorithm is being used to detect AND CORRECT aberrations
+my.syndromic <- holt_winters_synd(x=my.syndromic,
+                             evaluate.window=30,
+                             frequency=5,
+                             baseline.window=260,
+                             limit.sd=c(2.5,3,3.5), #default
+                             nahead=5,
+                             correct.baseline=2,
+                             alarm.dim=1)
+    
+
+
+    ##List of all arguments in the function and their default value
 #holt_winters_synd (x,
 #                    syndromes=NULL,
 #                    evaluate.window=1,
@@ -308,29 +339,42 @@ correct baseline (in this tutorial made with holt winters)
 #                    UCL=TRUE
 #                    )
 
-my.syndromic <- holt_winters_synd(x=my.syndromic,
-                             evaluate.window=30,
-                             frequency=5,
-                             baseline.window=260,
-                             limit.sd=c(2.5,3,3.5), #default
-                             nahead=5,
-                             correct.baseline=2,
-                             alarm.dim=1)
-
-
-# my.syndromic <- holt_winters_synd(x=my.syndromic,
-#                              evaluate.window=30,
-#                              frequency=7,
-#                              baseline.window=365,
-#                              limit.sd=c(2.5,3,3.5), #default
-#                              nahead=7,
-#                              correct.baseline=2,
-#                              alarm.dim=1)
-
 
 ```
 
 
+
+To adjust the functions described above, please note the use of the following arguments:
+
+* _evaluate.window_ use to provide the number of time points to be evaluated.That is, in on-line evaluation of syndromic data, normally only the last time point needs to e re-evaluated, but the window can be set to a custom value if for instance the user believe that the data form previous days could have been changed, and re-running a number of time points is safer. When using laboratory data, for instance, we use to re-run the last 30 days of syndromic surveillance every day, to account for the possible updating of laboratory tests information.
+
+Please note that the HoltWinters algorithm requires at least two cycles to initialize. That is, if the cycle of the data is weekly, then the two initial weeks of the data cannot be included in the analyses.
+
+* _frequency_ The cycles in the time series. Even though this is normally a year (frequency=365), we have found that the algorithm works better with a frequency equal to the week (5 or 7 days, dependening on whether weekends are included) when strong day-of-week effects are present in the data. 
+
+* _baseline_ The length of the baseline used to train the algorithm in order to provide a forecast, which will serve to decide whether the current observed data is expected. Normally 1-2 years.
+
+* _limit.sd_ The limit of detection to be used, that is, the cut-off of the confidence interval that decides when an observation is abnormal. Rather than a percentage (for instance 95% or 99%), this should be informed as number of standard deviations above the mean (for instance 2.5, or 3). This is to ensure comparability with the other detection algorithms used in this package (control charts). This can be provided as a single value or as a vector. When a vector is provided, multiple detection results are given. In this case the result of detection is not binary (as traditionally, 0 for no alarm detected and 1 for the detection of an aberration). Instead, an integer is produced refering to how many confidence intervals have been exceeded. If for instance the limits are set to c(2,2.5,3), then an observation which is greater than the 2.5 limit, but lower than 3, will have a detection score of 2 (2 detection limits "broken"). 
+
+* _alarm.dim_ The _syndromic_ object is set to accept the result of multiple detection algorithms. These results are stored as a third dimension in the slot alarms. Here the user can choose which order in that dimension should store the results of this algorithm. In this tutorial for instance we will store the results of the Holt-Winters algorithms as the first matrix in the 3rd dimension of the _@alarms_ array. Then next (below) we will apply EWMA and store the results as the second matrix, then the Shewrat as the 3rd, and finally CUSUM as the 4th matrix in the array. 
+
+* _nahead_ How many days ahead predictions should be made. One-day ahead predictions may have narrower confidence intervals, but they are unsafe as they do not protect the prediction from incoporating undetected outbreak signals. A one week ahead prediction (5 or 7 days) is recommended.
+
+
+* _correct.baseline_ Besides detecting abnormal observations, the algorithm can also be used to correct the data, removing these observations and substituting them by the limit of the confidence interval of the prediction provided by the HoltWinters() algorithm. If that is to be carried out, the user needs to specify which of the provided limits is to be used for the correction. This variable should be filled with the INDEX of the limit to be used. For example, if limit.sd was provided as "c(2.5,3.0,3.5)", the use of correct.baseline=1 will cause the algorithm to substitute any observations above 2.5 standard deviations from the predicted value with this exact cut-off limit. If using correct.baseline=2, only observations above a standard deviation of 3 (limit.sd[2]) will be corrected. To avoid that a baseline is generated or modified, set this argument to zero or NULL.
+
+* _UCL_ The minimum number that would have generated an alarm, for every time point, can be recorded in the slot UCL of the _syndromic_ object.The user must provide the INDEX in the limit.sd vector for which the UCL values should be corrected (as explained for the argument correct.baseline above). Set to FALSE to prevent
+the recording.
+
+Please note that is the _@baseline_ slot is empty, then it will be filled with NAs, and only teh syndromes evaluated will be filled either with a corrected baseline, or a copy of the data at observed (dependening on the user choice).
+
+An empty dimension on the slot _@alarms_ will also be filled with NAs. Then, for the syndromes evaluated, and _only in the rows corresponding to the time points evaluated for aberration detection_ teh result of aberration detection will be filled - a zero if no aberration is detected, and an integer otherwise.
+
+If the data have been previously evaluated (alarms are not empty), then whatever data has been previously recorded is reset to zero, and only alarms corresponding tot he current run are stord. 
+
+
+Note that for the example in this tutorial the Holt-Winters has indeed been used to detect aberrations **_and_** to correct them. Therefore, from here on the slot _@baseline_ will be filled with an outbreak-free baseline even for those time points not included in the retrospective analysis. Then the other detection algorithms will be applied using the data in _@baseline_ as training. 
+## EWMA
 
 ```{r ewma}
 # (x,

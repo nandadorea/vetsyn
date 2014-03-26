@@ -1,14 +1,17 @@
 ##' \code{clean_baseline_perc}
 ##'
 ##' Function to retrospectively remove possible outbreak signals and excessive
-##' noise, producing an \code{outbreak free baseline} that will serve to
+##' noise, producing an outbreak free baseline that will serve to
 ##' train outbreak-signal detection algorithms during prospective analysis.
 ##' 
 ##' The cleaning is non-parametric, based on moving
 ##' percentiles. The user sets a window of time points, around each time point,
 ##' which will be used to calculate the percentile set in the user in the argument
-##' \code{limit}. Any observations falling outside that percentile are removed
-##' and substituted by the percentile itself. See examples and references.
+##' limit. Any observations falling outside that percentile are removed
+##' and substituted by the percentile itself. See examples and references. See
+##' the package {caTools}, function runquantile() for details of
+##' how the running quantiles function handles the beginning and end of the
+##' time series.
 ##'
 ##' @name clean_baseline_perc-methods
 ##' @docType methods
@@ -17,13 +20,13 @@
 ##' @aliases clean_baseline_perc-methods
 ##' @aliases clean_baseline_perc,syndromic-method
 ##'
-##' @param x a \code{syndromic} object, which must have at least 
-##' the slot of observed data and a data.frame in the slot dates.
+##' @param x a syndromic object, which must have at least 
+##' the slot of observed data and a data frame in the slot dates.
 ##' @param syndromes an optional parameter, if not specified, all
-##' columns in the slot \code{observed} of the \code{syndromic} object
+##' columns in the slot observed of the syndromic object
 ##' will be used. The user can choose to restriict the analyses to 
 ##' a few syndromic groups listing their name or column position
-##' in the \code{observed} matrix. See examples.
+##' in the observed matrix. See examples.
 ##' @param limit the percentile to be used in identifying outliers.
 ##' @param run.window the number of time points to construct the moving
 ##' percentile window. By default 120 days.
@@ -31,11 +34,11 @@
 ##' the cleaning process should be displayed.
 ##' 
 ##' @return An object of the class syndromic which contains all 
-##' elements form the object provided in x, but in which
-##' the slot \code{baseline} has been filled with an outbreak-free baseline
+##' elements from the object provided in x, but in which
+##' the slot baseline has been filled with an outbreak-free baseline
 ##' for each syndromic group. When the user chooses to restrict analyses to some 
 ##' syndromes, the remaining columns are kept as is (if the slot was not empty)
-##' or filled with zeros when previously empty.
+##' or filled with NAs when previously empty.
 ##' 
 ##' @keywords methods
 ##' @export

@@ -9,14 +9,14 @@
   observed data will be extracted.}
 
   \item{object.name}{a name for the title in the html file,
-  byt default "my.syndromic".}
+  by default "my.syndromic".}
 
   \item{file.name}{a name for the rmd/html file to be
   created with the summary. The default is
   "syndromic.retro.summary". When changing the file name
   remember to use quotes. Please note that the function
   will create a subdirectory within the current working
-  directory, whre all files will be saved. Make sure to
+  directory, where all files will be saved. Make sure to
   check the current working directory (\code{getwd()}) and
   set a convenient one if needed (\code{setwd()}). See
   examples.}
@@ -32,10 +32,10 @@
 }
 \value{
   A ".Rmd" file and a ".html" page with sections
-  corresponding to each syndromic groups found in the slot
-  in the slot observed of the \code{syndromic} object.
-  These include: \describe{ \item{daily and weekly plots}{
-  Line plots of the data found in the slot observed of the
+  corresponding to each syndromic group found in the slot
+  observed of the \code{syndromic} object. These include:
+  \itemize{ \item{daily and weekly plots}{ Line plots of
+  the data found in the slot observed of the
   \code{syndromic} object provided. Weekly plots are
   produced merging the daily data by week.  }
 
@@ -49,17 +49,11 @@
   trends) }
 
   \item{Poisson model fitting}{ Fitting of a Poisson model
-  to the data using day-of-week only, and day-of-week
-  combined with month OR sin/cos for seasonal effects.
-  Auto-regressive terms from 1 to 7 days are also included,
-  and AIC for all fitted models are displayed.  }
+  to the data using a formula specified by the user.  }
 
   \item{Negative Binomial model fitting}{ Fitting of a
-  negative binomial model to the data using day-of-week
-  only, and day-of-week combined with month OR sin/cos for
-  seasonal effects.  Auto-regressive terms from 1 to 7 days
-  are also included, and AIC for all fitted models are
-  displayed.  }
+  negative binomial model to the data using a formula
+  specified by the user.  }
 
   }
 }
@@ -69,7 +63,7 @@
   under study, and outputs both a markdown file, where the
   user can have access to all retrospective analysis R
   codes, and an html summary (produced by knitting the .Rmd
-  file.
+  file).
 }
 \details{
   The summary should constitue a first step in the
@@ -79,9 +73,9 @@
   \code{syndromic}. That is, it is a convenient, fast way
   to plot all syndromic time-series in the object.
 
-  If the user want to make changes to the summary produced,
-  it is easy to open the .Rmd file in RStudio and produce
-  any changes to the R code generated.
+  If the user wants to make changes to the summary
+  produced, it is easy to open the .Rmd file in RStudio and
+  produce any changes to the R code generated.
 }
 \examples{
 data(lab.daily)

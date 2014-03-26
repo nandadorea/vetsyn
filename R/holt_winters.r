@@ -1,7 +1,7 @@
 ##' \code{holt_winters_synd}
 ##'
 ##' This function applies the \code{Holt-Winters()} algorithm (available in
-##' the {stats} R package available in the basic R 
+##' the {stats} R package and loaded in the basic R 
 ##' installation)). This algorithm
 ##' is normally used for decomposition and forecasting, but here
 ##' it is employed as part of an iterative process to allow 
@@ -14,7 +14,7 @@
 ##'  the function is called once and the internal loops evaluate
 ##'  one day at a time.}
 ##'  \item{Detection of deviations:} {  in this implementation the
-##'  \code{n} days ahead forecast of the algorithm is used as an 
+##'  n-days-ahead forecast of the algorithm is used as an 
 ##'  outbreak signal detector - observations above a confidence
 ##'  interval are flagged as "aberrations". }
 ##'  \item{baseline:}{  it is possible to point to an outbrak-free
@@ -27,7 +27,7 @@
 ##'  \item{data correction:}{  in case an observation is found to be greater
 ##'  than the confidence interval of the forecast, the user can 
 ##'  choose to update the outbreak-free baseline by substituting the
-##'  observed value withteh UCL value}
+##'  observed value with the UCL value}
 ##'  \item{multiple limits:}{  the user can apply the algorithm with multiple
 ##'   detection limits - that is to say, different
 ##'  confidence intervals}
@@ -40,42 +40,49 @@
 ##' @aliases holt_winters_synd,syndromic-method
 ##'
 ##' @param x a \code{syndromic} object, which must have  
-##' the slot of observed data, and a data.frame containing the
-##' variable  \code{year} in the slot dates. If the slot baseline is not 
+##' the slot of observed data, and a data frame containing the
+##' variable  year in the slot dates. If the slot baseline is not 
 ##' available, then the data in in the slot observed will be copied into
 ##' the baseline slot.
 ##' @param syndromes an optional parameter, if not specified, all
-##' columns in the slot \code{observed} of the \code{syndromic} object
+##' columns in the slot observed of the \code{syndromic} object
 ##' will be used. The user can choose to restrict the analyses to 
 ##' a few syndromic groups listing their name or column position
-##' in the \code{observed} matrix. See examples.
+##' in the observed matrix. See examples.
 ##' @param evaluate.window the number of time points to be evaluated.
 ##' By default only the last time point is evaluated, but the user can set 
 ##' any window (as long as the number of time points in the time series
 ##' allows so). Please note that the HoltWinters algorithm requires
 ##' at least two cycles to initialize. That is, if the cycle of the data 
 ##' is weekly, then the two initial weeks of the data cannot be included
-##' int he analyses.
+##' in the analyses.
 ##' @param frequency The frequency of cycles in the time series. Even though
 ##' this is normally a year (frequency=365), we have found that the algorithm
 ##' works better with a frequency equal to the week (5 or 7 days, dependening
 ##' on whether weekends are included) when strong day-of-week effects are
 ##' present in the data. 
-##' @param baseline.window The baseline used to train the algorithm in order 
+##' @param baseline.window The length of the 
+##' baseline used to train the algorithm in order 
 ##' to provide a forecast, which will serve to decide whether the current 
 ##' observed data is expected. Normally 1-2 years.
 ##' @param limit.sd The limit of detection to be used, that is, the cut-off
-##' of the confidence interval that decides when an observed is abnormal.
+##' of the confidence interval that decides when an observation is abnormal.
 ##' Rather than a percentage (for instance 95% or 99%), this should be informed
 ##' as number of standard deviations above the mean (for instance 2.5, or 3).
-##' This is to ensure comparability with the other detection algorithms used 
+##' This is to ensure comparability with the other detection algorithms used iin 
 ##' this package (control charts). This can be provided as a single value or as 
-##' a vector. When a vector is provided, multiple detection results are given,
-##' which are store is successive columns in the slot alarms.
+##' a vector. When a vector is provided, multiple detection results are given.
+##' In this case the result of detection is not binary (as traditionally, 0 for no
+##' alarm detected and 1 for the detection of an aberration). Instead,
+##' an integer is produced refering to how many confidence intervals have been
+##' exceeded. If for instance the limits are set to c(2,2.5,3), then an observation 
+##' which is greater than the 2.5 limit, but lower than 3, will have a detection score
+##' of 2 (2 detection limits "broken"). 
 ##' @param alarm.dim The \code{syndromic} object is set to accept the result of 
 ##' multiple detection algorithms. These results are stored as a third 
 ##' dimension in the slot alarms. Here the user can choose which order in that 
-##' dimension should store the results of this algorithm.
+##' dimension should store the results of this algorithm. If this is the first
+##' aberration detection algorithm used, for instance, leave as the default (1).
 ##' @param nahead how many days ahead predictions should be made. One-day ahead
 ##' predictions may have narrower confidence intervals, but they are unsafe
 ##' as they do not protect the prediction from incoporating undetected 
@@ -84,7 +91,7 @@
 ##' @param beta the beta parameter to be passed to the HoltWinters() algorithm.
 ##' @param gamma the gamma parameter to be passed to the HoltWinters() algorithm.
 ##' @param seasonal the seasonal parameter to be passed to the 
-##' HoltWinters() algorithm. Deault is "additive". The user can change to 
+##' HoltWinters() algorithm. Default is "additive". The user can change to 
 ##' "multiplicative", but that is not recommended if the data contains zeros.
 ##' @param correct.baseline besides detecting abnormal observations, the algorithm
 ##' can also be used to correct the data, removing these observations and 

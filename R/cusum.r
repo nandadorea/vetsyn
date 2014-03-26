@@ -1,10 +1,10 @@
 ##' \code{cusum_synd}
 ##'
-##' This function applies the \code{cusum()} algorithm (available in
+##' This function applies the cusum() algorithm (available in
 ##' the {qcc} R package. Here
 ##' it is employed as part of an iterative process to allow 
 ##' detection of outbreak signals. The additional features compared
-##' to the regular \code{cusum()} algorithm are: 
+##' to the regular cusum() algorithm are: 
 ##' \itemize{
 ##'  \item{pre-processing:}{  Instead of applying cusum directly to the time-series,
 ##'  it is possible to choose one of two pre-processing methods: (1) modeling
@@ -24,7 +24,7 @@
 ##'   can be corrected, before proceeding to the next. The correction
 ##'   of aberrations can be performed using this algorithm, or if
 ##'   the time series has already been corrected using another algorithm
-##'   (with results saved in the slot \code{baseline} of the
+##'   (with results saved in the slot baseline of the
 ##'   \code{syndromic} object being analysed), the corrected baseline
 ##'   will always considered as trainig data, rather than the
 ##'   observed data (which may contain aberrations)}
@@ -33,7 +33,7 @@
 ##'   as training data, in order to avoid contamination of the baseline
 ##'   with undetected outbreak-signals}.  
 ##'  \item{recording of the detection limits:}{  that is already a feature
-##'  of the \code{cusum()} function, and in the syndromic application
+##'  of the cusum() function, and in the syndromic application
 ##'  the LCL and UCL limits are stored in the appropriate slot of the object
 ##'  \code{syndromic}. The main innovation here is that if pre-processing
 ##'  methods are being used, the LCL and UCL are recorded after transformation of
@@ -62,10 +62,10 @@
 ##' a data.frame containing at least the columns for the regression 
 ##' variables chosen to be used (year, dow, month).
 ##' @param syndromes an optional parameter, if not specified, all
-##' columns in the slot \code{observed} of the \code{syndromic} object
+##' columns in the slot observed of the \code{syndromic} object
 ##' will be used. The user can choose to restrict the analyses to 
 ##' a few syndromic groups listing their name or column position
-##' in the \code{observed} matrix. See examples.
+##' in the observed matrix. See examples.
 ##' @param evaluate.window the number of time points to be evaluated.
 ##' By default only the last time point is evaluated, but the user can set 
 ##' any window (as long as the number of time points in the time series
@@ -127,7 +127,7 @@
 ##' are accepted: trend (for a monotonic trend), month, dow (day of week),
 ##' sin, cos, Ar1 (auto-regressive for 1 days) to AR7. These elements can be combined
 ##' into any formula. The default is formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5". See examples.
-##' @param period in case pre-processing is applied using "glm" AND the sin?cos functions 
+##' @param period in case pre-processing is applied using "glm" AND the sin/cos functions 
 ##' are used, the cycle of repetitions need to be set. The default is 365, for yearly cycles.
 ##' 
 ##' @seealso pre_process_glm

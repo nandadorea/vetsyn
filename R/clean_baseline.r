@@ -1,7 +1,7 @@
 ##' \code{clean_baseline}
 ##'
 ##' Function to retrospectively remove possible outbreak signals and excessive
-##' noise, producing an \code{outbreak free baseline} that will serve to
+##' noise, producing an outbreak free baseline that will serve to
 ##' train outbreak-signal detection algorithms during prospective analysis.
 ##' 
 ##' The cleaning is based on fitting the complete time series using regression methods 
@@ -19,32 +19,32 @@
 ##' @aliases clean_baseline,syndromic-method
 ##'
 ##' @param x a \code{syndromic} object, which must have at least 
-##' the slot of observed data and a data.frame in the slot dates.
+##' the slot of observed data and a data frame in the slot dates.
 ##' @param syndromes an optional parameter, if not specified, all
-##' columns in the slot \code{observed} of the \code{syndromic} object
+##' columns in the slot observed of the syndromic object
 ##' will be used. The user can choose to restrict the analyses to 
 ##' a few syndromic groups listing their name or column position
-##' in the \code{observed} matrix. See examples.
+##' in the observed matrix. See examples.
 ##' @param family the GLM distribution family used, by default 
-##' \code{"poisson"}. if \code{"nbinom"} is used, the function
+##' "poisson". if "nbinom" is used, the function
 ##' glm.nb is used instead.
 ##' @param limit the confidence interval to be used in identifying outliers.
 ##' @param formula the regression formula to be used. The following arguments
 ##' are accepted: trend (for a monotonic trend), month, dow (day of week),
-##' sin, cos, Ar1 (auto-regressive for 1 days) to AR7. These elements can be combined
-##' into any formula. The default is formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5". See examples. 
+##' sin, cos, AR1 (auto-regressive for 1 days) to AR7. These elements can be combined
+##' into any formula. The default is formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5". See examples. 
 ##' @param plot whether plots comparing observed data and the result of 
 ##' the cleaning process should be displayed.
 ##' @param print.model whether the result of model fitting should be
 ##' printed on the console. This is recommended when the user is 
 ##' exploring which dependent variables to keep or drop.
 ##' 
-##' @return An object of the class \code{syndromic} which contains all 
+##' @return An object of the class syndromic which contains all 
 ##' elements from the object provided in x, but in which
-##' the slot \code{baseline} has been filled with an outbreak-free baseline
+##' the slot baseline has been filled with an outbreak-free baseline
 ##' for each syndromic group. When the user chooses to restrict analyses to some 
 ##' syndromes, the remaining columns are kept as is (if the slot was not empty)
-##' or filled with zeros when previously empty.
+##' or filled with NAs when previously empty.
 ##' 
 ##' @keywords methods
 ##' @export

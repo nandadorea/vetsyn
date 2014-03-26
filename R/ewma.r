@@ -6,7 +6,7 @@
 ##' detection of outbreak signals. The additional features compared
 ##' to the regular \code{ewma()} algorithm are: 
 ##'  \itemize{
-##'  \item{pre-processing:}{  Instead of applying ewma directly to the time-series,
+##'  \item{pre-processing:}{  Instead of applying EWMA directly to the time-series,
 ##'  it is possible to choose one of two pre-processing methods: (1) modeling
 ##'  and removing temporal effects with a GLM regression model (families
 ##'  "poisson","nbinom" or "gaussian"); (2) differencing to remove for 
@@ -14,7 +14,7 @@
 ##'  to FALSE, and apply no temporal effects removal to the data.}
 ##'  \item{iterative application:} {  the algorithm is applied to a
 ##'  range of time points in an iterative manner, so if syndromic
-##'  data needs to be evaluated for the past 30 days, for instance,
+##'  data need to be evaluated for the past 30 days, for instance,
 ##'  the function is called once and the internal loops evaluate
 ##'  one day at a time.}
 ##'  \item{Detection of deviations one day at a time:} {  in this 
@@ -26,7 +26,7 @@
 ##'   the time series has already been corrected using another algorithm
 ##'   (with results saved in the slot \code{baseline} of the
 ##'   \code{syndromic} object being analysed), the corrected baseline
-##'   will always considered as trainig data, rather than the
+##'   will always be considered as trainig data, rather than the
 ##'   observed data (which may contain aberrations)}
 ##'   \item{guard-band:}{  The user can set a guard-band between the
 ##'   time unit being evaluated and the start of the window used
@@ -37,14 +37,14 @@
 ##'  the LCL and UCL limits are stored in the appropriate slot of the object
 ##'  \code{syndromic}. The main innovation here is that if pre-processing
 ##'  methods are being used, the LCL and UCL are recorded after transformation of
-##'  the values back to the scale of the original data, rathee than being recorded
+##'  the values back to the scale of the original data, rather than being recorded
 ##'  in the scale of the residuals of pre-processing, which are the actual
 ##'  values used by the control-chart method.}
 ##'  \item{data correction:}{  in case an observation is found to be greater
 ##'  than the confidence interval of the forecast, the user can 
 ##'  choose to update the outbreak-free baseline by substituting the
 ##'  observed value with the UCL value. As mentioned before, this feature
-##'  should not be used if the baseline was already constructed using another algorithm}
+##'  should not be used if the baseline was already constructed using another algorithm.}
 ##'  \item{multiple limits:}{  the user can apply the algorithm with multiple
 ##'   detection limits - that is to say, different
 ##'  confidence intervals}
@@ -61,10 +61,10 @@
 ##' a data.frame containing at least the columns for the regression 
 ##' variables chosen to be used (year, dow, month).
 ##' @param syndromes an optional parameter, if not specified, all
-##' columns in the slot \code{observed} of the \code{syndromic} object
+##' columns in the slot observed of the \code{syndromic} object
 ##' will be used. The user can choose to restrict the analyses to 
 ##' a few syndromic groups listing their name or column position
-##' in the \code{observed} matrix. See examples.
+##' in the observed matrix. See examples.
 ##' @param evaluate.window the number of time points to be evaluated.
 ##' By default only the last time point is evaluated, but the user can set 
 ##' any window (as long as the number of time points in the time series
@@ -78,7 +78,7 @@
 ##' provided in number of standard deviations. This can be provided as 
 ##' a single value or as a vector. When a vector is provided, multiple 
 ##' detection results are given, and the alarm result stored is a sum
-##' of how many detection limits were met. 
+##' of how many detection limits were exceeded. 
 ##' @param alarm.dim The \code{syndromic} object is set to accept the result of 
 ##' multiple detection algorithms. These results are stored as a third 
 ##' dimension in the slot alarms. Here the user can choose which order in that 
@@ -98,7 +98,7 @@
 ##' this exact cut-off limit. If using correct.baseline=2, only observations
 ##' above a standard deviation of 3 (limit.sd[2]) will be corrected. To avoid that 
 ##' a baseline is generated or modified, set this argument to zero or NULL.
-##' @param UCL the minimum number that would have geerated an alarm, for every time point,
+##' @param UCL the minimum number that would have generated an alarm, for every time point,
 ##' can be recorded in the slot UCL of the \code{syndromic} object.The user must provide 
 ##' the INDEX in the limit.sd vector for which the UCL values should be corrected 
 ##' (as explained for the argument correct.baseline above). Set to FALSE to prevent
@@ -121,13 +121,13 @@
 ##' 7 (weekly differencing). Change to 5 if weekends do not contain weekend days.
 ##' @param family when using pre-processing using glm,
 ##' the GLM distribution family used, by default 
-##' \code{"poisson"}. if \code{"nbinom"} is used, the function
+##' "poisson". if "nbinom" is used, the function
 ##' glm.nb is used instead.
 ##' @param formula the regression formula to be used. The following arguments
 ##' are accepted: trend (for a monotonic trend), month, dow (day of week),
 ##' sin, cos, Ar1 (auto-regressive for 1 days) to AR7. These elements can be combined
 ##' into any formula. The default is formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5". See examples.
-##' @param period in case pre-processing is applied using "glm" AND the sin?cos functions 
+##' @param period in case pre-processing is applied using "glm" AND the sin/cos functions 
 ##' are used, the cycle of repetitions need to be set. The default is 365, for yearly cycles.
 ##' 
 ##' @seealso pre_process_glm
@@ -137,13 +137,13 @@
 ##' 
 ##' @return An object of the class \code{syndromic} which contains all 
 ##' elements from the object provided in x, but in which
-##' the slot \code{alarm} has been filled in the following way: for the
-##' rows assigned in \code{evaluate.window}, columns indicated in
-##'  \code{syndromes} (or all columns from observed if syndromes is left undefined),
-##'  and for the third dimension specified in \code{alarm.dim} (1 by default), 
+##' the slot alarm has been filled in the following way: for the
+##' rows assigned in evaluate.window, columns indicated in
+##'  syndromes (or all columns from observed if syndromes is left undefined),
+##'  and for the third dimension specified in alarm.dim (1 by default), 
 ##'  zeros have been assigned if no alarm was generated; otherwise a numerical
 ##'  value gives the number of alarms detected. That is, how many of the
-##'  limits given in \code{limits.sd} detected an abnormal observation. See examples.
+##'  limits given in limits.sd detected an abnormal observation. See examples.
 ##'  If the user sets a correct.baseline value, the baseline will also have 
 ##'  been modified.
 ##' 

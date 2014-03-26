@@ -9,9 +9,8 @@
 ##' surveillance through objects of the class \code{syndromic},
 ##' pre-processing is performed in conjunction with the application of
 ##' control-charts, saving results into an object of the 
-##' class \code{syndromic} (which does not contain slots to
-##' save pre-processed data, as pre-processing is done within
-##' detection algorithms.)
+##' class \code{syndromic} (within
+##' detection algorithms. - See ewma_synd(), shew_synd() and cusum_synd())
 ##'
 ##' @name pre_process_glm-methods
 ##' @docType methods
@@ -21,24 +20,24 @@
 ##' @aliases pre_process_glm,syndromic-method
 ##'
 ##' @param x a \code{syndromic} object, which must have at least 
-##' the slot of observed data and a data.frame in the slot dates.
+##' the slot of observed data and a data frame in the slot dates.
 ##' @param slot the slot in the \code{syndromic} object to be processed,
 ##' by default, "observed", but this argument can be used to
 ##' change it to "baseline"
 ##' @param syndromes an optional parameter, if not specified, all
-##' columns in the slot \code{observed} (or \code{baseline} if that
+##' columns in the slot observed (or baseline if that
 ##' was chosen in the previous parameter) of the \code{syndromic} object
 ##' will be used. The user can choose to restrict the analyses to 
 ##' a few syndromic groups listing their name or column position
-##' in the \code{observed} matrix. See examples.
+##' in the observed matrix. See examples.
 ##' @param family the GLM distribution family used, by default 
-##' \code{"poisson"}. if \code{"nbinom"} is used, the function
+##' "poisson". if "nbinom" is used, the function
 ##' glm.nb is used instead.
 ##' @param formula the regression formula to be used. The following arguments
 ##' are accepted: trend (for a monotonic trend), month, dow (day of week),
 ##' sin, cos, Ar1 (auto-regressive for 1 days) to AR7. These elements can be combined
 ##' into any formula. The default is formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5". See examples.
-##' @param period in case pre-processing is applied using "glm" AND the sin?cos functions 
+##' @param period in case pre-processing is applied using "glm" AND the sin/cos functions 
 ##' are used, the cycle of repetitions need to be set. The default is 365, for yearly cycles.
 ##' @param plot whether plots comparing observed data and the result of 
 ##' the pre-processing should be displayed.

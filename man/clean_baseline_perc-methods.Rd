@@ -5,16 +5,15 @@
 \alias{clean_baseline_perc,syndromic-method}
 \title{\code{clean_baseline_perc}}
 \arguments{
-  \item{x}{a \code{syndromic} object, which must have at
-  least the slot of observed data and a data.frame in the
-  slot dates.}
+  \item{x}{a syndromic object, which must have at least the
+  slot of observed data and a data frame in the slot
+  dates.}
 
   \item{syndromes}{an optional parameter, if not specified,
-  all columns in the slot \code{observed} of the
-  \code{syndromic} object will be used. The user can choose
-  to restriict the analyses to a few syndromic groups
-  listing their name or column position in the
-  \code{observed} matrix. See examples.}
+  all columns in the slot observed of the syndromic object
+  will be used. The user can choose to restriict the
+  analyses to a few syndromic groups listing their name or
+  column position in the observed matrix. See examples.}
 
   \item{limit}{the percentile to be used in identifying
   outliers.}
@@ -27,27 +26,30 @@
 }
 \value{
   An object of the class syndromic which contains all
-  elements form the object provided in x, but in which the
-  slot \code{baseline} has been filled with an
-  outbreak-free baseline for each syndromic group. When the
-  user chooses to restrict analyses to some syndromes, the
-  remaining columns are kept as is (if the slot was not
-  empty) or filled with zeros when previously empty.
+  elements from the object provided in x, but in which the
+  slot baseline has been filled with an outbreak-free
+  baseline for each syndromic group. When the user chooses
+  to restrict analyses to some syndromes, the remaining
+  columns are kept as is (if the slot was not empty) or
+  filled with NAs when previously empty.
 }
 \description{
   Function to retrospectively remove possible outbreak
-  signals and excessive noise, producing an \code{outbreak
-  free baseline} that will serve to train outbreak-signal
+  signals and excessive noise, producing an outbreak free
+  baseline that will serve to train outbreak-signal
   detection algorithms during prospective analysis.
 }
 \details{
   The cleaning is non-parametric, based on moving
   percentiles. The user sets a window of time points,
   around each time point, which will be used to calculate
-  the percentile set in the user in the argument
-  \code{limit}. Any observations falling outside that
-  percentile are removed and substituted by the percentile
-  itself. See examples and references.
+  the percentile set in the user in the argument limit. Any
+  observations falling outside that percentile are removed
+  and substituted by the percentile itself. See examples
+  and references. See the package {caTools}, function
+  runquantile() for details of how the running quantiles
+  function handles the beginning and end of the time
+  series.
 }
 \examples{
 data(lab.daily)

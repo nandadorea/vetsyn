@@ -370,7 +370,7 @@ Please note that is the _@baseline_ slot is empty, then it will be filled with N
 
 An empty dimension on the slot _@alarms_ will also be filled with NAs. Then, for the syndromes evaluated, and _only in the rows corresponding to the time points evaluated for aberration detection_ teh result of aberration detection will be filled - a zero if no aberration is detected, and an integer otherwise.
 
-If the data have been previously evaluated (alarms are not empty), then whatever data has been previously recorded is reset to zero, and only alarms corresponding tot he current run are stord. 
+If the data have been previously evaluated (alarms are not empty), then whatever data has been previously recorded is reset to zero, and only alarms corresponding tot he current run are stored.  
 
 
 Note that for the example in this tutorial the Holt-Winters has indeed been used to detect aberrations **_and_** to correct them. Therefore, from here on the slot _@baseline_ will be filled with an outbreak-free baseline even for those time points not included in the retrospective analysis. Then the other detection algorithms will be applied using the data in _@baseline_ as training. 
@@ -395,6 +395,9 @@ Here the argument **_pre-proces_** allows the user to set a pre-processing metho
 Note that the user can set the function *ewma_synd()* to correct the baseline, or if the outbreak-free baseline has already been constructed using another algorithm (in this tutorial the Holt-Winters) then it just continues to use the data in _@baseline_ as training an dthe data in _@observed_ is evaluated for detection. 
 
 Also note that when pre-processing is used, the UCL (or also LCL and the baseline) are recorded *after transformation of the values back to the scale of the original data*, rather than being recorded in the scale of the residuals of pre-processing, which are the actual values used by the control-chart method.
+
+Note that for the example in this tutorial the Holt-Winters has indeed been used to detect aberrations **_and_** to correct them. Therefore, from here on the slot _@baseline_ will be filled with an outbreak-free baseline even for those time points not included in the retrospective analysis. Then the other detection algorithms will be applied using the data in _@baseline_ as training. 
+
 
 
 ```{r ewma}

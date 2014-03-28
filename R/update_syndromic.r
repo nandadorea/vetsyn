@@ -12,11 +12,11 @@
 ##' @aliases update_syndromic-methods
 ##' @aliases update_syndromic,syndromic-method
 ##' 
-##' @param x the syndromic object to be updated (if one is not already existing,
+##' @param x the syndromic object to be updated (if one does not already exist,
 ##' please use "raw_to_syndromic" or "syndromic")
 ##' @param id indicates a variable (or multiple variables) which should
 ##' be used to identify unique events in the data. It can be provided as an R
-##' vector (p.e. mydata$myid), as the name of a DataFrame column
+##' vector (p.e. mydata$myid), as the name of a Data Frame column
 ##' (p.e. id=myid, data=my.data), or as multiple column names
 ##' (p.e. id=list(id1,id2,id3), data=my.data).
 ##' @param syndromes.var the variable that identifies group membership
@@ -36,7 +36,7 @@
 ##' for instance, set remove.dow=c(6,0)
 ##' @param add.to when remove.dow is used, the user has the option to completely remove
 ##' any counts assigned to the days of week to be remove (set add.to=0) or add
-##' then to the following or precedent day. For instance when removing weekends,
+##' them to the following or precedent day. For instance when removing weekends,
 ##' the counts registered during weekends can be assigned to the following Monday or
 ##' the preceding Friday, using add.to=1 or add.to=-1 respectively. Please note that:
 ##' (i) the vector add.to must have the exact same dimensions as remove.dow. To remove 
@@ -44,8 +44,8 @@
 ##' remove.dow=c(6,0) and add.to=c(2,1) (Saturdays added to 2 days ahead, and Sunday to
 ##' 1 day ahead)
 ##' @param replace.dates a logical argument indicating whether dates in the
-##' new dataset for which data was already available in the syndromic object should
-##' replace the old value (set to TRUE) or be ignored (set to FALSE)
+##' new dataset for which data were already available in the syndromic object should
+##' replace the old values (set to TRUE) or be ignored (set to FALSE)
 ##' @param data Optional argument. If used the other arguments can be specified
 ##' as column names within the dataset provided through this argument
 ##'

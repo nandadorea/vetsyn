@@ -19,10 +19,10 @@
 ##' @param center the center of plotting, but the scale is not shown, so generally
 ##' should not need to be changed.
 ##' @param fill.colors the colors to be used for the 3 degrees of alarm. By default
-##' they are yellow, organe and light red (tomato).
+##' they are yellow, orange and light red (tomato).
 ##' @param arrow.colors the colors of the arrow for varying levels of alarm. By
 ##' default green is used when the score is zero, and a progressive scale
-##' is used for increasing scores: orange, romato and red. 
+##' is used for increasing scores: orange, tomato and red. 
 ##' 
 ##' @export
 ##' @examples

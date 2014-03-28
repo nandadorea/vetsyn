@@ -15,11 +15,11 @@
 ##' 
 ##' @param x a \code{syndromic} object.
 ##' @param syndromes an optional parameter, if not specified, all
-##' columns in the slot \code{observed} (or \code{baseline} of the
+##' columns in the slot observed (or baseline of the
 ##'  \code{syndromic} object
 ##' will be used. The user can choose to restrict the plotting to 
 ##' a few syndromic groups listing their name or column position
-##' in the \code{observed} matrix. See examples.
+##' in the observed matrix. See examples.
 ##' @param window the number of time points to plot, always finishing at the 
 ##' last time point recorded.
 ##' @param baseline whether to plot the baseline, by default equal to TRUE.

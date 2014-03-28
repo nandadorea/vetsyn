@@ -529,9 +529,25 @@ dimnames(my.syndromic@alarms)
 
 # Working "online" - receiving data in time steps and updating the system
 
+So far, we have only "implemented" the system, but we have not yet ran it, that is, the ystem is not "online". We have received a batch of data, chosen the appropriate algorithms based on retrospective analysis, and set up the aberration detection algorithms running then in the last (or last few) time point (s) of data available to assure ourselves that all is working.
+
+At every new time point (p.e. daily), however, we expect to get more data, and therefore we need to update the _syndromic object_ in order to add data for that new time point for all syndromes beign monitored. We aould first update the _@observed_, adding the new observations, and then need to run the aberration detection algorithms again in order to update the _@baseline_, _@alarms_ and _@UCL_. 
+
+## Updating the syndromic object to include a new time point
+
+We would do that in a similar way we did when we used *raw_to_syndromic*, by appointing the data we got, and where in those data the dates, syndromic classification and events ID can be found. The difference is that now we provide a _syndromic object_ we intend to append the data to. 
+
+The package contains an example set - _lab.daily.update_ - which contains data from the same data source used so far in this tutorial, with one extra day. It simulates the available of new data for an implemented syndromic surveillance system, which could (and in this case does) overlap with data already seen by the algorithms on the previous time point. 
+
+In this example the last observation in the _my.syndromic_ we constructed earlier was from 27th of May, 2013. The dataset _lab.daily.update_ contains data from May 2nd through May 28th. That is, is overlaps with the data we already have, but it also contains one more day of observations.
+
+By default, the function compared the dates of the data already in the _syndromic_ object with those in the new dataset, and extracts data *only for new dates*. If the user has reason to believe that the new dataset may contain updates of the data form the previous time point, then they should set _replace.date_ to *TRUE*, and all data from the updating dataset will be read and recorded in the _syndromic_ object, over-writing old observations. 
+ 
+
 ```{r online}
 data(lab.daily.update)
 
+### function compares dates and incorporates only the new ones
 my.syndromic
 my.syndromic <- update_syndromic(x=my.syndromic,
                                    id=SubmissionID,
@@ -551,6 +567,8 @@ my.syndromic@alarms[620:627,,1]
 my.syndromic@UCL[620:627,,1]
 
 
+#set replace.dates=TRUE in order to overwrite the data in the syndromic object
+#and record all the new data being passed to the object
 my.syndromic <- update_syndromic(x=my.syndromic,
                                    id=SubmissionID,
                                    syndromes.var=Syndrome, 
@@ -570,14 +588,28 @@ my.syndromic@UCL[600:627,,1]
 
 ```
 
+In a _syndromic object_ the number of rows in all slots must always remain the same. Therefore when new time points are added to _@observed_, as many addtional rows are added to all other slots. In _@dates_ the new dates are filled, and in the other slots these new rows are filled with NA, indicating that these new rows of observed data have not yet been analyzed, and therefore no analyses reults are available. 
 
-# Prospective
+You will have noted in the examples above that when using _replace.dates=TRUE_ the over-written rows will also receive NAs in the slots  _@alarms_ and _@UCL_, indicating that the update in the data results in a need to update the alarm situation.
 
-repeat algorithms
+## Prospective analysis - applying aberration detection online
+
+Once the syndromic object has been updated, the aberration detection algorithms can be applied again, to as many time points as added. 
+
+The online process therefore, constitutes of applying at every new time point:
+
+1. fetch a new batch of data including the new time point
+2. use *update_syndromic* to update the _syndromic_ object
+3. use *hotl_winters_synd*, *ewma_synd*, *shew_synd*, and/or *cusum_synd* to investigate whether there are alarms in the most rceent time point.
+
+Whether there are alarms or not, the end user will want to be informed of the results, and see the results os analysis. The next functions do just that.
 
 # Outcomes
 
 ## Plot
+
+A *plot_syndromic* function is provided. However, the simple _plot()_ function "knows" how to plot a syndromic object (once the package _vetsyn_ is loaded). You can still customize the plots using the arguments listed in the example below. 
+
 ```{r plot}
 
 
@@ -599,8 +631,11 @@ plot(my.syndromic, syndromes=c(1,3))
 
 ```
 
+The user can always point to specific slots (for instance plotting my.syndromic@observed, instead of my.syndromic) to customize the way they want to plot the reuslts. 
 
 ## Alarms, email, pdf (online code)
+
+
 ```{r pdf}
 
 syndromic_alarm(x=my.syndromic,

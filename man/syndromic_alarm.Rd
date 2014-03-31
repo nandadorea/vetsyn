@@ -60,14 +60,15 @@
   statistical value, but the sum of the scores of each
   individual detection algorithm. If for instance the
   syndromic object has been subjected to detection using a
-  HolteWinter algorithm with 3 alarm detection limits, and
-  an EWMA algorithm with 3 alarm detection limits, than the
-  maximum alarm score is 6. The limit parameter establishes
-  the minimum value (in his 0-6 scale) that in considered
-  an alarm. By default 1 is used. It can be provided as a
-  single value (if all syndromes are to have the same
-  limit) or as a vector with length equal to the number of
-  syndromes in use (number of columns in observed)}
+  \code{holt_winters_synd} algorithm with 3 alarm detection
+  limits, and an \code{ewma_synd} algorithm with 3 alarm
+  detection limits, than the maximum alarm score is 6. The
+  limit parameter establishes the minimum value (in this
+  0-6 scale) that in considered an alarm. By default 1 is
+  used. It can be provided as a single value (if all
+  syndromes are to have the same limit) or as a vector with
+  length equal to the number of syndromes in use (number of
+  columns in the slot observed)}
 
   \item{file.name}{an optional text to add to the date
   being evaluated, as the name of the file to be saved.}
@@ -89,7 +90,7 @@
   "ALARM: There are alarms today"}
 
   \item{message}{any message that the user wants to add to
-  the body of the email generates in case of alarm. This
+  the body of the email generated in case of alarm. This
   will be added to the default message, which is the name
   of the syndromes which generated an alarm.}
 
@@ -103,13 +104,13 @@
   called "PDF_reports" within the current working
   directory, to save the files. If set to FALSE, the
   current working directory is used. The current working
-  directory is not changed by using the function}
+  directory is not changed by using the function.}
 }
 \description{
   A simple command to generate an alarm around a syndromic
   object - the user can generate automated e-mails and also
   generate a pdf report of all syndromes in a syndromic
-  object, or only those for which an alarm was generated
+  object, or only those for which an alarm was generated.
 }
 \examples{
 data(lab.daily)

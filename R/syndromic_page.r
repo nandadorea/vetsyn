@@ -1,8 +1,8 @@
 ##' \code{syndromic_page}
 ##'
 ##' A simple command to generate an html page that summarizes the current 
-##' state of a syndromic object.A "html" folder is created (or used if already existing)
-##' into teh current working directory.
+##' state of a syndromic object. A "html" folder is created (or used if already existing)
+##' into the current working directory.
 ##'
 ##'
 ##' @name syndromic_page
@@ -14,7 +14,7 @@
 ##' 
 ##' 
 ##' @param x a \code{syndromic} object.
-##' @param week number of days in a week (for instance 7 for a full wee and 5 for 
+##' @param week number of days in a week (for instance 7 for a full week and 5 for 
 ##' weekdays only). This is used to choose how many days of alarms to display. The
 ##' normal is to show the entire last week, but the user can set this number
 ##' to any desired number of days to tabulate.
@@ -32,7 +32,8 @@
 ##' syndromes with an alarm are to be plotted. Remember that this is not a statistical 
 ##' value, but the sum of the scores of each individual detection algorithm. If for 
 ##' instance the syndromic object has been subjected to detection using a
-##' HolteWinter algorithm with 3 alarm detection limits, and an EWMA algorithm with 3
+##' \code{holt_winters_synd} algorithm with 3 alarm detection limits, 
+##' and an \code{ewma_synd} algorithm with 3
 ##' alarm detection limits, than the maximum alarm score is 6. The limit parameter
 ##' establishes the minimum value (in his 0-6 scale) that in considered an alarm. By default
 ##' 1 is used. It can be provided as a single value (if all syndromes are to have
@@ -51,21 +52,21 @@
 ##' @param dates.var the variable (column) in data to look for dates, in order to
 ##' find the data from last week.
 ##' @param color.null a color for the table of alarms, used in cells giving the number
-##' of syndromic events which corresponded to no alarm.
+##' of syndromic events which corresponded to NO alarm.
 ##' @param color.low a color for the table of alarms, used in cells giving the number
 ##' of syndromic events which generated an alarm score higher than 0, but lower than
 ##' the limit for alarms.
-##' @param color. alarm a color for the table of alarms, used in cells giving the number
+##' @param color.alarm a color for the table of alarms, used in cells giving the number
 ##' of syndromic events which corresponded to an alarm.
 ##' @param scale the maximum possible score (scale of alarms). Based on the number
 ##' of detection algorithms used, and the number of detection limits set to each
 ##' (3 algorithms with 5 detection limits for each, for instance, will give a
 ##' scale of 15)
 ##' @param fill.colors the colors to be used for the 3 degrees of alarm. By default
-##' they are yellow, organe and light red (tomato).
+##' they are yellow, orange and light red (tomato).
 ##' @param arrow.colors the colors of the arrow for varying levels of alarm. By
 ##' default green is used when the score is zero, and a progressive scale
-##' is used for increasing scores: orange, romato and red. 
+##' is used for increasing scores: orange, tomato and red. 
 ##' 
 ##' @importFrom xtable xtable
 ##' @keywords methods

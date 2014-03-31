@@ -26,13 +26,13 @@
   not shown, so generally should not need to be changed.}
 
   \item{fill.colors}{the colors to be used for the 3
-  degrees of alarm. By default they are yellow, organe and
+  degrees of alarm. By default they are yellow, orange and
   light red (tomato).}
 
   \item{arrow.colors}{the colors of the arrow for varying
   levels of alarm. By default green is used when the score
   is zero, and a progressive scale is used for increasing
-  scores: orange, romato and red.}
+  scores: orange, tomato and red.}
 }
 \description{
   Code to plot a syndromic final score when an alarm scale

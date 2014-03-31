@@ -6,7 +6,7 @@
 \title{\code{pre_process_glm}}
 \arguments{
   \item{x}{a \code{syndromic} object, which must have at
-  least the slot of observed data and a data.frame in the
+  least the slot of observed data and a data frame in the
   slot dates.}
 
   \item{slot}{the slot in the \code{syndromic} object to be
@@ -14,16 +14,15 @@
   be used to change it to "baseline"}
 
   \item{syndromes}{an optional parameter, if not specified,
-  all columns in the slot \code{observed} (or
-  \code{baseline} if that was chosen in the previous
-  parameter) of the \code{syndromic} object will be used.
-  The user can choose to restrict the analyses to a few
-  syndromic groups listing their name or column position in
-  the \code{observed} matrix. See examples.}
+  all columns in the slot observed (or baseline if that was
+  chosen in the previous parameter) of the \code{syndromic}
+  object will be used. The user can choose to restrict the
+  analyses to a few syndromic groups listing their name or
+  column position in the observed matrix. See examples.}
 
   \item{family}{the GLM distribution family used, by
-  default \code{"poisson"}. if \code{"nbinom"} is used, the
-  function glm.nb is used instead.}
+  default "poisson". if "nbinom" is used, the function
+  glm.nb is used instead.}
 
   \item{formula}{the regression formula to be used. The
   following arguments are accepted: trend (for a monotonic
@@ -33,7 +32,7 @@
   formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5". See examples.}
 
   \item{period}{in case pre-processing is applied using
-  "glm" AND the sin?cos functions are used, the cycle of
+  "glm" AND the sin/cos functions are used, the cycle of
   repetitions need to be set. The default is 365, for
   yearly cycles.}
 
@@ -61,9 +60,8 @@
   \code{syndromic}, pre-processing is performed in
   conjunction with the application of control-charts,
   saving results into an object of the class
-  \code{syndromic} (which does not contain slots to save
-  pre-processed data, as pre-processing is done within
-  detection algorithms.)
+  \code{syndromic} (within detection algorithms. - See
+  ewma_synd(), shew_synd() and cusum_synd())
 }
 \examples{
 data(lab.daily)

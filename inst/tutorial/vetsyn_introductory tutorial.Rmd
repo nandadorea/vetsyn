@@ -635,8 +635,45 @@ The user can always point to specific slots (for instance plotting my.syndromic@
 
 ## Alarms, email, pdf (online code)
 
+It is expected that a user implementing syndromic surveillance would want to set the process to run in an automatted manner, at specified time points (for instance every day or every week). In that case, it's important to have an alert that will:
+
+* Notify the user in case there is an alarm;
+
+* Notify the user that the process ran successfully, but no alarms were generated. This is important so that the managers of syndromic surveillance know the difference between "no alarm" and "an error occurred and the analyses were not finished".
+
+The following function will:
+
+1. Save the plots for each individual syndrome stored in a syndromic object into a single pdf file (unless the user sets pdf.report=FALSE). The user can choose whether to plot all monitored syndromes or only those for which an alarm was found. 
+
+2. Email a specified user (or list of users) when there is an alarm.
+
+3. Email a specified user (which can be different from previously) when there is NO alarm, to assure that the calculations finished,
+
+Please read the documentation for the function. It explains how the email alert can be left as the default (sent from Rmail interface) or changed to a specific desired email of origin. 
+
 
 ```{r pdf}
+
+#### all possible arguments:
+#syndromic_alarm (x,
+#                    pdf.report=TRUE,
+#                    email.alarm.to=NULL,
+#                    email.noalarm.to=NULL,
+#                    date=NULL,
+#                    plot.all=FALSE,
+#                    window=365,
+#                    baseline=TRUE,
+#                    UCL=1,
+#                    algorithms=NULL,
+#                    limit=1,
+#                    email.from=NULL,
+#                    smtpServer=NULL,
+#                    subject= paste((Sys.Date()),"ALARM: There are alarms today",sep=","),
+#                    message=NULL,
+#                    height=7.5,
+#                    width=10.5,
+#                    pdf.dir=TRUE,
+#                    file.name=NULL)
 
 syndromic_alarm(x=my.syndromic,
               plot.all=TRUE,
@@ -648,6 +685,16 @@ syndromic_alarm(x=my.syndromic,
 
 
 ## Interface
+
+It has been our experience that the pdf reports are good for documentation, but they are not always very user friendly. Syndromic surveillance users will find it easier to see the results in a webpage. The function below generates such a webpage. One single page contains all syndromic groups found n the syndromic object, and displlays:
+
+1. A summary of all syndromes with a "alarmometer", which defines, for each syndrome, what is the current alarm level for today in the format of a meter with colors from green to red.
+
+2. Idividual plots for each syndrome directly linked to the name of the syndrome displayed in the initial table.
+
+The function creates on .html page for ONE syndromic object, and therefore it assumes that all syndromes have been placed in the same syndromic object. When mulitple syndromic objects are part of the same syndromic surveillance system - for instance because multiple animal species are monitred, or multiple sources of data - it's possible to create a main page with links to all individual pages. Codes are available upon contact (fernanda.dorea@sva.se) to generate a homepage that summarizes all syndromic objects, with green/red alert signals according to whether alarms were generated for any syndrome in that syndrmic object.
+
+
 ```{r syndromic.page}
 getwd()
 syndromic_page (x=my.syndromic,
@@ -659,10 +706,10 @@ syndromic_page (x=my.syndromic,
                     date.format="%d/%m/%Y",
                     dates.var="DateofSubmission",
                     syndromes.var="Syndrome",
-                     scale=9)
+                    scale=9)
 getwd()
 ```
 
-To create a main page if multiple syndromic objectes are in place - just email the authors for a html code.
+
 
 

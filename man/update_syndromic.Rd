@@ -5,14 +5,14 @@
 \alias{update_syndromic,syndromic-method}
 \title{update_syndromic}
 \arguments{
-  \item{x}{the syndromic object to be updated (if one is
-  not already existing, please use "raw_to_syndromic" or
+  \item{x}{the syndromic object to be updated (if one does
+  not already exist, please use "raw_to_syndromic" or
   "syndromic")}
 
   \item{id}{indicates a variable (or multiple variables)
   which should be used to identify unique events in the
   data. It can be provided as an R vector (p.e.
-  mydata$myid), as the name of a DataFrame column (p.e.
+  mydata$myid), as the name of a Data Frame column (p.e.
   id=myid, data=my.data), or as multiple column names (p.e.
   id=list(id1,id2,id3), data=my.data).}
 
@@ -43,7 +43,7 @@
 
   \item{add.to}{when remove.dow is used, the user has the
   option to completely remove any counts assigned to the
-  days of week to be remove (set add.to=0) or add then to
+  days of week to be remove (set add.to=0) or add them to
   the following or precedent day. For instance when
   removing weekends, the counts registered during weekends
   can be assigned to the following Monday or the preceding
@@ -56,9 +56,10 @@
   ahead)}
 
   \item{replace.dates}{a logical argument indicating
-  whether dates in the new dataset for which data was
+  whether dates in the new dataset for which data were
   already available in the syndromic object should replace
-  the old value (set to TRUE) or be ignored (set to FALSE)}
+  the old values (set to TRUE) or be ignored (set to
+  FALSE)}
 
   \item{data}{Optional argument. If used the other
   arguments can be specified as column names within the

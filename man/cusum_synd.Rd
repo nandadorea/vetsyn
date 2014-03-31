@@ -12,11 +12,10 @@
   month).}
 
   \item{syndromes}{an optional parameter, if not specified,
-  all columns in the slot \code{observed} of the
-  \code{syndromic} object will be used. The user can choose
-  to restrict the analyses to a few syndromic groups
-  listing their name or column position in the
-  \code{observed} matrix. See examples.}
+  all columns in the slot observed of the \code{syndromic}
+  object will be used. The user can choose to restrict the
+  analyses to a few syndromic groups listing their name or
+  column position in the observed matrix. See examples.}
 
   \item{evaluate.window}{the number of time points to be
   evaluated. By default only the last time point is
@@ -109,7 +108,7 @@
   formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5". See examples.}
 
   \item{period}{in case pre-processing is applied using
-  "glm" AND the sin?cos functions are used, the cycle of
+  "glm" AND the sin/cos functions are used, the cycle of
   repetitions need to be set. The default is 365, for
   yearly cycles.}
 }
@@ -129,48 +128,47 @@
   baseline will also have been modified.
 }
 \description{
-  This function applies the \code{cusum()} algorithm
-  (available in the {qcc} R package. Here it is employed as
-  part of an iterative process to allow detection of
-  outbreak signals. The additional features compared to the
-  regular \code{cusum()} algorithm are: \itemize{
-  \item{pre-processing:}{ Instead of applying cusum
-  directly to the time-series, it is possible to choose one
-  of two pre-processing methods: (1) modeling and removing
-  temporal effects with a GLM regression model (families
-  "poisson","nbinom" or "gaussian"); (2) differencing to
-  remove for instance day-of-week effects. The user can of
-  course also set pre-processing to FALSE, and apply no
-  temporal effects removal to the data.} \item{iterative
-  application:} { the algorithm is applied to a range of
-  time points in an iterative manner, so if syndromic data
-  needs to be evaluated for the past 30 days, for instance,
-  the function is called once and the internal loops
-  evaluate one day at a time.} \item{Detection of
-  deviations one day at a time:} { in this implementation
-  rather than running the algorithm to multiple time units
-  in a "batch", it applies the algorithm one time unit
-  (e.g., day) at a time, so that aberrations detected in
-  any given time unit can be corrected, before proceeding
-  to the next. The correction of aberrations can be
-  performed using this algorithm, or if the time series has
-  already been corrected using another algorithm (with
-  results saved in the slot \code{baseline} of the
-  \code{syndromic} object being analysed), the corrected
-  baseline will always considered as trainig data, rather
-  than the observed data (which may contain aberrations)}
-  \item{guard-band:}{ The user can set a guard-band between
-  the time unit being evaluated and the start of the window
-  used as training data, in order to avoid contamination of
-  the baseline with undetected outbreak-signals}.
-  \item{recording of the detection limits:}{ that is
-  already a feature of the \code{cusum()} function, and in
-  the syndromic application the LCL and UCL limits are
-  stored in the appropriate slot of the object
-  \code{syndromic}. The main innovation here is that if
-  pre-processing methods are being used, the LCL and UCL
-  are recorded after transformation of the values back to
-  the scale of the original data, rathee than being
+  This function applies the cusum() algorithm (available in
+  the {qcc} R package. Here it is employed as part of an
+  iterative process to allow detection of outbreak signals.
+  The additional features compared to the regular cusum()
+  algorithm are: \itemize{ \item{pre-processing:}{ Instead
+  of applying cusum directly to the time-series, it is
+  possible to choose one of two pre-processing methods: (1)
+  modeling and removing temporal effects with a GLM
+  regression model (families "poisson","nbinom" or
+  "gaussian"); (2) differencing to remove for instance
+  day-of-week effects. The user can of course also set
+  pre-processing to FALSE, and apply no temporal effects
+  removal to the data.} \item{iterative application:} { the
+  algorithm is applied to a range of time points in an
+  iterative manner, so if syndromic data needs to be
+  evaluated for the past 30 days, for instance, the
+  function is called once and the internal loops evaluate
+  one day at a time.} \item{Detection of deviations one day
+  at a time:} { in this implementation rather than running
+  the algorithm to multiple time units in a "batch", it
+  applies the algorithm one time unit (e.g., day) at a
+  time, so that aberrations detected in any given time unit
+  can be corrected, before proceeding to the next. The
+  correction of aberrations can be performed using this
+  algorithm, or if the time series has already been
+  corrected using another algorithm (with results saved in
+  the slot baseline of the \code{syndromic} object being
+  analysed), the corrected baseline will always considered
+  as trainig data, rather than the observed data (which may
+  contain aberrations)} \item{guard-band:}{ The user can
+  set a guard-band between the time unit being evaluated
+  and the start of the window used as training data, in
+  order to avoid contamination of the baseline with
+  undetected outbreak-signals}.  \item{recording of the
+  detection limits:}{ that is already a feature of the
+  cusum() function, and in the syndromic application the
+  LCL and UCL limits are stored in the appropriate slot of
+  the object \code{syndromic}. The main innovation here is
+  that if pre-processing methods are being used, the LCL
+  and UCL are recorded after transformation of the values
+  back to the scale of the original data, rathee than being
   recorded in the scale of the residuals of pre-processing,
   which are the actual values used by the control-chart
   method.} \item{data correction:}{ in case an observation

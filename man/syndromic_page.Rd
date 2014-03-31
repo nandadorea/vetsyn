@@ -8,7 +8,7 @@
   \item{x}{a \code{syndromic} object.}
 
   \item{week}{number of days in a week (for instance 7 for
-  a full wee and 5 for weekdays only). This is used to
+  a full week and 5 for weekdays only). This is used to
   choose how many days of alarms to display. The normal is
   to show the entire last week, but the user can set this
   number to any desired number of days to tabulate.}
@@ -37,15 +37,15 @@
   statistical value, but the sum of the scores of each
   individual detection algorithm. If for instance the
   syndromic object has been subjected to detection using a
-  HolteWinter algorithm with 3 alarm detection limits, and
-  an EWMA algorithm with 3 alarm detection limits, than the
-  maximum alarm score is 6. The limit parameter establishes
-  the minimum value (in his 0-6 scale) that in considered
-  an alarm. By default 1 is used. It can be provided as a
-  single value (if all syndromes are to have the same
-  limit) or as a vector with length equal to the number of
-  syndromes in use (number of columns in the slot
-  observed)}
+  \code{holt_winters_synd} algorithm with 3 alarm detection
+  limits, and an \code{ewma_synd} algorithm with 3 alarm
+  detection limits, than the maximum alarm score is 6. The
+  limit parameter establishes the minimum value (in his 0-6
+  scale) that in considered an alarm. By default 1 is used.
+  It can be provided as a single value (if all syndromes
+  are to have the same limit) or as a vector with length
+  equal to the number of syndromes in use (number of
+  columns in the slot observed)}
 
   \item{file.name}{an optional text to add to the date
   being evaluated, as the name of the file to be saved.}
@@ -73,14 +73,14 @@
 
   \item{color.null}{a color for the table of alarms, used
   in cells giving the number of syndromic events which
-  corresponded to no alarm.}
+  corresponded to NO alarm.}
 
   \item{color.low}{a color for the table of alarms, used in
   cells giving the number of syndromic events which
   generated an alarm score higher than 0, but lower than
   the limit for alarms.}
 
-  \item{color.}{alarm a color for the table of alarms, used
+  \item{color.alarm}{a color for the table of alarms, used
   in cells giving the number of syndromic events which
   corresponded to an alarm.}
 
@@ -91,18 +91,18 @@
   instance, will give a scale of 15)}
 
   \item{fill.colors}{the colors to be used for the 3
-  degrees of alarm. By default they are yellow, organe and
+  degrees of alarm. By default they are yellow, orange and
   light red (tomato).}
 
   \item{arrow.colors}{the colors of the arrow for varying
   levels of alarm. By default green is used when the score
   is zero, and a progressive scale is used for increasing
-  scores: orange, romato and red.}
+  scores: orange, tomato and red.}
 }
 \description{
   A simple command to generate an html page that summarizes
-  the current state of a syndromic object.A "html" folder
-  is created (or used if already existing) into teh current
+  the current state of a syndromic object. A "html" folder
+  is created (or used if already existing) into the current
   working directory.
 }
 \examples{

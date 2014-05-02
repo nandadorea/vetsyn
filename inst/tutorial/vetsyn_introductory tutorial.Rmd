@@ -6,14 +6,12 @@ VETSYN - introductory tutorial
 Install and load the package:
 
 ```{r load.package}
-##install.packages("devtools")
-##library(devtools)
+#install.packages("devtools")
+library(devtools)
 ##dev_mode(on=T)
-#install_github("vetsyn")
+install_github("vetsyn",username="nandadorea")
 
 #library(vetsyn)
-require(devtools)
-load_all()
 
 ```
 

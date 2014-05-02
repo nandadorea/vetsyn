@@ -45,7 +45,7 @@ Collate:
     'ewma.r'
     'pre_process_glm.r'
     'cusum.r'
-    'shewhart.R'
+    'shew_synd.r'
     'update_syndromic.r'
     'alarmometer.r'
     'plot.r'

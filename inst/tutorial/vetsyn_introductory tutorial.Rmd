@@ -10,7 +10,6 @@ Install and load the package:
 library(devtools)
 ##dev_mode(on=T)
 install_github("vetsyn",username="nandadorea")
-require(vetsyn)
 
 #library(vetsyn)
 

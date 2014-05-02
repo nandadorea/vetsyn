@@ -8,10 +8,10 @@ Install and load the package:
 ```{r load.package}
 #install.packages("devtools")
 library(devtools)
-##dev_mode(on=T)
-install_github("vetsyn",username="nandadorea")
 
-#library(vetsyn)
+install_github("vetsyn",username="nandadorea")
+require(vetsyn)
+
 
 ```
 

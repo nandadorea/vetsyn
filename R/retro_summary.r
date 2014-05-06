@@ -119,10 +119,12 @@ setMethod('retro_summary',
     
             cat("```{r}\n", file=rmd)
             cat("#loading and preparing the data to work with\n", file=rmd)
-            cat("workdir <- getwd()\n", file=rmd)
-            cat("setwd(file.path(workdir, \"syndromic.retro.summary\"))\n", file=rmd)
+            #cat("workdir <- getwd()\n", file=rmd)
+            #cat("setwd(file.path(workdir, \"syndromic.retro.summary\"))\n", file=rmd)
             cat(paste0("load(\"",object.name,".RData\")\n"), file=rmd)
             
+            cat("require(vetsyn)\n", file=rmd)
+   
             cat("matrix.days <- x@observed\n", file=rmd)
             cat("matrix.week.full <- convert_days_to_week(x@observed,x@dates)\n", file=rmd)
             cat("matrix.week <- matrix.week.full[,-(1:2)]\n", file=rmd)
@@ -364,7 +366,7 @@ setMethod('retro_summary',
             print(paste0("Summary saved successully into ",getwd(),"/",file.name,".Rmd,and knit into ",file.name,".html"))
             on.exit(close(rmd))
             on.exit(knit2html(paste0(file.name,".Rmd")), add=TRUE)
-                  on.exit(setwd(workdir), add=TRUE)
+            on.exit(setwd(workdir), add=TRUE)
 
           }
 )

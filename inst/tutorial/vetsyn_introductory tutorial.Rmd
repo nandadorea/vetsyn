@@ -144,6 +144,7 @@ my.syndromic <- raw_to_syndromic (id=SubmissionID,
                                     sort=TRUE,
                                     data=lab.daily)
 
+plot(my.syndromic)
 
 ```
 
@@ -611,7 +612,7 @@ A *plot_syndromic* function is provided. However, the simple _plot()_ function "
 ```{r plot}
 
 
-plot_syndromic(x=my.syndromic,
+plot(x=my.syndromic,
                syndromes="Musculoskeletal",
                window=365,
                baseline=TRUE,
@@ -619,12 +620,12 @@ plot_syndromic(x=my.syndromic,
                algorithms=NULL,
                limit=1)
 
-plot_syndromic(x=my.syndromic,
+plot(x=my.syndromic,
                syndromes=c(1,4))
 
 
 plot(my.syndromic)
-plot(my.syndromic, syndromes=c(1,3))
+
 
 
 ```

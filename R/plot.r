@@ -18,7 +18,12 @@
 
 
 setMethod("plot","syndromic",
-          function (x, syndromes=NULL)
+          function (x, syndromes=NULL,
+                    window=365,
+                    baseline=FALSE,
+                    UCL=1,
+                    algorithms=NULL,
+                    limit=NULL)
           {
     
             
@@ -39,12 +44,8 @@ setMethod("plot","syndromic",
          stop("valid data not found in the slot dates")
        }
        
-       ##optins from plot_syndromic that here are always true
-       window=365
-       baseline=TRUE
-       UCL=1
-       algorithms=NULL
-       limit=NULL
+       
+       
       
        #make sure syndrome list is always numeric
        #even if user gives as a list of names
@@ -57,6 +58,9 @@ setMethod("plot","syndromic",
        #window of plotting
      end<-dim(x@observed)[1]
      start<-max(1, end-window+1)
+
+
+if (dim(x@alarms)!=0){
     
        algo.names<-dimnames(x@alarms)[[3]]
        #algorithms to be used
@@ -66,7 +70,7 @@ setMethod("plot","syndromic",
      }else{
        alarms.array <- x@alarms[,,algorithms]
      }
-     
+
        
        
        if(length(algorithms)==1&&algorithms!=0){
@@ -75,7 +79,7 @@ setMethod("plot","syndromic",
           n.algos<-dim(alarms.array)[3]
        }
        alarms.sum<-apply(alarms.array,MARGIN=c(1,2),FUN="sum",na.rm=TRUE)
-       
+}
        
        
        #set plot
@@ -83,9 +87,26 @@ setMethod("plot","syndromic",
        
       for (s in syndromes.num){      
 
+        
+        if (dim(x@alarms)==0){
+          ymax<-max(x@observed[start:end,s])
+          x.date <- x@dates[start:end,1]
+          
+          #plot observed data
+          plot(x@observed[start:end,s],x=x.date, yaxt="s", 
+               ylim=c(0,ymax), type="l", 
+               main=colnames(x@observed)[s],xlab="Days", ylab="Events")
+          
+          
+          if (baseline==TRUE){
+            lines(x=x.date, y=x@baseline[start:end,s],col="blue")
+          }
+          
+        }else{
+        
         #set limits
         ymax<-max(x@observed[start:end,s])
-        ymax.bar <- max(1,max(alarms.sum[,s]))
+        ymax.bar <- max(1,max(alarms.sum[,s])) 
         x.date <- x@dates[start:end,1]
         
         #set empty bar chart
@@ -151,7 +172,7 @@ setMethod("plot","syndromic",
        
       }
       
-      
+      }
        
           }
 )

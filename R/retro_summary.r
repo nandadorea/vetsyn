@@ -119,6 +119,7 @@ setMethod('retro_summary',
     
             cat("```{r}\n", file=rmd)
             cat("#loading and preparing the data to work with\n", file=rmd)
+            cat("workdir <- getwd()\n", file=rmd)
             cat("setwd(file.path(workdir, \"syndromic.retro.summary\"))\n", file=rmd)
             cat(paste0("load(\"",object.name,".RData\")\n"), file=rmd)
             
@@ -337,17 +338,17 @@ setMethod('retro_summary',
                           fitNB2AR4=fitNB2AR4$aic,fitNB2AR5=fitNB2AR5$aic,fitNB2AR6=fitNB2AR6$aic,fitNB2AR7=fitNB2AR7$aic)\n", file=rmd)
                 cat("AR_NB3 <- c(fitNB3=fitNB3$aic,fitNB3AR1=fitNB3AR1$aic,fitNB3AR2=fitNB3AR2$aic,fitNB3AR3=fitNB3AR3$aic,
                           fitNB3AR4=fitNB3AR4$aic,fitNB3AR5=fitNB3AR5$aic,fitNB3AR6=fitNB3AR6$aic,fitNB3AR7=fitNB3AR7$aic)\n", file=rmd)
-                cat("print(NB_AR1)\n", file=rmd)
-            cat("print(NB_AR2)\n", file=rmd)
-            cat("print(NB_AR3)\n", file=rmd)
+                cat("print(AR_NB1)\n", file=rmd)
+            cat("print(AR_NB2)\n", file=rmd)
+            cat("print(AR_NB3)\n", file=rmd)
                 cat("```\n", file=rmd)
                 cat("\n", file=rmd)
                 
                 cat("```{r fig.width=10, fig.height=5}\n", file=rmd)                              
                 cat("plot(t,days, type=\"l\",main=\"Negative Binomial Regression\")\n", file=rmd)
-            cat("lines(fitNB1$fitNB, col=\"red\"   , lwd=2)\n", file=rmd)
-            cat("lines(fitNB2$fitNB, col=\"blue\"  , lwd=2)\n", file=rmd)
-            cat("lines(fitNB3$fitNB, col=\"green\" , lwd=2)\n", file=rmd)
+            cat("lines(fitNB1$fit, col=\"red\"   , lwd=2)\n", file=rmd)
+            cat("lines(fitNB2$fit, col=\"blue\"  , lwd=2)\n", file=rmd)
+            cat("lines(fitNB3$fit, col=\"green\" , lwd=2)\n", file=rmd)
             cat("legend(\"topleft\",pch=3,col=c(\"red\",\"blue\",\"green\"),
                 c(\"Day-of-Week\", \"Day-of-Week+Month\",\"Day-of-Week+sin/cos\"))\n", file=rmd)
             cat("\n", file=rmd)

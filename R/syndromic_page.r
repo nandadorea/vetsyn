@@ -111,7 +111,7 @@ setMethod('syndromic_page',
                     algorithms=NULL,
                     limit=1,
                     file.name="my.syndromic",
-                    title=file.name,
+                    title="My syndromic",
                     data.page=FALSE,
                     data=NULL,
                     date.format="%d/%m/%Y",
@@ -215,7 +215,7 @@ data.tables2[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
 ###########
 cat("<html>\n", file=html)
 cat("<head>\n", file=html)
-cat(sprintf("<title>%s</title>\n", paste(title, Sys.Date(),sep="-")), file=html)
+cat(sprintf("<title>%s</title>\n", paste(title, x@dates[dim(x@dates)[1],1],sep="-")), file=html)
 cat("</head>\n", file=html)
 
 cat("<body>\n", file=html)
@@ -238,7 +238,7 @@ counts.table<-rep(0,length(syndromes)*(week))
 dim(counts.table)<-c(length(syndromes),(week))
 rownames(counts.table)<- syndromes
 for (j in syndromes.num){
-  counts.table[j,1:week] <- (x@observed[(end-(week-1)):end,j])  
+  counts.table[j,1:week] <- round(x@observed[(end-(week-1)):end,j])  
 }
 
 colors.table = rep (color.null,length(counts.table))
@@ -251,7 +251,7 @@ for (r in 1:dim(colors.table)[1]){
     if (alarms.table[r,c]>=alarms.table[r,(week+1)]) (colors.table[r,c]<-color.alarm)
   }}
 
-cat(sprintf('<h1 align="center">%s</h1>\n', paste(title, (Sys.Date()),sep=" ")),file=html)
+cat(sprintf('<h1 align="center">%s</h1>\n', paste(title, x@dates[dim(x@dates)[1],1],sep=" ")),file=html)
 
 cat("<TABLE border=\"1\" align=\"center\">\n", file=html)
 
@@ -330,7 +330,7 @@ setwd(workdir.html)
 for (p in syndromes.num){
   anchor = paste('<a name=" ',syndromes[p],'"></a>\n',sep="")
   cat(anchor, file=html)
-  cat(sprintf('<h3 align="center">%s</h3>\n', paste(file.name, syndromes[p],(Sys.Date()-1), sep=" ")), file=html)
+  cat(sprintf('<h3 align="center">%s</h3>\n', paste(file.name, syndromes[p],(x@dates[dim(x@dates)[1],1]), sep=" ")), file=html)
   cat("<p align=\"center\">\n", file=html)
   cat("<img src=\"",paste("figures//",file.name,sprintf("%03d", p),".png",sep=""),"\"/>\n", file=html)
   cat("</p>\n", file=html)
@@ -371,7 +371,7 @@ if (data.page==TRUE){
     cat("<body>\n", file=html)
     
     cat(sprintf('<h1 align="center">%s</h1>\n', 
-                paste(file.name,syndromes[syndrome],Sys.Date(),sep=" - ")), file=html)
+                paste(file.name,syndromes[syndrome],x@dates[dim(x@dates)[1],1],sep=" - ")), file=html)
     
     cat(paste0("<a href=\"../",file.name,".html\">Go back to ",file.name, " main page</a>\n"),
                file=html)

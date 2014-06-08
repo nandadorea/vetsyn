@@ -11,6 +11,7 @@
 ##' manually by the user, this function may be needed. 
 ##'
 ##' @title convert_days_to_week
+##' @name convert_days_to_week
 ##'
 ##' @aliases convert_days_to_week
 ##' 

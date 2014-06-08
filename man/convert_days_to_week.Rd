@@ -1,3 +1,4 @@
+\name{convert_days_to_week}
 \alias{convert_days_to_week}
 \title{convert_days_to_week}
 \usage{

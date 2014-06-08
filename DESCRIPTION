@@ -32,6 +32,7 @@ Suggests:
     testthat
 Collate:
     'syndromic.r'
+    'syndromicW.r'
     'syndromicW-function.r'
     'internal_functions.r'
     'retro_summary.r'
@@ -69,4 +70,3 @@ Collate:
     'retro_summaryW.r'
     'showW.r'
     'subsettingW.r'
-    'syndromicW.r'

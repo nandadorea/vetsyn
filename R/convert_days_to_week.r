@@ -17,7 +17,7 @@
 ##' @param counts.df a matrix with rows corresponding to daily counts, and
 ##' columns corresponding to syndromic groups
 ##' @param dates.df a data frame where the first column contain dates
-##' @param date.format the date format in the dates variable, by default "%Y-%m-%d".
+##' @param date.format the date format in the dates variable, by default %d/%m/%Y.
 ##' 
 ##' @export 
 ##' @import ISOweek

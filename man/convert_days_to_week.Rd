@@ -1,9 +1,8 @@
-\name{convert_days_to_week}
 \alias{convert_days_to_week}
 \title{convert_days_to_week}
 \usage{
   convert_days_to_week(counts.df, dates.df,
-    date.format = "\%Y-\%m-\%d")
+    date.format = "\%d/\%m/\%Y")
 }
 \arguments{
   \item{counts.df}{a matrix with rows corresponding to
@@ -14,7 +13,7 @@
   contain dates}
 
   \item{date.format}{the date format in the dates variable,
-  by default "%Y-%m-%d".}
+  by default "\%d/\%m/\%Y"}
 }
 \description{
   \code{convert_days_to_week}

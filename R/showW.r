@@ -3,8 +3,8 @@
 ##' Shows information for the \code{\link{syndromicW}} object.
 ##'
 ##'
-##' @name showW-methods
-##' @aliases showW showW-methods showW,syndromicW-method
+##' @name show-methods
+##' @aliases show show-methods show,syndromicW-method
 ##' @docType methods
 ##' @section Methods: \describe{
 ##' \item{\code{signature(object = "syndromicW")}}{
@@ -15,7 +15,7 @@
 ##' @export
 ##' @import methods
 
-setMethod("showW",
+setMethod("show",
           signature(object = "syndromicW"),
           function (object)
       {

@@ -1,0 +1,717 @@
+VETSYN - introductory tutorial - WEEKLY monitoring
+========================================================
+
+# Getting started with the package
+
+Install and load the package:
+
+```{r load.package}
+#install.packages("devtools")
+library(devtools)
+
+install_github("vetsyn",username="nandadorea")
+require(vetsyn)
+
+
+```
+
+# Getting started with your data
+
+## Raw data
+
+This assumes the user has acces to some **data which contains events to be monitored**, and which comes in the format of a **flat table**. Observations do not need to be unique per row. 
+
+You can work through this tutorial with the data provided as part of the package. 
+
+```{r load.raw.data}
+data(lab.daily)
+head(lab.daily)
+
+data(lab.weekly)
+head(lab.weekly)
+
+data(observedW)
+head(observedW)
+
+```
+
+_lab.daily_ is an example of the type of flat file that the user is expected to have access to. It refers to laboratory submissions to a diagnostic laboratory (the actual country, laboratory, animal species and test names were removed due to privacy issues). The _SubmissionID_ identifies unique submissions, but each submission can have multiple performed tests, multiple herds and multiple animals, so multiple rows can have the have _SubmissionID_. Unique events are therefore defined as a unique submission (_SubmissionID_), in an unique date (_DateofSubmission_), classified into the same syndrome (_Syndrome_), and in either a unique animal (_AnimalID_), a unique herd (_HerdID_) or a unique sample (_MaterialID_), according to the syndromic surveillance operator's decision of which is relevant. 
+
+The functions can handle any other type of syndromic data (not only laboratory submissions) provided that the format is similar: a column with dates, a column (or a combination of) providing unique identification of events, and a columns with the syndromic classification.
+
+_observed_ is a dataset that represents the number of daily counts to each syndrome. The package goal is to make it possible to work from raw data already classified into syndromes (such as lab.daily), but users who may already have consolidated data to a format like _observed_ can also use the detection functions.
+
+## SYNDROMIC - the central object of the package
+
+The center of the package are objectes of the class _**syndromic**_. These objects are designed to contain all information extracted from the data and relevant for syndromic surveillance, from counts to alarms, in one single place. The dimensions of the object serve as a way to keep data validated.
+
+_**syndromic**_ is a S4 class, which means the object is divided in slots that can be accessed using @:
+
+* __@observed__ - _t x S dimensions_: Here the obrserved data are stored - the number of events for each syndrome in each time point. The _observed_ slot has as many columns as the number of syndromes to be monitored, and as many rows as time points. At present the package is only able to deal with daily data (so each time point is one day).  
+* __@dates__ _t x 9 dimensions_: This slot stores the dates sequence. The rows are created as the data are evaluated, and the columns are pre-set in the package:
+  * date:the column with the date in the format yyyy-mm-dd; 
+  * mday: integer representing the day number within the month
+  * month: the month, from 0 (January) to 12 (December)
+  * year: the year in the format yyyy
+  * yday: counts the day of the year continuoysly (from1 to 365 or 366)
+  * week: the week of the month, from 1 to 52 (or 53)
+  * dow: the day of the week, from 0 (Sunday) to 6 (Saturday)
+  * weekday: a binary variables indicating whether the day is a weekday (1) or not (0). A variable for holidays was not included because holidays are country dependent. But the user can set up their own dates data.frame, as mentioned below.
+* __@baseline__ - _t x S dimensions_: if outbreak signals are detected in the observed data, rendering those data unfit to serve as a baseline for detection of new outbreaks in the future, then "cleaned" data should be stored for the purpose of training the detection algorithms. This slot if the place to store such outbreak-free baseline (how to clean the data is discussed below). 
+* __@alarms__ - _t x S x A dimensions_: once a detection algorithm has been applied to the data, the results are stored here. However, multiple algorithms for detection can be used, so @alarms is actually an array, where alarms for each day (rows), each syndrome (columns) and each detection algorithm (3rd dimension) are stored. Alarms can be bonary or integer, as discussed below.
+* __@UCL__ - _t x S x A dimensions_: besides storing the alarm (whether there was detection or not), the user can also store the minimum number of events (_upper control limit_) that would have generated an alarm, per day and syndrome, for each algorithm (provided that a specific detection limit is given for each algorithm).
+* __@LCL__ - _t x S x A dimensions_: when using algorithms that are able to detect DECREASES in the expected number of observations, besides storing the alarm (whether there was detection or not), the user can also store the maximim number of events (_lower control limit_) that would have generated an alarm, per day and syndrome, for each algorithm (provided that a specific detection limit is given for each algorithm).
+
+It is expected that the construction of a _**syndromic object**_ starts when the user has only the flat table of data, which means that the only data available from the beginning are those that go into the slots _@observed_ and _@dates_. The user can have those data already formatted in a matrix and data-frame format, respectively, in which case they can use directly the function _syndromic()_.
+
+
+
+```{r observed.to.syndromic}
+
+my.syndromic <- syndromic(observed,min.date="03/01/2011",max.date="28/05/2013")
+```
+
+If the dates are left blank, the user can use the function
+      **setDates <-**
+to give a full, customized data-frame for the slots _@dates_. This will work as long as said data-frame has the exact same number of rows as the matrix provided for _@observed_.
+
+However, the user can take maximum advantage of the package by using its functions to convert the raw (classified) data into a formatted matrix to go into _@observed_. For that, one would use the function *raw_to_syndromic()*. 
+
+It requires that the user specifies which column in the raw data stores the dates (and the format of the dates); which column or columns (**id**) should be used to identify the unique cases (see below for examples when more than one column are needed); and where the syndromic classification can be found (**syndromes.var**).
+
+```{r raw.to.syndromic}
+
+  my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+                                    syndromes.var=Syndrome,
+                                    dates.var=DateofSubmission, 
+                                    date.format="%d/%m/%Y", 
+                                    data=lab.daily)
+```
+
+The function counts the number of cases (ids) per syndrome, per day, and stores all in a syndromic object. In the process, any repeated cases (multiple ids with the same syndromic classification in the same day) are discarded. Also, the dates are counted as a complete sequence. If for instance an observation exists for day 2013-11-01, and the next observation is on date 2013-11-04, then 4 rows are created (days 1, 2, 3 and 4 of November) and days 2 and 3 are assigned a count of zero. 
+
+Below you can see several other examples of how the *raw_to_syndromic()* function can be used.
+
+Note that the user does not have to count _all_ nor _only_ the syndromes that appear int he data. If a set list of syndromes exist for your syndromic surveillance system, that can be provided as a list. Any syndromes in the list not found in the data will be assigned a count of zero for every day. Any syndromes appearing in the data which are not in the list will be ignored. This is important in order to prevent that data from different time periods end up generating a different set of syndromic groups. 
+
+
+```{r raw.to.syndromic2}
+
+####multiple ID columns
+  my.syndromic <- raw_to_syndromic (id=list(HerdID,AnimalID), 
+                                    syndromes.var=Syndrome,
+                                    dates.var=DateofSubmission, 
+                                    date.format="%d/%m/%Y", 
+                                    sort=TRUE,
+                                    data=lab.daily)
+####specific syndromes
+   my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+                                    syndromes.var=Syndrome,
+                                    syndromes.name=c("GIT","Musculoskeletal"),
+                                    dates.var=DateofSubmission, 
+                                    date.format="%d/%m/%Y", 
+                                    sort=TRUE,
+                                    data=lab.daily)
+
+####fix the dates
+##start precisely at the beginning of the year
+  my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+                                    syndromes.var=Syndrome,
+                                    dates.var=DateofSubmission, 
+                                    date.format="%d/%m/%Y", 
+                                    min.date="01/01/2011", 
+                                    max.date="01/01/2014",
+                                    sort=TRUE,
+                                    data=lab.daily)
+
+####ignore weekends and add Saturday's counts to Friday, and Sunday's counts to Mondays
+  my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+                                    syndromes.var=Syndrome,
+                                    dates.var=DateofSubmission, 
+                                    date.format="%d/%m/%Y", 
+                                    max.date="01/01/2014",
+                                    remove.dow=c(6,0),
+                                    add.to=c(2,1),
+                                    sort=TRUE,
+                                    data=lab.daily)
+
+
+
+##### this is the syndromic object we will work with for the rest of this tutorial
+my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+                                    syndromes.var=Syndrome,
+                                    dates.var=DateofSubmission, 
+                                    date.format="%d/%m/%Y", 
+                                    remove.dow=c(6,0),
+                                    add.to=c(2,1),
+                                    sort=TRUE,
+                                    data=lab.daily)
+
+plot(my.syndromic)
+
+```
+
+You can explore the syndromic object using regular functions from R.
+
+Note that when you simply type the object name into the console, the data are not printed (since it could be quite massive), but instead a summary of the object. To see the data in specific slots, you can use functions such as _head()_ and _tail()_, or subsetting.
+
+```{r exploring.syndromic}
+
+my.syndromic
+
+dim(my.syndromic)
+  dim(my.syndromic)[1] #rows = number of time points
+  dim(my.syndromic)[2] #columns = number of syndromes monitored
+  dim(my.syndromic)[3] #3rd dimension = number of detection algorithms used (more later)
+
+head(my.syndromic@observed)
+tail(my.syndromic@dates)
+
+my.syndromic@observed[1:5,]
+```
+
+Note that in order to subset the whole syndromic object (not only specific slots) you can use subsetting in the following way: **(please nothe the use of comma(,) instead of a colon(:))**
+
+```{r subsetting.syndromic}
+
+my.syndromic.short <- my.syndromic[1,5]
+  my.syndromic.short
+  my.syndromic.short@observed
+  my.syndromic.short@dates
+
+```
+
+
+Once all your observed data are into a syndromic object, you are ready to start the analyses.
+
+# Retrospective analysis
+
+The expected pathway to build syndromic surveillance is to start with a good "chunk" of data, say at least two years. That is, you would request a batch of data from your data provider. Once classified into syndromes, those data would be converted to a syndromic object all at once as we did in the previous section. The step of online data acquisition, where the syndromic object grows time point by time point comes later. For now, you should be concerned with retrospective evaluation of all the data you have. 
+
+
+## Summary
+
+To construct a summary of your data, as described in:
+
+Fernanda C. Dórea, Crawford W. Revie, Beverly J. McEwen, W. Bruce McNab, David Kelton, Javier Sanchez (2012) Retrospective time series analysis of veterinary laboratory data: Preparing a historical baseline for cluster detection in syndromic surveillance. Preventive Veterinary Medicine. DOI: 10.1016/j.prevetmed.2012.10.010.
+
+
+from a syndromic object requires only the command:
+
+```{r retro.summary}
+
+####We removed weekends, so our cycles (years) are of 260 days only. 
+####The default for the function is 365
+
+      #retro_summary(my.syndromic, frequency=260)
+
+```
+
+In this tutorial the command has been commented out so that this function (which creates folders on your computer and takes a considerable amount of time) is only run if you really decide to do so. Then, do it manually. 
+
+The command will create a folder within the current working directory (so make sure to check where that is beforehand using _getwd()_, and if needed change it using _setwd()_). Within this folder, it will save a html file with a number of summary statistics and regression models fit to your data, for a first quick assessment of how the data look like. A markdown version of the file will also be saved in the created directory. You can access that file to see directly all the R codes used to create such summaries, and change the regression models as necessary. 
+
+Consult the help of the *retro_summary()* function to explore the options that can be adjusted.
+
+The function is set to provide a great number of regression models, but some will not be appropriate for your data. Just take a look at all the outputs, they should help you deciding on an appropriate direction to take your analysis. Then, using as a start the R codes provided in the markdown file generated by the function, deepen your analysis as needed. 
+
+The main goal is to identify a regression model that works well with the temporal effects found in your data (or possibly determine that a parametric model is not needed).
+
+
+## Cleaning baseline
+
+In the reference cited above, we also described a method to clean the baseline from outbreak signals and excessive noise. You can apply it to your data to create an _**outbreak-free baseline**_ using the  *clean_baseline* function. A non-parametric version is also available - *clean_baseline_perc()*.
+
+The parametric version requires the user to provide a regression family and a regression formula (as should have been ientified in the previous step). The data in the slot _@observed_ are then used to fit a regression model based on that formula. Any observations above the confidence interval set in the _limit_ argument are removed and substituted by the limit of such confidence interval. The remaining time series in then saved into the slot _@baseline_. The results are plotted unless the user sets _plot=FALSE_. 
+
+It is not uncommon that the different syndromes in the syndromic object will have different characteristics, and therefore demand varied models. Therefore, the user should apply *clean_baseline* listing out which specific syndromic groups are targetted. If no syndromic group is specified, the process will be appplied to all columns in the _@observed_.
+
+
+```{r baseline}
+
+#minimal set up
+    ##will be applied to all syndromic groups 
+    ##when a user does not specify, the default formula for regression is
+          ##"dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7"
+
+my.syndromic2 <- clean_baseline(my.syndromic)
+
+#a more realistic, still simple example
+my.syndromic2 <- clean_baseline(my.syndromic, 
+                                syndromes="Musculoskeletal", 
+                                formula="dow+month+year",
+                                plot=FALSE)
+
+
+#for the data being used as an example in this tutorial:
+  #(which contains no weekends, weeks have 5 days only)
+my.syndromic <- clean_baseline(my.syndromic,
+                               syndromes="Musculoskeletal",
+                               formula="dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5")
+
+```
+
+The non-parametric version works in a similar way, but percentiles are used instead of regression models. It will be used for all other syndromes in this example (regression models were applied to "Musculoskeletal" above).
+
+```{r baseline_perc}
+
+# change the percentile used for correction (default is 0.95)
+my.syndromic2 <- clean_baseline_perc(my.syndromic, 
+                  syndromes=2,
+                  limit=0.90)
+
+# change the number of time points included in the running window
+  #default is 120
+my.syndromic2 <- clean_baseline_perc(my.syndromic, 
+                  run.window=90,
+                  plot=FALSE)
+
+#for the data being used as an example in this tutorial:
+my.syndromic <- clean_baseline_perc(my.syndromic,
+                                    syndromes=c(1,2,4,5))
+
+```
+
+
+# Testing prospective (prospective with batch data)
+
+At this point you have observed data and a baseline to train outbreak-signal detection algorithms. The next step should be to implement detection.
+
+## Holt Winters (data-driven, no pre-processing necessary)
+
+For information about this data-driven algorithm please see the help for the function:
+
+        _HoltWinters()_
+        
+And the reference: 
+*Elbert Y, Burkom HS. (2009) Development and evaluation of a data-adaptive alerting algorithm for univariate temporal biosurveillance data. Statistics in Medicine 28 (26).*
+
+This function applies the _HoltWinters() function to the data in the context of syndromic surveillance, adding the following deatures: 
+
+* __Iterative application:__  The algorithm is applied to a range of time points in an iterative manner, so if syndromic data needs to be evaluated for the past 30 days, for instance, the function is called once and the internal loops evaluate one day at a time. This garantees that the syndromic evaluation of a given time point only occurs after all previous time points have been evaluated, and if applicable, the outbreak-free baseline has been corrected. 
+
+* __Detecion of deviations:__ In this implementation the n-days-ahead forecast of the algorithm is used as an outbreak signal detector - observations above a confidence interval are flagged as "aberrations". 
+
+* __Baseline:__ It is possible to point to an outbrak-free time series (baseline) which will serve to train the algorithm and calculate the forecast, which is then compared to the actual observed data that is being analysed. This happen through the syndromic object. If the slot _@baseline_ of the syndromic objects is not empty, then it's used as training data (rather than the data in _@observed_, which may contain aberrations). If the slot _@baseline_ is empty for the syndrome under evaluation, then that slot is filled with the data in _@observed_.
+
+* __Recording of the detection limits:__ The minimum value that would have generated an alarm in each time point can be recorded in the UCL slot of the _syndromic_ object provided
+
+* __Data correction:__ In case an observation is found to be greater than the confidence interval of the forecast, the user can choose to update the outbreak-free baseline (in _@baseline_) by substituting the  observed value with the detection limit. 
+
+* __Multiple limits:__ The user can apply the algorithm with multiple detection limits - that is to say, different confidence intervals. 
+
+For more information see:
+
+Dórea, F. C., Revie, C. W., McEwen, B. J., McNab, W. B. and Sanchez, J. 2013b. Syndromic surveillance using veterinary laboratory data: data pre-processing and algorithm performance evaluation. J R S Interface. 10: 20130114. DOI:10.1098/rsif.2013.0114
+
+Dórea, F. C., Sanchez, J., McEwen, B. J., McNab, W. B. and Revie, C. W. 2013c. Syndromic surveillance using veterinary laboratory data: algorithm combination and customization of alerts for specific syndromes. PLoS ONE 01/2013; 8(12):e82183
+
+More details of how to set various arguments are provided following the example below: 
+
+```{r holt_winters}
+
+
+#Applying to all syndromes in this tutorial's example
+  #algorithm is being used to detect AND CORRECT aberrations
+my.syndromic <- holt_winters_synd(x=my.syndromic,
+                             evaluate.window=30,
+                             frequency=5,
+                             baseline.window=260,
+                             limit.sd=c(2.5,3,3.5), #default
+                             nahead=5,
+                             correct.baseline=2,
+                             alarm.dim=1)
+    
+
+
+    ##List of all arguments in the function and their default value
+#holt_winters_synd (x,
+#                    syndromes=NULL,
+#                    evaluate.window=1,
+#                    frequency=7,
+#                    baseline.window=365,
+#                    limit.sd=c(2.5,3,3.5),
+#                    nahead=7,
+#                    alpha=0.4,
+#                    beta=0,
+#                    gamma=0.15,
+#                    seasonal="additive",
+#                    correct.baseline=1,
+#                    alarm.dim=1,
+#                    UCL=TRUE
+#                    )
+
+
+```
+
+
+
+To adjust the functions described above, please note the use of the following arguments:
+
+* _evaluate.window_ use to provide the number of time points to be evaluated.That is, in on-line evaluation of syndromic data, normally only the last time point needs to e re-evaluated, but the window can be set to a custom value if for instance the user believe that the data form previous days could have been changed, and re-running a number of time points is safer. When using laboratory data, for instance, we use to re-run the last 30 days of syndromic surveillance every day, to account for the possible updating of laboratory tests information.
+
+Please note that the HoltWinters algorithm requires at least two cycles to initialize. That is, if the cycle of the data is weekly, then the two initial weeks of the data cannot be included in the analyses.
+
+* _frequency_ The cycles in the time series. Even though this is normally a year (frequency=365), we have found that the algorithm works better with a frequency equal to the week (5 or 7 days, dependening on whether weekends are included) when strong day-of-week effects are present in the data. 
+
+* _baseline_ The length of the baseline used to train the algorithm in order to provide a forecast, which will serve to decide whether the current observed data is expected. Normally 1-2 years.
+
+* _limit.sd_ The limit of detection to be used, that is, the cut-off of the confidence interval that decides when an observation is abnormal. Rather than a percentage (for instance 95% or 99%), this should be informed as number of standard deviations above the mean (for instance 2.5, or 3). This is to ensure comparability with the other detection algorithms used in this package (control charts). This can be provided as a single value or as a vector. When a vector is provided, multiple detection results are given. In this case the result of detection is not binary (as traditionally, 0 for no alarm detected and 1 for the detection of an aberration). Instead, an integer is produced refering to how many confidence intervals have been exceeded. If for instance the limits are set to c(2,2.5,3), then an observation which is greater than the 2.5 limit, but lower than 3, will have a detection score of 2 (2 detection limits "broken"). 
+
+* _alarm.dim_ The _syndromic_ object is set to accept the result of multiple detection algorithms. These results are stored as a third dimension in the slot alarms. Here the user can choose which order in that dimension should store the results of this algorithm. In this tutorial for instance we will store the results of the Holt-Winters algorithms as the first matrix in the 3rd dimension of the _@alarms_ array. Then next (below) we will apply EWMA and store the results as the second matrix, then the Shewrat as the 3rd, and finally CUSUM as the 4th matrix in the array. 
+
+* _nahead_ How many days ahead predictions should be made. One-day ahead predictions may have narrower confidence intervals, but they are unsafe as they do not protect the prediction from incoporating undetected outbreak signals. A one week ahead prediction (5 or 7 days) is recommended.
+
+
+* _correct.baseline_ Besides detecting abnormal observations, the algorithm can also be used to correct the data, removing these observations and substituting them by the limit of the confidence interval of the prediction provided by the HoltWinters() algorithm. If that is to be carried out, the user needs to specify which of the provided limits is to be used for the correction. This variable should be filled with the INDEX of the limit to be used. For example, if limit.sd was provided as "c(2.5,3.0,3.5)", the use of correct.baseline=1 will cause the algorithm to substitute any observations above 2.5 standard deviations from the predicted value with this exact cut-off limit. If using correct.baseline=2, only observations above a standard deviation of 3 (limit.sd[2]) will be corrected. To avoid that a baseline is generated or modified, set this argument to zero or NULL.
+
+* _UCL_ The minimum number that would have generated an alarm, for every time point, can be recorded in the slot UCL of the _syndromic_ object.The user must provide the INDEX in the limit.sd vector for which the UCL values should be corrected (as explained for the argument correct.baseline above). Set to FALSE to prevent
+the recording.
+
+Please note that is the _@baseline_ slot is empty, then it will be filled with NAs, and only teh syndromes evaluated will be filled either with a corrected baseline, or a copy of the data at observed (dependening on the user choice).
+
+An empty dimension on the slot _@alarms_ will also be filled with NAs. Then, for the syndromes evaluated, and _only in the rows corresponding to the time points evaluated for aberration detection_ teh result of aberration detection will be filled - a zero if no aberration is detected, and an integer otherwise.
+
+If the data have been previously evaluated (alarms are not empty), then whatever data has been previously recorded is reset to zero, and only alarms corresponding tot he current run are stored.  
+
+
+Note that for the example in this tutorial the Holt-Winters has indeed been used to detect aberrations **_and_** to correct them. Therefore, from here on the slot _@baseline_ will be filled with an outbreak-free baseline even for those time points not included in the retrospective analysis. Then the other detection algorithms will be applied using the data in _@baseline_ as training. 
+
+
+## EWMA
+
+This applies the control chart EWMA, from the package _{qcc}_. As with the Holt-Winters, the difference is the recursive application. Read the Holt-Winters above to understand how the detection algorithms are applied here in the context of detection.
+
+All the arguments that can be provided to the function are listed below. Most of them are the same arguments (with the same application) described above for the Holt-Winters. The new ones are:
+
+* _lambda_: the lambda parameter to be passed to the ewma() function.
+
+* _guard-band_: a guard-band to be used between the baseline data (training) and the data being evaluated, in order to prevent that undetected (and therefore not yet corrected) outbreaks contaminate the training data. 
+
+* _pre-process_: The Holt-Winters was a data-driven algorithm, and therefore could deal with temporal effects directly. When applying the EWMA, however, data should be pre-processed in order to remove reproducible temporaleffects, if any are present. 
+
+The step of retrispective evaluation should have identified the best method to model the temporal effects in the data: none needed; differencing (when temporal effects are very small or restricted to day-of-week effect); or regression methods. 
+
+Here the argument **_pre-proces_** allows the user to set a pre-processing method to be applid to the data before the EWMA is applied. set to *"FALSE"* to supress any pre-processing, to *"diff"* to use differencing (and then set an appropriate _diff.window_), or to use a GLM regression model set _pre-process_ to *glm* and _family_ to *nbinom*, *poisson* or *gaussian*. then also set an appropriate regression _formula_. See the examples below.
+
+Note that the user can set the function *ewma_synd()* to correct the baseline, or if the outbreak-free baseline has already been constructed using another algorithm (in this tutorial the Holt-Winters) then it just continues to use the data in _@baseline_ as training an dthe data in _@observed_ is evaluated for detection. 
+
+Also note that when pre-processing is used, the UCL (or also LCL and the baseline) are recorded *after transformation of the values back to the scale of the original data*, rather than being recorded in the scale of the residuals of pre-processing, which are the actual values used by the control-chart method.
+
+Note that for the example in this tutorial the Holt-Winters has indeed been used to detect aberrations **_and_** to correct them. Therefore, from here on the slot _@baseline_ will be filled with an outbreak-free baseline even for those time points not included in the retrospective analysis. Then the other detection algorithms will be applied using the data in _@baseline_ as training. 
+
+
+
+```{r ewma}
+# (x,
+#                     syndromes=NULL,
+#                     evaluate.window=1,
+#                     baseline.window=365,
+#                     lambda=0.2,
+#                     limit.sd=c(2.5,3,3.5),
+#                     guard.band=7,
+#                     correct.baseline=FALSE,
+#                     alarm.dim=2,
+#                     UCL=TRUE,
+#                     LCL=FALSE,
+#                     pre.process=FALSE,
+#                     diff.window=7,
+#                     family="poisson",
+#                     formula="dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7"
+#           )
+
+
+my.syndromic <- ewma_synd(x=my.syndromic,
+                          syndromes="Musculoskeletal",
+                          evaluate.window=30,
+                          baseline.window=260,
+                          lambda=0.2,
+                          limit.sd=c(2.5,3,3.5),
+                          guard.band=5,
+                          correct.baseline=FALSE,
+                          alarm.dim=2,
+                          UCL=2,
+                          LCL=FALSE,                          
+                          pre.process="glm",
+                          family="poisson",
+                          formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5",
+                          period=260)
+
+
+my.syndromic <- ewma_synd(x=my.syndromic,
+                           syndromes= c(1,2,4,5),
+                          evaluate.window=30,
+                          baseline.window=260,
+                          lambda=0.2,
+                          limit.sd=c(2.5,3,3.5),
+                          guard.band=5,
+                          UCL=2,
+                          correct.baseline=FALSE,
+                          alarm.dim=2,
+                          pre.process="diff",
+                          diff.window=5)
+
+dimnames(my.syndromic@alarms)
+```
+
+If the user wants to check how the pre-processing is being applied to the data, and what is the resulting time series tat is delivered to the _ewma()_ algorithm for detection, a function has been made available which returns only the pre-processing steps builto into the *ewma_synd()*. The use of this function has no value for detection, but it serves for the user to check that the pre-processing method is working appropriately. By defalt it plots the results. Set plot=FALSE to suppress that.
+
+Pre-processing by differencing can be checked using the base R function _diff()_.
+
+```{r pre_process}
+pre_processed_data <- pre_process_glm(my.syndromic)
+
+```
+
+## Shewhart
+
+This applied the x bar charts from the package _{qcc}_, which can be coupled with pre-processing. All arguments and functionalities are similar to thse described for *EWMA* before, except that here the control chart used is a simple x bar. 
+
+```{r shew}
+
+
+my.syndromic <- shew_synd(x=my.syndromic,
+                          syndromes="Musculoskeletal",
+                          evaluate.window=30,
+                          baseline.window=260,
+                          limit.sd=c(2.5,3,3.5),
+                          guard.band=5,
+                          correct.baseline=FALSE,
+                          alarm.dim=3,
+                          UCL=2,
+                          LCL=FALSE,                          
+                          pre.process="glm",
+                          family="poisson",
+                          formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5",
+                          period=260)
+
+
+my.syndromic <- shew_synd(x=my.syndromic,
+                           syndromes= c(1,2,4,5),
+                          evaluate.window=30,
+                          baseline.window=260,
+                          limit.sd=c(2.5,3,3.5),
+                          guard.band=5,
+                          UCL=2,
+                          correct.baseline=FALSE,
+                          alarm.dim=3,
+                          pre.process="diff",
+                          diff.window=5)
+
+dimnames(my.syndromic@alarms)
+```
+
+## CUSUM
+
+This applied the cumulative sums chart (CUSUM) from the package _{qcc}_, which can be coupled with pre-processing. All arguments and functionalities are similar to thse described for *EWMA* before, except that here the control chart used is a simple x bar. 
+
+
+```{r cusum}
+
+
+my.syndromic <- cusum_synd(x=my.syndromic,
+                          evaluate.window=30,
+                          baseline.window=260,
+                          limit.sd=c(2.5,3,3.5),
+                          guard.band=5,
+                          correct.baseline=FALSE,
+                          alarm.dim=4,
+                          UCL=2,
+                          LCL=FALSE,                          
+                          pre.process="glm",
+                          family="poisson",
+                          formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5",
+                          period=260)
+
+#diff would result in negative numbers for cusum
+
+dimnames(my.syndromic@alarms)
+```
+
+
+# Working "online" - receiving data in time steps and updating the system
+
+So far, we have only "implemented" the system, but we have not yet ran it, that is, the ystem is not "online". We have received a batch of data, chosen the appropriate algorithms based on retrospective analysis, and set up the aberration detection algorithms running then in the last (or last few) time point (s) of data available to assure ourselves that all is working.
+
+At every new time point (p.e. daily), however, we expect to get more data, and therefore we need to update the _syndromic object_ in order to add data for that new time point for all syndromes beign monitored. We aould first update the _@observed_, adding the new observations, and then need to run the aberration detection algorithms again in order to update the _@baseline_, _@alarms_ and _@UCL_. 
+
+## Updating the syndromic object to include a new time point
+
+We would do that in a similar way we did when we used *raw_to_syndromic*, by appointing the data we got, and where in those data the dates, syndromic classification and events ID can be found. The difference is that now we provide a _syndromic object_ we intend to append the data to. 
+
+The package contains an example set - _lab.daily.update_ - which contains data from the same data source used so far in this tutorial, with one extra day. It simulates the available of new data for an implemented syndromic surveillance system, which could (and in this case does) overlap with data already seen by the algorithms on the previous time point. 
+
+In this example the last observation in the _my.syndromic_ we constructed earlier was from 27th of May, 2013. The dataset _lab.daily.update_ contains data from May 2nd through May 28th. That is, is overlaps with the data we already have, but it also contains one more day of observations.
+
+By default, the function compared the dates of the data already in the _syndromic_ object with those in the new dataset, and extracts data *only for new dates*. If the user has reason to believe that the new dataset may contain updates of the data form the previous time point, then they should set _replace.date_ to *TRUE*, and all data from the updating dataset will be read and recorded in the _syndromic_ object, over-writing old observations. 
+ 
+
+```{r online}
+data(lab.daily.update)
+
+### function compares dates and incorporates only the new ones
+my.syndromic
+my.syndromic <- update_syndromic(x=my.syndromic,
+                                   id=SubmissionID,
+                                   syndromes.var=Syndrome, 
+                                   add.syndromes=TRUE,
+                                   dates.var=DateofSubmission, 
+                                   date.format="%d/%m/%Y", 
+                                   remove.dow=c(6,0),
+                                   add.to=c(2,1),
+                                   replace.dates=FALSE,
+                                   data=lab.daily.update)
+
+my.syndromic
+my.syndromic@observed[620:627,]
+my.syndromic@dates[620:627,]
+my.syndromic@alarms[620:627,,1]
+my.syndromic@UCL[620:627,,1]
+
+
+#set replace.dates=TRUE in order to overwrite the data in the syndromic object
+#and record all the new data being passed to the object
+my.syndromic <- update_syndromic(x=my.syndromic,
+                                   id=SubmissionID,
+                                   syndromes.var=Syndrome, 
+                                   add.syndromes=TRUE,
+                                   dates.var=DateofSubmission, 
+                                   date.format="%d/%m/%Y", 
+                                   remove.dow=c(6,0),
+                                   add.to=c(2,1),
+                                   replace.dates=TRUE,
+                                   data=lab.daily.update)
+
+my.syndromic
+my.syndromic@observed[620:627,]
+my.syndromic@dates[620:627,]
+my.syndromic@alarms[600:627,,1]
+my.syndromic@UCL[600:627,,1]
+
+```
+
+In a _syndromic object_ the number of rows in all slots must always remain the same. Therefore when new time points are added to _@observed_, as many addtional rows are added to all other slots. In _@dates_ the new dates are filled, and in the other slots these new rows are filled with NA, indicating that these new rows of observed data have not yet been analyzed, and therefore no analyses reults are available. 
+
+You will have noted in the examples above that when using _replace.dates=TRUE_ the over-written rows will also receive NAs in the slots  _@alarms_ and _@UCL_, indicating that the update in the data results in a need to update the alarm situation.
+
+## Prospective analysis - applying aberration detection online
+
+Once the syndromic object has been updated, the aberration detection algorithms can be applied again, to as many time points as added. 
+
+The online process therefore, constitutes of applying at every new time point:
+
+1. fetch a new batch of data including the new time point
+2. use *update_syndromic* to update the _syndromic_ object
+3. use *hotl_winters_synd*, *ewma_synd*, *shew_synd*, and/or *cusum_synd* to investigate whether there are alarms in the most rceent time point.
+
+Whether there are alarms or not, the end user will want to be informed of the results, and see the results os analysis. The next functions do just that.
+
+# Outcomes
+
+## Plot
+
+A *plot_syndromic* function is provided. However, the simple _plot()_ function "knows" how to plot a syndromic object (once the package _vetsyn_ is loaded). You can still customize the plots using the arguments listed in the example below. 
+
+```{r plot}
+
+
+plot(x=my.syndromic,
+               syndromes="Musculoskeletal",
+               window=365,
+               baseline=TRUE,
+               UCL=1,
+               algorithms=NULL,
+               limit=1)
+
+plot(x=my.syndromic,
+               syndromes=c(1,4))
+
+
+plot(my.syndromic)
+
+
+
+```
+
+The user can always point to specific slots (for instance plotting my.syndromic@observed, instead of my.syndromic) to customize the way they want to plot the reuslts. 
+
+## Alarms, email, pdf (online code)
+
+It is expected that a user implementing syndromic surveillance would want to set the process to run in an automatted manner, at specified time points (for instance every day or every week). In that case, it's important to have an alert that will:
+
+* Notify the user in case there is an alarm;
+
+* Notify the user that the process ran successfully, but no alarms were generated. This is important so that the managers of syndromic surveillance know the difference between "no alarm" and "an error occurred and the analyses were not finished".
+
+The following function will:
+
+1. Save the plots for each individual syndrome stored in a syndromic object into a single pdf file (unless the user sets pdf.report=FALSE). The user can choose whether to plot all monitored syndromes or only those for which an alarm was found. 
+
+2. Email a specified user (or list of users) when there is an alarm.
+
+3. Email a specified user (which can be different from previously) when there is NO alarm, to assure that the calculations finished,
+
+Please read the documentation for the function. It explains how the email alert can be left as the default (sent from Rmail interface) or changed to a specific desired email of origin. 
+
+
+```{r pdf}
+
+#### all possible arguments:
+#syndromic_alarm (x,
+#                    pdf.report=TRUE,
+#                    email.alarm.to=NULL,
+#                    email.noalarm.to=NULL,
+#                    date=NULL,
+#                    plot.all=FALSE,
+#                    window=365,
+#                    baseline=TRUE,
+#                    UCL=1,
+#                    algorithms=NULL,
+#                    limit=1,
+#                    email.from=NULL,
+#                    smtpServer=NULL,
+#                    subject= paste((Sys.Date()),"ALARM: There are alarms today",sep=","),
+#                    message=NULL,
+#                    height=7.5,
+#                    width=10.5,
+#                    pdf.dir=TRUE,
+#                    file.name=NULL)
+
+syndromic_alarm(x=my.syndromic,
+              plot.all=TRUE,
+              email.alarm.to="<dorea.meyer@gmail.com>",
+              email.noalarm.to="<dorea.meyer@gmail.com>")
+
+
+```
+
+
+## Interface
+
+It has been our experience that the pdf reports are good for documentation, but they are not always very user friendly. Syndromic surveillance users will find it easier to see the results in a webpage. The function below generates such a webpage. One single page contains all syndromic groups found n the syndromic object, and displlays:
+
+1. A summary of all syndromes with a "alarmometer", which defines, for each syndrome, what is the current alarm level for today in the format of a meter with colors from green to red.
+
+2. Idividual plots for each syndrome directly linked to the name of the syndrome displayed in the initial table.
+
+The function creates on .html page for ONE syndromic object, and therefore it assumes that all syndromes have been placed in the same syndromic object. When mulitple syndromic objects are part of the same syndromic surveillance system - for instance because multiple animal species are monitred, or multiple sources of data - it's possible to create a main page with links to all individual pages. Codes are available upon contact (fernanda.dorea@sva.se) to generate a homepage that summarizes all syndromic objects, with green/red alert signals according to whether alarms were generated for any syndrome in that syndrmic object.
+
+
+```{r syndromic.page}
+getwd()
+syndromic_page (x=my.syndromic,
+                    week=5,
+                    file.name="SpeciesX",
+                    title="Lab data daily for Species X",
+                    data.page=TRUE,
+                    data=lab.daily,
+                    date.format="%d/%m/%Y",
+                    dates.var="DateofSubmission",
+                    syndromes.var="Syndrome",
+                    scale=9)
+getwd()
+```
+
+
+
+

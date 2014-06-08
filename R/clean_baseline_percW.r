@@ -6,6 +6,25 @@
 ##' @aliases clean_baseline_perc,syndromicW-method
 ##' @export
 ##' @importFrom caTools runquantile
+##' @examples
+##'data(lab.daily)
+##'my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
+##'                                  syndromes.var=Syndrome,
+##'                                  dates.var=DateofSubmission,
+##'                                  date.format="%d/%m/%Y",
+##'                                  data=lab.daily)
+##'my.syndromicW <- clean_baseline_perc(my.syndromicW)
+##'my.syndromicW <- clean_baseline_perc(my.syndromicW,run.window=90)
+##'my.syndromicW <- clean_baseline_perc(my.syndromicW,
+##'                               syndromes="Musculoskeletal")
+##'my.syndromicW <- clean_baseline_perc(my.syndromicW,
+##'                               syndromes=c("GIT","Musculoskeletal"))
+##'my.syndromicW <- clean_baseline_perc(my.syndromicW,
+##'                               syndromes=3)
+##'my.syndromicW <- clean_baseline_perc(my.syndromicW,
+##'                               syndromes=c(1,3))
+
+
 
 setGeneric('clean_baseline_perc',
            signature = 'x',

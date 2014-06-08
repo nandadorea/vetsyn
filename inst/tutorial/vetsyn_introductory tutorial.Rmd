@@ -44,20 +44,20 @@ The center of the package are objectes of the class _**syndromic**_. These objec
 
 _**syndromic**_ is a S4 class, which means the object is divided in slots that can be accessed using @:
 
-*__@observed__ - _t x S dimensions_: Here the obrserved data are stored - the number of events for each syndrome in each time point. The _observed_ slot has as many columns as the number of syndromes to be monitored, and as many rows as time points. At present the package is only able to deal with daily data (so each time point is one day).  
-*__@dates__ _t x 9 dimensions_: This slot stores the dates sequence. The rows are created as the data are evaluated, and the columns are pre-set in the package:
-  *date:the column with the date in the format yyyy-mm-dd; 
-  *mday: integer representing the day number within the month
-  *month: the month, from 0 (January) to 12 (December)
-  *year: the year in the format yyyy
-  *yday: counts the day of the year continuoysly (from1 to 365 or 366)
-  *week: the week of the month, from 1 to 52 (or 53)
-  *dow: the day of the week, from 0 (Sunday) to 6 (Saturday)
-  *weekday: a binary variables indicating whether the day is a weekday (1) or not (0). A variable for holidays was not included because holidays are country dependent. But the user can set up their own dates data.frame, as mentioned below.
-*__@baseline__ - _t x S dimensions_: if outbreak signals are detected in the observed data, rendering those data unfit to serve as a baseline for detection of new outbreaks in the future, then "cleaned" data should be stored for the purpose of training the detection algorithms. This slot if the place to store such outbreak-free baseline (how to clean the data is discussed below). 
-*__@alarms__ - _t x S x A dimensions_: once a detection algorithm has been applied to the data, the results are stored here. However, multiple algorithms for detection can be used, so @alarms is actually an array, where alarms for each day (rows), each syndrome (columns) and each detection algorithm (3rd dimension) are stored. Alarms can be bonary or integer, as discussed below.
-*__@UCL__ - _t x S x A dimensions_: besides storing the alarm (whether there was detection or not), the user can also store the minimum number of events (_upper control limit_) that would have generated an alarm, per day and syndrome, for each algorithm (provided that a specific detection limit is given for each algorithm).
-*__@LCL__ - _t x S x A dimensions_: when using algorithms that are able to detect DECREASES in the expected number of observations, besides storing the alarm (whether there was detection or not), the user can also store the maximim number of events (_lower control limit_) that would have generated an alarm, per day and syndrome, for each algorithm (provided that a specific detection limit is given for each algorithm).
+* __@observed__ - _t x S dimensions_: Here the obrserved data are stored - the number of events for each syndrome in each time point. The _observed_ slot has as many columns as the number of syndromes to be monitored, and as many rows as time points. At present the package is only able to deal with daily data (so each time point is one day).  
+* __@dates__ _t x 9 dimensions_: This slot stores the dates sequence. The rows are created as the data are evaluated, and the columns are pre-set in the package:
+  * date:the column with the date in the format yyyy-mm-dd; 
+  * mday: integer representing the day number within the month
+  * month: the month, from 0 (January) to 12 (December)
+  * year: the year in the format yyyy
+  * yday: counts the day of the year continuoysly (from1 to 365 or 366)
+  * week: the week of the month, from 1 to 52 (or 53)
+  * dow: the day of the week, from 0 (Sunday) to 6 (Saturday)
+  * weekday: a binary variables indicating whether the day is a weekday (1) or not (0). A variable for holidays was not included because holidays are country dependent. But the user can set up their own dates data.frame, as mentioned below.
+* __@baseline__ - _t x S dimensions_: if outbreak signals are detected in the observed data, rendering those data unfit to serve as a baseline for detection of new outbreaks in the future, then "cleaned" data should be stored for the purpose of training the detection algorithms. This slot if the place to store such outbreak-free baseline (how to clean the data is discussed below). 
+* __@alarms__ - _t x S x A dimensions_: once a detection algorithm has been applied to the data, the results are stored here. However, multiple algorithms for detection can be used, so @alarms is actually an array, where alarms for each day (rows), each syndrome (columns) and each detection algorithm (3rd dimension) are stored. Alarms can be bonary or integer, as discussed below.
+* __@UCL__ - _t x S x A dimensions_: besides storing the alarm (whether there was detection or not), the user can also store the minimum number of events (_upper control limit_) that would have generated an alarm, per day and syndrome, for each algorithm (provided that a specific detection limit is given for each algorithm).
+* __@LCL__ - _t x S x A dimensions_: when using algorithms that are able to detect DECREASES in the expected number of observations, besides storing the alarm (whether there was detection or not), the user can also store the maximim number of events (_lower control limit_) that would have generated an alarm, per day and syndrome, for each algorithm (provided that a specific detection limit is given for each algorithm).
 
 It is expected that the construction of a _**syndromic object**_ starts when the user has only the flat table of data, which means that the only data available from the beginning are those that go into the slots _@observed_ and _@dates_. The user can have those data already formatted in a matrix and data-frame format, respectively, in which case they can use directly the function _syndromic()_.
 

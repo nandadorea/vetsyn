@@ -1,5 +1,3 @@
-##' \code{convert_days_to_week}
-##'
 ##' Converts a matrix of daily counts into weekly counts, using the
 ##' ISOweek standard, provided that a deparate data frame is 
 ##' appointed from which to extract the actual dates corresponding to each
@@ -13,6 +11,9 @@
 ##' manually by the user, this function may be needed. 
 ##'
 ##' @title convert_days_to_week
+##'
+##' @aliases convert_days_to_week
+##' 
 ##' @param counts.df a matrix with rows corresponding to daily counts, and
 ##' columns corresponding to syndromic groups
 ##' @param dates.df a data frame where the first column contain dates

@@ -1,4 +1,4 @@
-##' \code{clean_baseline}
+##' \code{clean_baselineW}
 ##'
 ##' Function to retrospectively remove possible outbreak signals and excessive
 ##' noise, producing an outbreak free baseline that will serve to
@@ -11,14 +11,14 @@
 ##' (set by the user). These observations are substituted by the model
 ##' prediction for that time point.
 ##'
-##' @name clean_baseline-methods
+##' @name clean_baselineW-methods
 ##' @docType methods
-##' @seealso \code{\link{syndromic}}
-##' @aliases clean_baseline
-##' @aliases clean_baseline-methods
-##' @aliases clean_baseline,syndromic-method
+##' @seealso \code{\link{syndromicW}}
+##' @aliases clean_baselineW
+##' @aliases clean_baselineW-methods
+##' @aliases clean_baselineW,syndromic-method
 ##'
-##' @param x a \code{syndromic} object, which must have at least 
+##' @param x a \code{syndromicW} object, which must have at least 
 ##' the slot of observed data and a data frame in the slot dates.
 ##' @param syndromes an optional parameter, if not specified, all
 ##' columns in the slot observed of the syndromic object
@@ -30,16 +30,18 @@
 ##' glm.nb is used instead.
 ##' @param limit the confidence interval to be used in identifying outliers.
 ##' @param formula the regression formula to be used. The following arguments
-##' are accepted: trend (for a monotonic trend), month, dow (day of week), year, 
-##' sin, cos, AR1 (auto-regressive for 1 days) to AR7. These elements can be combined
-##' into any formula. The default is formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5". See examples. 
+##' are accepted: trend (for a monotonic trend), year,
+##' sin, cos, AR1 (auto-regressive for 1 week) to AR4. These elements can be combined
+##' into any formula. The default is formula="trend+sin+cos". See examples. 
+##' @param frequency the frequency of repetition in the data, by default 
+##' 52 (one year).
 ##' @param plot whether plots comparing observed data and the result of 
 ##' the cleaning process should be displayed.
 ##' @param print.model whether the result of model fitting should be
 ##' printed on the console. This is recommended when the user is 
 ##' exploring which dependent variables to keep or drop.
 ##' 
-##' @return An object of the class syndromic which contains all 
+##' @return An object of the class syndromicW which contains all 
 ##' elements from the object provided in x, but in which
 ##' the slot baseline has been filled with an outbreak-free baseline
 ##' for each syndromic group. When the user chooses to restrict analyses to some 
@@ -58,49 +60,41 @@
 ##' DOI: 10.1016/j.prevetmed.2012.10.010.
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
-##'                                  remove.dow=c(6,0),
-##'                                  add.to=c(2,1),                                  
 ##'                                  data=lab.daily)
-##'my.syndromic <- clean_baseline(my.syndromic)
-##'my.syndromic <- clean_baseline(my.syndromic, formula="dow+month+year")
-##'my.syndromic <- clean_baseline(my.syndromic, formula="dow+sin+cos+trend")
-##'my.syndromic <- clean_baseline(my.syndromic,
+##'my.syndromicW <- clean_baselineW(my.syndromicW)
+##'my.syndromicW <- clean_baselineW(my.syndromicW, formula="sin+cos")
+##'my.syndromicW <- clean_baselineW(my.syndromicW,
 ##'                               syndromes="Musculoskeletal")
-##'my.syndromic <- clean_baseline(my.syndromic,
+##'my.syndromicW <- clean_baselineW(my.syndromicW,
 ##'                               syndromes=c("GIT","Musculoskeletal"))
-##'my.syndromic <- clean_baseline(my.syndromic,
+##'my.syndromicW <- clean_baselineW(my.syndromicW,
 ##'                               syndromes=3)
-##'my.syndromic <- clean_baseline(my.syndromic,
+##'my.syndromicW <- clean_baselineW(my.syndromicW,
 ##'                               syndromes=c(1,3))
 ##'
-##'my.syndromic <- clean_baseline(my.syndromic,
+##'my.syndromicW <- clean_baselineW(my.syndromicW,
 ##'                               family="nbinom")
-##'my.syndromic <- clean_baseline(my.syndromic,
+##'my.syndromicW <- clean_baselineW(my.syndromicW,
 ##'                               syndromes="Musculoskeletal",family="nbinom")
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes=c("GIT","Musculoskeletal"),family="nbinom")
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes=3,family="nbinom")
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes=c(1,3),family="nbinom")
 
-setGeneric('clean_baseline',
+setGeneric('clean_baselineW',
            signature = 'x',
-           function(x, ...) standardGeneric('clean_baseline'))
+           function(x, ...) standardGeneric('clean_baselineW'))
 
-setMethod('clean_baseline',
-          signature(x = 'syndromic'),
+setMethod('clean_baselineW',
+          signature(x = 'syndromicW'),
           function (x,
                     syndromes=NULL,
                     family="poisson",
                     limit=0.95,
-                    formula="dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7",
+                    formula="year+sin+cos",
                     plot=TRUE,
-                    print.model=TRUE)
+                    print.model=TRUE,
+                    frequency=52)
         {
     
       ##check that syndromes is valid
@@ -140,33 +134,24 @@ setMethod('clean_baseline',
        #aberration is detected
       baseline.matrix[,syndromes.num] <- observed.matrix[,syndromes.num]
       
-       period<-365
-      if (length(which(x@dates$weekday==0))==0){
-        period<-260
-      }
-       
+ 
        
        loop=0
       for (c in syndromes.num){      
        loop=loop+1
         
-        days = observed.matrix[,c]
-        t = 1:length(days)
-        month = as.factor(x@dates$month)
-        dow <- as.factor(x@dates$dow)
-        cos = cos (2*pi*t/period)
-        sin = sin (2*pi*t/period)
+        week = observed.matrix[,c]
+        trend = 1:length(week)
+        cos = cos (2*pi*t/frequency)
+        sin = sin (2*pi*t/frequency)
         year <- as.factor(x@dates$year)
-        AR1<-c(days[1],days[1:(length(days)-1)])
-        AR2<-c(days[1:2],days[1:(length(days)-2)])
-        AR3<-c(days[1:3],days[1:(length(days)-3)])
-        AR4<-c(days[1:4],days[1:(length(days)-4)])
-        AR5<-c(days[1:5],days[1:(length(days)-5)])
-        AR6<-c(days[1:6],days[1:(length(days)-6)])
-        AR7<-c(days[1:7],days[1:(length(days)-7)])
-        trend=t
+        AR1<-c(week[1],week[1:(length(week)-1)])
+        AR2<-c(week[1:2],week[1:(length(week)-2)])
+        AR3<-c(week[1:3],week[1:(length(week)-3)])
+        AR4<-c(week[1:4],week[1:(length(week)-4)])
+        
 
-        fn.formula=as.formula(paste0("days~",formula))
+        fn.formula=as.formula(paste0("week~",formula))
       
       
       if (family=="nbinom"){
@@ -174,7 +159,7 @@ setMethod('clean_baseline',
     #    require(fitdistrplus)
         fit1     <- glm.nb(fn.formula)  
         predict1 <- predict(fit1, type="response", se.fit=TRUE)
-        nbin     <- fitdist(days,"nbinom")
+        nbin     <- fitdist(week,"nbinom")
         series   <- predict1$fit
         se       <- predict1$se.fit
         limitV  <- qnbinom(p=limit, 
@@ -194,8 +179,8 @@ setMethod('clean_baseline',
       
       
        #detecting and substituting aberrations
-      peaks <- which(days > round(limitV))
-      x.smooth <- days
+      peaks <- which(week > round(limitV))
+      x.smooth <- week
       x.smooth [peaks] <- round(limitV [peaks])
       
         
@@ -214,7 +199,7 @@ setMethod('clean_baseline',
           if (loop==1){
             par(mfrow=c(length(syndromes),1),mar=c(2,4,2,2))}
           
-          plot(days, x=x@dates[,1],type="l",ylab=syndrome.name)
+          plot(week, x=x@dates[,1],type="l",ylab=syndrome.name)
           lines(x.smooth,,x=x@dates[,1], col="red")
           legend("topleft", pch=3,col=c("black","red"),
                  c("Original series","Series with outliers removed"))

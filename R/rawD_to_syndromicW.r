@@ -1,16 +1,24 @@
-##' \code{raw_to_syndromic}
+##' \code{rawD_to_syndromicW}
 ##'
-##' Create an object of the class \code{syndromic} from raw, observed data.
-##' This assumed data will be monitored DAILY. For weekly monitoring please
-##' see \code{rawD_to_syndromicW} and \code{rawW_to_syndromicW}.
+##' An object \code{syndromicW} (syndromic main class for data to be monitored weekly)
+##' can be created from data that were originally recorded with the WEEK of the
+##' event (in which case please check the function \code{rawW_to_syndromicW});or when
+##' the DATE of the event was recorded, but the user wants to group events
+##' per week, this funcrion \code{rawD_to_syndromicW} can be used. For data
+##' already grouped into the number of observations per week, please see the
+##' function \code{syndromicW}.
 ##' 
-##' This functions will count the number of cases for one or more defined groups, daily.
-##' Days without counts will be assigned a count of zero,
-##' generating a complete sequence of dates. The complete sequence will
-##' start at the minimum date found in the dataset and end at the maximum day,
-##' by default. However it is also possible to provide a minimum date
-##' EARLIER than the minimum in the dataset or a maximum date LATER than the
-##' latest recorded. The extra days are assigned counts of zero (minimum
+##' This function will count the number of cases for one or more defined groups, weekly.
+##' Weeks without counts will be assigned a count of zero,
+##' generating a complete sequence of weeks. The complete sequence will
+##' start at the minimum week found in the dataset and end at the maximum week,
+##' by default. However it is also possible to provide a minimum DATE EARLIER 
+##' than the minimum in the dataset(since the
+##' original data were recorded based on the date, it's assumed that the user may
+##' wanst to establish cut-offs based on the dates from the original data, not weeks,
+##' which is the format of the output). It is also possible to provide a maximum 
+##' date LATER than the
+##' latest recorded. The extra weeks created are assigned counts of zero (minimum
 ##' or maximum dates already within the range of the dataset are ignored).
 ##'
 ##' The raw, observed data, are assumed to be stored in a \code{data.frame}
@@ -23,10 +31,10 @@
 ##' variables "farm" and "animal").
 ##'
 ##' Multiple events with the same unique ID are acceptable, but counted
-##' only once per time unit (p.e. day). Besides removing duplicated events, the
-##' function also completes missing days, assigning them a count of zero.
+##' only once per time unit (p.e. WEEK). Besides removing duplicated events, the
+##' function also completes missing weeks, assigning them a count of zero.
 ##'
-##' The function counts the number of events, per day, for each of the groups
+##' The function counts the number of events, per week, for each of the groups
 ##' found in the variable \code{syndromes.var}. However, the variable
 ##' \code{syndromes.name} can be used to RESTRICT the groups counted (if not all
 ##' values appearing in the data are to be subjected to monitoring, p.e. when
@@ -36,8 +44,15 @@
 ##' groups with zero events in the specific data batch being analyzed will
 ##' still be represented in the output of the function, though with zero
 ##' counts every day.)
+##' 
+##' IMPORTANT: Please note that this function removed DUPLICATED records based on
+##' a repeat id, within the same DATE, since daily records are provided. If two 
+##' cases with the same ID are recorded in the same week, but dfferent days,
+##' these will be counted as TWO CASES.To eliminate repeated cases within the same
+##' week, please convert the date to ISOweek format using the functions in this package,
+##' and use, instead, the function \code{rawW_to_syndromicW}.
 ##'
-##' @title raw_to_syndromic
+##' @title raw_to_syndromicW
 ##' @param id indicates a variable (or multiple variables) which should
 ##' be used to identify unique events in the data. It can be provided as an R
 ##' vector (p.e. mydata$myid), as the name of a DataFrame column
@@ -62,21 +77,6 @@
 ##' @param sort Default is true, which organizes the groups found in syndromes.name
 ##' alphabetically. If set to FALSE, groups are listed in the order they are found
 ##' in the dataset or provided in syndromes.name.
-##' @param remove.dow An optional argument, by default set to FALSE. This allows
-##' the user to specify weekdays that must be removed from the dataset, for instance
-##' when weekends are not relevant. This must be se to integers between 0 and 6
-##' specifying the day of the week to be removed. To remove saturdays and sundays, 
-##' for instance, set remove.dow=c(6,0). (Note that in R days of week are counted
-##' from 0-Sunday to 6-Saturday)
-##' @param add.to when remove.dow is used, the user has the option to completely remove
-##' any counts assigned to the days of week to be removed (set add.to=0) or add
-##' them to the following or precedent day. For instance when removing weekends,
-##' the counts registered during weekends can be assigned to the following Monday or
-##' the preceding Friday, using add.to=1 or add.to=-1 respectively. Please note that:
-##' (i) the vector add.to must have the exact same dimensions as remove.dow. To remove 
-##' weekends adding any observed counts to the following Monday the user would need to set
-##' remove.dow=c(6,0) and add.to=c(2,1) (Saturdays added to 2 days ahead, and Sunday to
-##' 1 day ahead)
 ##' @param data Optional argument. If used the other arguments can be specified
 ##' as column names within the dataset provided through this argument
 ##'
@@ -84,47 +84,47 @@
 ##' (1) OBSERVED: A matrix with as many columns as syndromic groups
 ##'  found in the dataset (or listed by the user); (2) DATES: A data frame
 ##'  where the first column contains the complete
-##'  sequence of dates from the minimum to the maximum date found in the dataset
+##'  ISOweek of dates from the minimum to the maximum date found in the dataset
 ##'  (or set by the user), and additional columns contain additional date variables
-##'  (such as day of week, holidays, month) as generated by default when an object of
+##'  (such as day of numerical week and year) as generated by default when an object of
 ##'  the class \code{syndromic} is created. 
 ##'  
 ##' @import ISOweek
 ##' @export 
 ##' @examples
 ##' data(lab.daily)
-##' my.syndromic <- raw_to_syndromic (id=lab.daily$SubmissionID,
+##' my.syndromicW <- rawD_to_syndromicW (id=lab.daily$SubmissionID,
 ##'                                   syndromes.var=lab.daily$Syndrome,
 ##'                                   dates.var=lab.daily$DateofSubmission,
 ##'                                   date.format="%d/%m/%Y")
 ##'
-##' my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##' my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromic <- raw_to_syndromic (id=list(HerdID,AnimalID),
+##' my.syndromicW <- rawD_to_syndromicW (id=list(HerdID,AnimalID),
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##' my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   syndromes.name=c("GIT","Musculoskeletal"),
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##' my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   syndromes.name=c("GIT","Musculoskeletal","NonExisting"),
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##' my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   min.date="01/01/2011",
@@ -134,15 +134,13 @@
 ##'                                   data=lab.daily)
 
 
-raw_to_syndromic <- function(id,
+rawD_to_syndromicW <- function(id,
                              syndromes.var, 
                              syndromes.name,
                              dates.var, 
                              date.format="%d/%m/%Y", 
                              min.date, 
                              max.date,
-                             remove.dow=FALSE,
-                             add.to=0,
                              sort=TRUE,
                              data=NULL) {
   
@@ -151,18 +149,7 @@ raw_to_syndromic <- function(id,
   id           <-eval(substitute(id),data, parent.frame())
   syndromes.var<-eval(substitute(syndromes.var),data, parent.frame())
   dates.var    <-eval(substitute(dates.var),data, parent.frame())
-  
-  #checking validity
-  if (remove.dow!=FALSE&&(sum(remove.dow<0)>0||sum(remove.dow>6)>0)) {
-    stop("remove.dow must be an integer (or vector of integers)
-         between 0 (Sunday) and 6 (Monday) or FALSE")
-  }
-  
-  if (remove.dow!=FALSE&&length(add.to)!=length(remove.dow)) {
-    stop("the argumento add.to must have the exact same vector length
-         as remove.dow")
-  }
-  
+    
   
   #syndrome names if not supplied
   if (missing("syndromes.name"))  (syndromes.name <- unique(syndromes.var))
@@ -243,32 +230,25 @@ raw_to_syndromic <- function(id,
   
   colnames(syndrome.counts) <- syndromes.name
   
+  
   #create dates matrix using internal function
   dates <- dates_df(min.date,max.date, 
                     by="days",
                     date.format = "%Y-%m-%d")
   
-  #remove.dow    
-  if (as.character(remove.dow[1])!="FALSE") {
-    
-    for (r in 1:length(remove.dow)){
-      remove <- which(dates$dow==remove.dow[r])
-      add    <- remove+(add.to[r])
-          ignore <- which(add>dim(syndrome.counts)[1]|add<1)
-      if (length(ignore)>0){
-      remove <- remove[-ignore]
-      add    <- add[-ignore]}
-     
-      syndrome.counts[add,] <- syndrome.counts[add,]+ syndrome.counts[remove,]
-      syndrome.counts <- syndrome.counts[-(remove),]
-      dates           <- dates[-(remove),]  
-        
-    }   
-    
-  }
   
+  syndrome.counts <- convert_days_to_week (syndrome.counts,
+                                   dates,date.format="%Y-%m-%d")
+  syndrome.counts$week <- NULL
+  syndrome.counts$year <- NULL
   
-  syndromic(observed=as.matrix(syndrome.counts), dates=dates)
+  dates <- dates[,c("week","year")]
+    dates <- unique(dates)
+  ISOweek<- create_isoweek(dates$week,dates$year,reference.day=1)
+  dates <- cbind(ISOweek,dates)
+    
+  
+  syndromicW(observed=as.matrix(syndrome.counts), dates=dates)
   
   
 }

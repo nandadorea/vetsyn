@@ -3,7 +3,7 @@
 \title{convert_days_to_week}
 \usage{
   convert_days_to_week(counts.df, dates.df,
-    date.format = "\%d/\%m/\%Y")
+    date.format = "\%Y-\%m-\%d")
 }
 \arguments{
   \item{counts.df}{a matrix with rows corresponding to
@@ -14,17 +14,15 @@
   contain dates}
 
   \item{date.format}{the date format in the dates variable,
-  by default "\%d/\%m/\%Y"}
+  by default \%d/\%m/\%Y.}
 }
 \description{
-  \code{convert_days_to_week}
-}
-\details{
   Converts a matrix of daily counts into weekly counts,
   using the ISOweek standard, provided that a deparate data
   frame is appointed from which to extract the actual dates
   corresponding to each row of the matrix.
-
+}
+\details{
   This is an internal function of the package vetsyn, made
   available as an exported funciton in order to allow users
   to take advantage of the function retro_summary() from

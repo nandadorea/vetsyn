@@ -1,11 +1,10 @@
-\name{raw_to_syndromic}
-\alias{raw_to_syndromic}
+\name{rawW_to_syndromicW}
+\alias{rawW_to_syndromicW}
 \title{raw_to_syndromic}
 \usage{
-  raw_to_syndromic(id, syndromes.var, syndromes.name,
-    dates.var, date.format = "\%d/\%m/\%Y", min.date,
-    max.date, remove.dow = FALSE, add.to = 0, sort = TRUE,
-    data = NULL)
+  rawW_to_syndromicW(id, syndromes.var, syndromes.name,
+    week.var, min.week, min.year, max.week, max.year,
+    sort = TRUE, data = NULL)
 }
 \arguments{
   \item{id}{indicates a variable (or multiple variables)
@@ -26,47 +25,28 @@
   character value or vector (p.e. "Mastitis" or
   c("Mastitis","GIT") ).}
 
-  \item{dates.var}{The vector (dates.var=mydata$mydates) or
-  column name (dates.var=mydates, data=mydata) where the
-  dates of the events are to be found.}
+  \item{weeks.var}{The vector of weeks in the ISOWEEK
+  format. If weeks are not recorded in the ISOweek format,
+  please see the function \code{create_isoweek} which
+  creates ISOweek from data provided as week and year, in
+  numerical formats. Consult the examples in that function
+  for an example of how to add a column to a dataset in the
+  format ISOweek.}
 
-  \item{date.format}{The date.format of the date.variable.
-  Default is "%d/%m/%Y". See strptime() for format
-  specifications}
+  \item{min.week}{The user can specify the minimum
+  week-year, and/or the maximum week-year, to create a
+  dataset that extends the weeks found in the data.}
 
-  \item{min.date}{An optional argument. If not provided,
-  the minimum date found in the dataset is used.}
+  \item{min.year}{see min.week above}
 
-  \item{max.date}{An optional argument. If not provided,
-  the maximum date found in the dataset is used.}
+  \item{max.week}{see min.week above}
+
+  \item{max.year}{see min.week above}
 
   \item{sort}{Default is true, which organizes the groups
   found in syndromes.name alphabetically. If set to FALSE,
   groups are listed in the order they are found in the
   dataset or provided in syndromes.name.}
-
-  \item{remove.dow}{An optional argument, by default set to
-  FALSE. This allows the user to specify weekdays that must
-  be removed from the dataset, for instance when weekends
-  are not relevant. This must be se to integers between 0
-  and 6 specifying the day of the week to be removed. To
-  remove saturdays and sundays, for instance, set
-  remove.dow=c(6,0). (Note that in R days of week are
-  counted from 0-Sunday to 6-Saturday)}
-
-  \item{add.to}{when remove.dow is used, the user has the
-  option to completely remove any counts assigned to the
-  days of week to be removed (set add.to=0) or add them to
-  the following or precedent day. For instance when
-  removing weekends, the counts registered during weekends
-  can be assigned to the following Monday or the preceding
-  Friday, using add.to=1 or add.to=-1 respectively. Please
-  note that: (i) the vector add.to must have the exact same
-  dimensions as remove.dow. To remove weekends adding any
-  observed counts to the following Monday the user would
-  need to set remove.dow=c(6,0) and add.to=c(2,1)
-  (Saturdays added to 2 days ahead, and Sunday to 1 day
-  ahead)}
 
   \item{data}{Optional argument. If used the other
   arguments can be specified as column names within the
@@ -85,26 +65,33 @@
   class \code{syndromic} is created.
 }
 \description{
-  \code{raw_to_syndromic}
+  \code{rawW_to_syndromicW}
 }
 \details{
-  Create an object of the class \code{syndromic} from raw,
-  observed data. This assumed data will be monitored DAILY.
-  For weekly monitoring please see
-  \code{rawD_to_syndromicW} and \code{rawW_to_syndromicW}.
+  An object \code{syndromicW} (syndromic main class for
+  data to be monitored weekly) can be created from data
+  that were originally recorded with the DAY of the event,
+  but the user wants to group by WEEK (then use
+  \code{rawD_to_syndromicW}); or from data that were
+  already recorded with only indication to the WEEK of the
+  event, in which case the user must use the function
+  \code{rawW_to_syndromicW}. For data already grouped into
+  the number of observations per week, please see the
+  function \code{syndromicW}.
 
-  This functions will count the number of cases for one or
-  more defined groups, daily. Days without counts will be
+  This function will count the number of cases for one or
+  more defined groups, WEEKLY. Weeks without counts will be
   assigned a count of zero, generating a complete sequence
-  of dates. The complete sequence will start at the minimum
-  date found in the dataset and end at the maximum day, by
+  of weeks The complete sequence will start at the minimum
+  week found in the dataset and end at the maximum week, by
   default. However it is also possible to provide a minimum
-  date EARLIER than the minimum in the dataset or a maximum
-  date LATER than the latest recorded. The extra days are
-  assigned counts of zero (minimum or maximum dates already
-  within the range of the dataset are ignored).
+  week-year EARLIER than the minimum in the dataset or a
+  maximum week-year LATER than the latest recorded. The
+  extra weeks are assigned counts of zero (minimum or
+  maximum weeks already within the range of the dataset are
+  ignored).
 
-  The raw, observed data, are assumed to be stored in a
+  The raw, observed data, is assumed to be stored in a
   \code{data.frame} in which each observed event (for
   instance a laboratory submission) is recorded in one or
   multiple rows. Unique events can be identified by one
@@ -120,7 +107,7 @@
   removing duplicated events, the function also completes
   missing days, assigning them a count of zero.
 
-  The function counts the number of events, per day, for
+  The function counts the number of events, per week, for
   each of the groups found in the variable
   \code{syndromes.var}. However, the variable
   \code{syndromes.name} can be used to RESTRICT the groups
@@ -136,44 +123,37 @@
 }
 \examples{
 data(lab.daily)
-my.syndromic <- raw_to_syndromic (id=lab.daily$SubmissionID,
-                                  syndromes.var=lab.daily$Syndrome,
-                                  dates.var=lab.daily$DateofSubmission,
-                                  date.format="\%d/\%m/\%Y")
+my.syndromicW <- rawW_to_syndromicW (id=lab.weekly$SubmissionID,
+                                  syndromes.var=lab.weekly$Syndrome,
+                                  week.var=lab.weekly$DateofSubmission)
 
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
                                   syndromes.var=Syndrome,
                                   dates.var=DateofSubmission,
-                                  date.format="\%d/\%m/\%Y",
-                                  data=lab.daily)
+                                  data=lab.weekly)
 
-my.syndromic <- raw_to_syndromic (id=list(HerdID,AnimalID),
+my.syndromicW <- rawW_to_syndromicW (id=list(HerdID,AnimalID),
                                   syndromes.var=Syndrome,
                                   dates.var=DateofSubmission,
-                                  date.format="\%d/\%m/\%Y",
-                                  data=lab.daily)
+                                  data=lab.weekly)
 
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
                                   syndromes.var=Syndrome,
                                   syndromes.name=c("GIT","Musculoskeletal"),
                                   dates.var=DateofSubmission,
-                                  date.format="\%d/\%m/\%Y",
-                                  data=lab.daily)
+                                  data=lab.weekly)
 
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
                                   syndromes.var=Syndrome,
                                   syndromes.name=c("GIT","Musculoskeletal","NonExisting"),
                                   dates.var=DateofSubmission,
-                                  date.format="\%d/\%m/\%Y",
-                                  data=lab.daily)
+                                  data=lab.weekly)
 
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
                                   syndromes.var=Syndrome,
                                   dates.var=DateofSubmission,
-                                  min.date="01/01/2011",
-                                  date.format="\%d/\%m/\%Y",
-                                  remove.dow=c(6,0),
-                                  add.to=c(2,1),
-                                  data=lab.daily)
+                                  min.week=40,
+                                  min.year=2010,
+                                  data=lab.weekly)
 }
 

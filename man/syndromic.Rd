@@ -79,7 +79,7 @@
 }
 \description{
   Create an object of the class \code{syndromic} from
-  pre-cleaned data. The observed data is assumed to be
+  pre-cleaned data. The observed data are assumed to be
   formatted as a \code{matrix}, in which each row
   corresponds to an observation time point (p.e. days),
   columns correspond to each syndromic group to be

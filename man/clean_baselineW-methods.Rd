@@ -1,11 +1,11 @@
 \docType{methods}
-\name{clean_baseline-methods}
-\alias{clean_baseline}
-\alias{clean_baseline-methods}
-\alias{clean_baseline,syndromic-method}
-\title{\code{clean_baseline}}
+\name{clean_baselineW-methods}
+\alias{clean_baselineW}
+\alias{clean_baselineW-methods}
+\alias{clean_baselineW,syndromic-method}
+\title{\code{clean_baselineW}}
 \arguments{
-  \item{x}{a \code{syndromic} object, which must have at
+  \item{x}{a \code{syndromicW} object, which must have at
   least the slot of observed data and a data frame in the
   slot dates.}
 
@@ -24,10 +24,12 @@
 
   \item{formula}{the regression formula to be used. The
   following arguments are accepted: trend (for a monotonic
-  trend), month, dow (day of week), year, sin, cos, AR1
-  (auto-regressive for 1 days) to AR7. These elements can
-  be combined into any formula. The default is
-  formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5". See examples.}
+  trend), year, sin, cos, AR1 (auto-regressive for 1 week)
+  to AR4. These elements can be combined into any formula.
+  The default is formula="trend+sin+cos". See examples.}
+
+  \item{frequency}{the frequency of repetition in the data,
+  by default 52 (one year).}
 
   \item{plot}{whether plots comparing observed data and the
   result of the cleaning process should be displayed.}
@@ -38,7 +40,7 @@
   keep or drop.}
 }
 \value{
-  An object of the class syndromic which contains all
+  An object of the class syndromicW which contains all
   elements from the object provided in x, but in which the
   slot baseline has been filled with an outbreak-free
   baseline for each syndromic group. When the user chooses
@@ -64,35 +66,26 @@
 }
 \examples{
 data(lab.daily)
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",
-                                 remove.dow=c(6,0),
-                                 add.to=c(2,1),
                                  data=lab.daily)
-my.syndromic <- clean_baseline(my.syndromic)
-my.syndromic <- clean_baseline(my.syndromic, formula="dow+month+year")
-my.syndromic <- clean_baseline(my.syndromic, formula="dow+sin+cos+trend")
-my.syndromic <- clean_baseline(my.syndromic,
+my.syndromicW <- clean_baselineW(my.syndromicW)
+my.syndromicW <- clean_baselineW(my.syndromicW, formula="sin+cos")
+my.syndromicW <- clean_baselineW(my.syndromicW,
                               syndromes="Musculoskeletal")
-my.syndromic <- clean_baseline(my.syndromic,
+my.syndromicW <- clean_baselineW(my.syndromicW,
                               syndromes=c("GIT","Musculoskeletal"))
-my.syndromic <- clean_baseline(my.syndromic,
+my.syndromicW <- clean_baselineW(my.syndromicW,
                               syndromes=3)
-my.syndromic <- clean_baseline(my.syndromic,
+my.syndromicW <- clean_baselineW(my.syndromicW,
                               syndromes=c(1,3))
 
-my.syndromic <- clean_baseline(my.syndromic,
+my.syndromicW <- clean_baselineW(my.syndromicW,
                               family="nbinom")
-my.syndromic <- clean_baseline(my.syndromic,
+my.syndromicW <- clean_baselineW(my.syndromicW,
                               syndromes="Musculoskeletal",family="nbinom")
-my.syndromic <- clean_baseline(my.syndromic,
-                              syndromes=c("GIT","Musculoskeletal"),family="nbinom")
-my.syndromic <- clean_baseline(my.syndromic,
-                              syndromes=3,family="nbinom")
-my.syndromic <- clean_baseline(my.syndromic,
-                              syndromes=c(1,3),family="nbinom")
 }
 \references{
   Fernanda C. Dorea, Crawford W. Revie, Beverly J. McEwen,
@@ -104,7 +97,7 @@ my.syndromic <- clean_baseline(my.syndromic,
   10.1016/j.prevetmed.2012.10.010.
 }
 \seealso{
-  \code{\link{syndromic}}
+  \code{\link{syndromicW}}
 }
 \keyword{methods}
 

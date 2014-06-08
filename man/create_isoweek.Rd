@@ -1,0 +1,28 @@
+\name{create_isoweek}
+\alias{create_isoweek}
+\title{create_isoweek}
+\usage{
+  create_isoweek(week, year, reference.day = 1)
+}
+\arguments{
+  \item{week}{the week of the year}
+
+  \item{year}{the year}
+
+  \item{reference-day}{the ISOweek format also stores the
+  actual day of the week, creating a daily sequence. users
+  can set a reference day. if only interested in weekly
+  data, it's suggested to leave as the default
+  reference.day=1}
+}
+\description{
+  Creates weeks in the format ISOweek from week and year
+  provided as numerical formats
+}
+\examples{
+create_isoweek(11,2014)
+dates <- data.frame (week=1:10, year=2014)
+    ISOweek <- create_isoweek(dates$week,dates$year)
+    dates <- cbind(ISOweek,dates)
+}
+

@@ -1,8 +1,8 @@
 \docType{class}
-\name{syndromic-class}
-\alias{syndromic}
-\alias{syndromic-class}
-\title{Class \code{"syndromic"}}
+\name{syndromicW-class}
+\alias{syndromicW}
+\alias{syndromicW-class}
+\title{Class \code{"syndromicW"}}
 \description{
   Syndromic is the main class of the package. Two versions
   are available, \code{syndromic}, which is intended for
@@ -22,13 +22,13 @@
 \section{Slots}{
   \itemize{ \item{observed}{ A \code{matrix} with the
   number of rows equal to the number of time points
-  available (the number of DAYS of observed data); and
-  number of columns equal to the number of syndromes
+  available (here the number of WEEKS of observed data);
+  and number of columns equal to the number of syndromes
   monitored.  } \item{dates}{ A \code{DataFrame} which
-  first column contains the dates corresponding to the
-  observations recorded. Additional columns contain
-  additional information extracted from the date, such as
-  day-of-the-week, month, holidays, etc.  }
+  first column contains the weeks corresponding to the
+  observations recorded, in the ISOweek format.  Additional
+  columns contain additional information extracted from the
+  date, such as year and week in a number format.  }
   \item{baseline}{ A \code{matrix} of dimensions exactly
   equal to the slot observed, where observed data have been
   cleaned in order to remove excess noise and/or outbreak
@@ -68,15 +68,9 @@
 }
 \examples{
 ## Load data
-data(observed)
-my.syndromic <- syndromic(observed,min.date="01/01/2010",max.date="28/05/2013")
-my.syndromic <- syndromic(observed[1:5,],min.date="01/01/2010",max.date="05/01/2010")
-my.syndromic <- syndromic(observed[1:6,],min.date="01/01/2010",max.date="08/01/2010",
-                          weekends=FALSE)
-dates = seq(from=as.Date("01/01/2010",format ="\%d/\%m/\%Y" ),
-              to=as.Date("05/01/2010",format ="\%d/\%m/\%Y" ),
-              by="days")
-my.syndromic <- syndromic(observed[1:5,],dates=dates)
+data(observedW)
+my.syndromicW <- syndromicW(observed,min.week=1, min.year=2011,
+                              max.week=22, max.year=2013)
 }
 \keyword{classes}
 

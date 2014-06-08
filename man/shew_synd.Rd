@@ -154,10 +154,10 @@
   to the next. The correction of aberrations can be
   performed using this algorithm, or if the time series has
   already been corrected using another algorithm (with
-  results saved in the slot baseline of the
-  \code{syndromic} object being analysed), the corrected
-  baseline will always considered as trainig data, rather
-  than the observed data (which may contain aberrations)}
+  results saved in the slot baseline of the syndromic
+  object being analysed), the corrected baseline will
+  always considered as trainig data, rather than the
+  observed data (which may contain aberrations)}
   \item{guard-band:}{ The user can set a guard-band between
   the time unit being evaluated and the start of the window
   used as training data, in order to avoid contamination of

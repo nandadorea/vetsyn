@@ -1,6 +1,6 @@
-##' \code{raw_to_syndromic}
+##' \code{raw_to_syndromicD}
 ##'
-##' Create an object of the class \code{syndromic} from raw, observed data.
+##' Create an object of the class \code{syndromicD} from raw, observed data.
 ##' This assumed data will be monitored DAILY. For weekly monitoring please
 ##' see \code{rawD_to_syndromicW} and \code{rawW_to_syndromicW}.
 ##' 
@@ -37,7 +37,7 @@
 ##' still be represented in the output of the function, though with zero
 ##' counts every day.)
 ##'
-##' @title raw_to_syndromic
+##' @title raw_to_syndromicD
 ##' @param id indicates a variable (or multiple variables) which should
 ##' be used to identify unique events in the data. It can be provided as an R
 ##' vector (p.e. mydata$myid), as the name of a DataFrame column
@@ -93,38 +93,38 @@
 ##' @export 
 ##' @examples
 ##' data(lab.daily)
-##' my.syndromic <- raw_to_syndromic (id=lab.daily$SubmissionID,
+##' my.syndromicD <- raw_to_syndromicD (id=lab.daily$SubmissionID,
 ##'                                   syndromes.var=lab.daily$Syndrome,
 ##'                                   dates.var=lab.daily$DateofSubmission,
 ##'                                   date.format="%d/%m/%Y")
 ##'
-##' my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##' my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromic <- raw_to_syndromic (id=list(HerdID,AnimalID),
+##' my.syndromicD <- raw_to_syndromicD (id=list(HerdID,AnimalID),
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##' my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   syndromes.name=c("GIT","Musculoskeletal"),
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##' my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   syndromes.name=c("GIT","Musculoskeletal","NonExisting"),
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##' my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   min.date="01/01/2011",
@@ -134,7 +134,7 @@
 ##'                                   data=lab.daily)
 
 
-raw_to_syndromic <- function(id,
+raw_to_syndromicD <- function(id,
                              syndromes.var, 
                              syndromes.name,
                              dates.var, 
@@ -268,7 +268,7 @@ raw_to_syndromic <- function(id,
   }
   
   
-  syndromic(observed=as.matrix(syndrome.counts), dates=dates)
+  syndromicD(observed=as.matrix(syndrome.counts), dates=dates)
   
   
 }

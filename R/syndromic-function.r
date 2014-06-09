@@ -4,7 +4,7 @@
 ##' columns correspond to each syndromic group to be monitored, and the
 ##' numbers refer to the number of observatiosn per group per time point.
 ##' For an example of data formatted this way use date(observed). For data
-##' not formatted use directly the function "raw_to_syndromic".
+##' not formatted use directly the function "raw_to_syndromicD".
 ##' 
 ##' The dates are expected to be a \code{data.frame} with the first column
 ##' in the \code{dates} format, though the function will also accept a

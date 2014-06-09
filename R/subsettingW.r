@@ -26,19 +26,19 @@ setMethod(
     
         
     if (length(x@baseline)!=0){
-      setBaseline(new.syndromic)<-x@baseline[i:j,]
+      setBaselineW(new.syndromic)<-x@baseline[i:j,]
     }
     
     if (length(x@alarms)!=0){
-      setAlarms(new.syndromic)<-x@alarms[i:j,,]
+      setAlarmsW(new.syndromic)<-x@alarms[i:j,,]
     }
     
     if (length(x@UCL)!=0){
-      setUCL(new.syndromic)<-x@UCL[i:j,,]
+      setUCLW(new.syndromic)<-x@UCL[i:j,,]
     }
     
     if (length(x@LCL)!=0){
-      setLCL(new.syndromic)<-x@LCL[i:j,,]
+      setLCLW(new.syndromic)<-x@LCL[i:j,,]
     }
     
     return(new.syndromic)

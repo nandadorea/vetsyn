@@ -50,19 +50,13 @@
 ##' to create this slot from data on \code{observed}.
 ##' @param LCL Lower control limit. See UCL above. 
 ##' 
-##' @name syndromicD
+##' @name syndromicD-function
 ##' @return an object of the class \code{syndromicD} with the slots
 ##' corresponding to the parameters described. See \code{class-syndromicD}
 ##'  for more details.
 ##' 
 ##' @import ISOweek
 ##' 
-##' @aliases syndromicD 
-##' @aliases setDates
-##' @aliases setBaseline
-##' @aliases setAlarms
-##' @aliases setUCl
-##' @aliases setLCL
 ##' @export
 ##' @examples
 ##' ## Load data
@@ -112,9 +106,9 @@ syndromicD <- function(observed,
 
 
 
-setGeneric("setDates<-",function(object,value){standardGeneric("setDates<-")})
+setGeneric("setDatesD<-",function(object,value){standardGeneric("setDatesD<-")})
  setReplaceMethod(
-   f="setDates",
+   f="setDatesD",
    signature="syndromicD",
    definition=function(object,value){
      object@dates <- value
@@ -127,9 +121,9 @@ setGeneric("setDates<-",function(object,value){standardGeneric("setDates<-")})
 #test0
 
 
-setGeneric("setBaseline<-",function(object,value){standardGeneric("setBaseline<-")})
+setGeneric("setBaselineD<-",function(object,value){standardGeneric("setBaselineD<-")})
 setReplaceMethod(
-  f="setBaseline",
+  f="setBaselineD",
   signature="syndromicD",
   definition=function(object,value){
     object@baseline <- value
@@ -138,9 +132,9 @@ setReplaceMethod(
   }
 )
 
-setGeneric("setAlarms<-",function(object,value){standardGeneric("setAlarms<-")})
+setGeneric("setAlarmsD<-",function(object,value){standardGeneric("setAlarmsD<-")})
 setReplaceMethod(
-  f="setAlarms",
+  f="setAlarmsD",
   signature="syndromicD",
   definition=function(object,value){
     object@alarms <- value
@@ -149,9 +143,9 @@ setReplaceMethod(
   }
 )
 
-setGeneric("setUCL<-",function(object,value){standardGeneric("setUCL<-")})
+setGeneric("setUCLD<-",function(object,value){standardGeneric("setUCLD<-")})
 setReplaceMethod(
-  f="setUCL",
+  f="setUCLD",
   signature="syndromicD",
   definition=function(object,value){
     object@UCL <- value
@@ -161,9 +155,9 @@ setReplaceMethod(
 )
 
 
-setGeneric("setLCL<-",function(object,value){standardGeneric("setLCL<-")})
+setGeneric("setLCLD<-",function(object,value){standardGeneric("setLCLD<-")})
 setReplaceMethod(
-  f="setLCL",
+  f="setLCLD",
   signature="syndromicD",
   definition=function(object,value){
     object@LCL <- value

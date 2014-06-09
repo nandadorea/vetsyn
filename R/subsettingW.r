@@ -1,17 +1,9 @@
-##' Sub-setting
-##'
-##' Allows sub-setting of a \code{\link{syndromicW}} object
-##' and all of its slots, by a start and end number of rows.
-##'
-##'
 ##' @name "["-methods
 ##' @docType methods
 ##' @keywords methods
 ##' @export
 ##' @import methods
 ##' @aliases subset 
-##' @aliases subset-methods 
-##' @aliases subset,syndromicW-method
 ##' @examples
 ##' data(lab.daily)
 ##' my.syndromicW <- rawD_to_syndromicW (id=lab.daily$SubmissionID,
@@ -34,19 +26,19 @@ setMethod(
     
         
     if (length(x@baseline)!=0){
-      setBaselineW(new.syndromic)<-x@baseline[i:j,]
+      setBaseline(new.syndromic)<-x@baseline[i:j,]
     }
     
     if (length(x@alarms)!=0){
-      setAlarmsW(new.syndromic)<-x@alarms[i:j,,]
+      setAlarms(new.syndromic)<-x@alarms[i:j,,]
     }
     
     if (length(x@UCL)!=0){
-      setUCLW(new.syndromic)<-x@UCL[i:j,,]
+      setUCL(new.syndromic)<-x@UCL[i:j,,]
     }
     
     if (length(x@LCL)!=0){
-      setLCLW(new.syndromic)<-x@LCL[i:j,,]
+      setLCL(new.syndromic)<-x@LCL[i:j,,]
     }
     
     return(new.syndromic)

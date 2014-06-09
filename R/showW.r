@@ -1,14 +1,8 @@
-##' Show
-##'
-##' Shows information for the \code{\link{syndromicW}} object.
-##'
-##'
-##' @name show-methods
-##' @aliases show show-methods show,syndromicW-method
+##' @name show
 ##' @docType methods
 ##' @section Methods: \describe{
-##' \item{\code{signature(object = "syndromicW")}}{
-##' Show information for the syndromic object.
+##' \item{\code{signature(object = "syndromic")}}{
+##' Show information for a syndromic object.
 ##' }
 ##' }
 ##' @keywords methods

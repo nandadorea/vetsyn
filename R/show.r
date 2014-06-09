@@ -1,14 +1,14 @@
 ##' Show
 ##'
-##' Shows information for the \code{\link{syndromic}} object.
+##' Shows information for a syndromic object (\code{syndromicD} or 
+##' \code{syndromicW}).
 ##'
 ##'
-##' @name show-methods
-##' @aliases show show-methods show,syndromic-method
+##' @name show
 ##' @docType methods
 ##' @section Methods: \describe{
 ##' \item{\code{signature(object = "syndromic")}}{
-##' Show information for the syndromic object.
+##' Show information for a syndromic object.
 ##' }
 ##' }
 ##' @keywords methods
@@ -16,7 +16,7 @@
 ##' @import methods
 
 setMethod("show",
-          signature(object = "syndromic"),
+          signature(object = "syndromicD"),
           function (object)
       {
           cat(sprintf("****** Syndromic object:******\n"))

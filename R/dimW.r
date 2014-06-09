@@ -1,11 +1,4 @@
-##' \code{dim}
-##'
-##' Get dimension information for a syndromic object.
-##'
-##' @name dim-methods
-##' @aliases dim
-##' @aliases dim-methods
-##' @aliases dim,syndromicW-method
+##' @name dim
 ##' @docType methods
 ##' @keywords methods
 ##' @export

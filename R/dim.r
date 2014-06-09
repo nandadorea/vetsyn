@@ -1,11 +1,7 @@
-##' \code{dim}
+##' Get dimension information for a syndromic object (\code{syndromicD} or 
+##' \code{syndromicW}).
 ##'
-##' Get dimension information for a syndromic object.
-##'
-##' @name dim-methods
-##' @aliases dim
-##' @aliases dim-methods
-##' @aliases dim,syndromic-method
+##' @name dim
 ##' @docType methods
 ##' @keywords methods
 ##' @export
@@ -18,16 +14,16 @@
 ##' 
 ##' @examples
 ##' data(lab.daily)
-##' my.syndromic <- raw_to_syndromic (id=lab.daily$SubmissionID,
+##' my.syndromicD <- raw_to_syndromicD (id=lab.daily$SubmissionID,
 ##'                                   syndromes.var=lab.daily$Syndrome,
 ##'                                   dates.var=lab.daily$DateofSubmission,
 ##'                                   date.format="%d/%m/%Y")
-##' dim(my.syndromic)
-##' columns <- dim(my.syndromic)[2]
+##' dim(my.syndromicD)
+##' columns <- dim(my.syndromicD)[2]
 ##' print(columns)
 ##'
 setMethod('dim',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x)
       {
           cat(sprintf("****** Syndromic object:******\n"))

@@ -11,7 +11,7 @@
 ##' minimum and maximum date, and take care of constructing the appropriate
 ##' data frame (this is the recommended use). 
 ##'
-##' @title syndromicD
+##' @title syndromicD-function
 ##' 
 ##' @param observed A \code{matrix} with the observed data
 ##' @param dates A \code{data.frame} with the complete dates of of each 

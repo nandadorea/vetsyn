@@ -1,7 +1,7 @@
 ##' Sub-setting
 ##'
-##' Allows sub-setting of a \code{\link{syndromic}} object
-##' and all of its slots, by a start and end number of rows.
+##' Allows sub-setting of syndromic objects (\code{syndromicD} or 
+##' \code{syndromicW}) with all of its slots, by a start and end number of rows.
 ##'
 ##'
 ##' @name "["-methods
@@ -9,28 +9,25 @@
 ##' @keywords methods
 ##' @export
 ##' @import methods
-##' @aliases subset 
-##' @aliases subset-methods 
-##' @aliases subset,syndromic-method
 ##' @examples
 ##' data(lab.daily)
-##' my.syndromic <- raw_to_syndromic (id=lab.daily$SubmissionID,
+##' my.syndromicD <- raw_to_syndromicD (id=lab.daily$SubmissionID,
 ##'                                   syndromes.var=lab.daily$Syndrome,
 ##'                                   dates.var=lab.daily$DateofSubmission,
 ##'                                   date.format="%d/%m/%Y")
 ##' ## create a subset that ony includes the first 10 time points
 ##' ## (all the slots are trimmed from rows 1 to 10)
 ##' ## note the use of "," instead of ":"
-##' subset <- my.syndromic[1,10]
+##' subset <- my.syndromicD[1,10]
 ##'
 
 
 setMethod(
   f= "[",
-  signature="syndromic",
+  signature="syndromicD",
   definition=function(x,i,j){
     
-    new.syndromic = syndromic(observed=x@observed[i:j,], dates=x@dates[i:j,])
+    new.syndromic = syndromicD(observed=x@observed[i:j,], dates=x@dates[i:j,])
     
         
     if (length(x@baseline)!=0){

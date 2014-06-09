@@ -91,8 +91,8 @@ syndromicW <- function(observed,
   
   if (missing("dates")&&!missing("min.week")&&!missing("max.week")) {
 
-    min.date <- create_isoweek(min.week,min.year,reference.day=1)
-    max.date <- create_isoweek(max.week,max.year,reference.day=1)
+    min.date <- ISOweek2date(create_isoweek(min.week,min.year,reference.day=1))
+    max.date <- ISOweek2date(create_isoweek(max.week,max.year,reference.day=1))
     dates <- dates_df(min.date=min.date,max.date=max.date, 
                           by="days",
                           date.format = "%Y-%M-%d")

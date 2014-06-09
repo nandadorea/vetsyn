@@ -91,29 +91,29 @@
 ##'
 ##' my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
-##'                                   dates.var=DateofSubmission,
+##'                                   week.var=DateofSubmission,
 ##'                                   data=lab.weekly)
 ##'
 ##' my.syndromicW <- rawW_to_syndromicW (id=list(HerdID,AnimalID),
 ##'                                   syndromes.var=Syndrome,
-##'                                   dates.var=DateofSubmission,
+##'                                   week.var=DateofSubmission,
 ##'                                   data=lab.weekly)
 ##'
 ##' my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   syndromes.name=c("GIT","Musculoskeletal"),
-##'                                   dates.var=DateofSubmission,
+##'                                   week.var=DateofSubmission,
 ##'                                   data=lab.weekly)
 ##'
 ##' my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   syndromes.name=c("GIT","Musculoskeletal","NonExisting"),
-##'                                   dates.var=DateofSubmission,
+##'                                   week.var=DateofSubmission,
 ##'                                   data=lab.weekly)
 ##'
 ##' my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
-##'                                   dates.var=DateofSubmission,
+##'                                   week.var=DateofSubmission,
 ##'                                   min.week=40,
 ##'                                   min.year=2010,
 ##'                                   data=lab.weekly)
@@ -186,7 +186,7 @@ rawW_to_syndromicW <- function(id,
     column <- column+1
     
     if (length(which(syndromes.var==syndrome))==0) {
-      nsubmissions <- rep(0,dim(dates[1]))} else {
+      nsubmissions <- rep(0,dim(dates)[1])} else {
         
         #Syndrome specific ID: syndromes may have been given as a list
         if (is.list(id)==TRUE) {

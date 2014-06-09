@@ -129,8 +129,6 @@
 ##'                                   dates.var=DateofSubmission,
 ##'                                   min.date="01/01/2011",
 ##'                                   date.format="%d/%m/%Y",
-##'                                   remove.dow=c(6,0),
-##'                                   add.to=c(2,1),
 ##'                                   data=lab.daily)
 
 

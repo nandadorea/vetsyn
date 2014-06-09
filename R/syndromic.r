@@ -72,7 +72,7 @@
 ##' @examples
 ##' ## Load data
 ##' data(observed)
-##' my.syndromicD <- syndromicD(observed,min.date="01/01/2010",max.date="28/05/2013")
+##' my.syndromicD <- syndromicD(observed,min.date="01/01/2011",max.date="26/05/2013")
 ##' my.syndromicD <- syndromicD(observed[1:5,],min.date="01/01/2010",max.date="05/01/2010")
 ##' my.syndromicD <- syndromicD(observed[1:6,],min.date="01/01/2010",max.date="08/01/2010", 
 ##'                           weekends=FALSE) 

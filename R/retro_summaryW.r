@@ -1,70 +1,5 @@
-##' \code{retro_summary}
-##'
-##' Performs an exploratory, descriptive analysis of the time series of observed
-##' data, for as many syndromic groups as under study, and outputs both a
-##' markdown file, where the user can have access to all retrospective
-##' analysis R codes, and an html summary (produced by knitting the .Rmd file).
-##'
-##' The summary should constitue a first step in the retrospective
-##' exploratory analysis of available syndromic data. It is also intended to
-##' serve as means to check the result of the creation
-##' of an object of the class \code{syndromic}. That is, it is a convenient, fast
-##' way to plot all syndromic time-series in the object.
-##'
-##' If the user wants to make changes to the summary produced, it is easy
-##' to open the .Rmd file in RStudio and produce any changes to the R
-##' code generated.
-##'
-##' @name retro_summaryW-methods
+##' @name retro_summary
 ##' @docType methods
-##' @seealso \code{\link{syndromicW}}
-##' @aliases retro_summaryW
-##' @aliases retro_summaryW-methods
-##' @aliases retro_summaryW,syndromic-method
-##'
-##' @param x a \code{syndromicW} object, from where weeks and observed
-##' data will be extracted.
-##' @param object.name a name for the title in the html file, by default
-##' "my.syndromic".
-##' @param file.name a name for the rmd/html file to be created with
-##' the summary. The default is "syndromic.retro.summary". When changing the
-##' file name remember to use quotes. Please note that the function will create
-##' a subdirectory within the current working directory, where all files will be
-##' saved. Make sure to check the current working directory (\code{getwd()}) and
-##' set a convenient one if needed (\code{setwd()}). See examples.
-##' @param frequency The cycle of data repetition. By default equal to 52 (year).
-##' @param short By default set to FALSE. When set to TRUE, omits the
-##' fitting of poisson and negative binomial distributions, displaying only
-##' summary statistics and plots for each series.
-##' 
-##' @return A ".Rmd" file and a ".html" page with sections corresponding to each syndromic group
-##' found in the slot observed of the \code{syndromic} object. These include:
-##' \itemize{
-##'   \item{time series plots}{
-##'     Line plots of the data found in the slot observed of the \code{syndromic}
-##'     object provided. 
-##'   }
-##'
-##'   \item{basic summary statistics}{
-##'     Such as mean, quartiles, auto-correlation and partial auto-correlation.
-##'   }
-##'
-##'   \item{box-plots}{
-##'     meant to provide a year view of the data, super-imposing the data
-##'     from multiple year by week, in order to provide an assessment of the 
-##'     seasonal patterns that may be present in the time series.
-##'   }
-##'
-##'   \item{Poisson model fitting}{
-##'     Fitting of a Poisson model to the data using a formula specified by the user.
-##'   }
-##'
-##'   \item{Negative Binomial model fitting}{
-##'     Fitting of a negative binomial model to the data using a formula specified by the user.
-##'   }
-##'
-##' }
-##' @keywords methods
 ##' @export
 ##' @import MASS 
 ##' @examples
@@ -83,16 +18,13 @@
 ##'                                  date.format="%d/%m/%Y")
 ##'wd = getwd()
 ##'setwd(paste0(wd,"/retro"))
-##'retro_summaryW(my.syndromicW)
+##'retro_summary(my.syndromicW)
 ##'setwd(wd)
 ##'
 
 
-setGeneric('retro_summaryW',
-           signature = 'x',
-           function(x, ...) standardGeneric('retro_summaryW'))
 
-setMethod('retro_summaryW',
+setMethod('retro_summary',
           signature(x = 'syndromicW'),
           function (x,
                     object.name="my.syndromic",

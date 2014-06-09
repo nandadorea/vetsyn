@@ -142,8 +142,8 @@ setMethod('clean_baselineW',
         
         week = observed.matrix[,c]
         trend = 1:length(week)
-        cos = cos (2*pi*t/frequency)
-        sin = sin (2*pi*t/frequency)
+        cos = cos (2*pi*trend/frequency)
+        sin = sin (2*pi*trend/frequency)
         year <- as.factor(x@dates$year)
         AR1<-c(week[1],week[1:(length(week)-1)])
         AR2<-c(week[1:2],week[1:(length(week)-2)])

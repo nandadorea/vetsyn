@@ -1,12 +1,13 @@
-##' Class \code{"syndromic"}
+##' Class \code{"syndromicD"}
 ##'
-##' Syndromic is the main class of the package. Two versions are available,
-##' \code{syndromic}, which is intended for use when data are to be monitored daily,
-##' and \code{syndromicW}, which is to be used when data are monitored weekly.
+##' Syndromic is the main class of the \code{vetsyn} package, but it has been 
+##' specified for different types of data streams. \code{syndromicD} is the class
+##' used for data that are recorded and monitored DAILY, while \code{syndromicW is
+##' used when the time points for monitoring refer to WEEKS.
 ##' 
-##' The \code{syndromic} or \code{syndromicW} class stores observed data in 
+##' The \code{syndromicD} or \code{syndromicW} classes store observed data in 
 ##' a format appropriate
-##' for monitoring, and contains several slots to store input and outputs of 
+##' for monitoring, and contain several slots to store input and outputs of 
 ##' analysis (temporal monitoring).
 ##' Functions are available to create an object of the class syndromic from data 
 ##' already cleaned and prepared for monitoring, or alternatively from raw observed data.
@@ -15,13 +16,17 @@
 ##' \itemize{
 ##'   \item{observed}{
 ##'     A \code{matrix} with the number of rows equal to the number of time points available
-##' (the number of DAYS of observed data); and number of columns equal to the number of 
+##' (i.e., the number of DAYS of observed data for syndromicD, or the number of WEEKS
+##' for syndromicW); and number of columns equal to the number of 
 ##' syndromes monitored.
 ##'   }
 ##'   \item{dates}{
 ##'     A \code{DataFrame} which first column contains the dates corresponding to the observations
-##' recorded. Additional columns contain additional information extracted from the date,
-##' such as day-of-the-week, month, holidays, etc.
+##' recorded. In syndromicD the dates are recorded in the format "yyyy-mm-dd" in the first columns,
+##' and additional columns contain additional information extracted from the date,
+##' such as day-of-the-week, month, holidays, etc. For syndromicW the first column
+##' contains the week in the ISOweek format, and additional columns give the week and year in the
+##' numerical format.
 ##'   }
 ##'   \item{baseline}{
 ##'   A \code{matrix} of dimensions exactly equal to the slot observed, where observed data have been 
@@ -59,24 +64,24 @@
 ##'   }
 ##'   }
 ##'   
-##' @name syndromic-class
+##' @name syndromicD-class
 ##' @docType class
 ##' @keywords classes
 ##' @export
-##' @aliases syndromic
+##' @aliases syndromicD
 ##' @examples
 ##' ## Load data
 ##' data(observed)
-##' my.syndromic <- syndromic(observed,min.date="01/01/2010",max.date="28/05/2013")
-##' my.syndromic <- syndromic(observed[1:5,],min.date="01/01/2010",max.date="05/01/2010")
-##' my.syndromic <- syndromic(observed[1:6,],min.date="01/01/2010",max.date="08/01/2010", 
+##' my.syndromicD <- syndromicD(observed,min.date="01/01/2010",max.date="28/05/2013")
+##' my.syndromicD <- syndromicD(observed[1:5,],min.date="01/01/2010",max.date="05/01/2010")
+##' my.syndromicD <- syndromicD(observed[1:6,],min.date="01/01/2010",max.date="08/01/2010", 
 ##'                           weekends=FALSE) 
 ##' dates = seq(from=as.Date("01/01/2010",format ="%d/%m/%Y" ),
 ##'               to=as.Date("05/01/2010",format ="%d/%m/%Y" ), 
 ##'               by="days")
-##' my.syndromic <- syndromic(observed[1:5,],dates=dates) 
+##' my.syndromicD <- syndromicD(observed[1:5,],dates=dates) 
 ##'
-setClass('syndromic',
+setClass('syndromicD',
          representation(observed  = 'matrix',
                         dates     = 'data.frame',
                         baseline  = 'matrix',

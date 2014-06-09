@@ -1,6 +1,6 @@
-##' Create an object of the class \code{syndromic} from pre-cleaned data.
+##' Create an object of the class \code{syndromicD} from pre-cleaned data.
 ##' The observed data are assumed to be formatted as a \code{matrix}, in 
-##' which each row corresponds to an observation time point (p.e. days),
+##' which each row corresponds to an observation time point (DAYS),
 ##' columns correspond to each syndromic group to be monitored, and the
 ##' numbers refer to the number of observatiosn per group per time point.
 ##' For an example of data formatted this way use date(observed). For data
@@ -11,7 +11,7 @@
 ##' minimum and maximum date, and take care of constructing the appropriate
 ##' data frame (this is the recommended use). 
 ##'
-##' @title syndromic
+##' @title syndromicD
 ##' 
 ##' @param observed A \code{matrix} with the observed data
 ##' @param dates A \code{data.frame} with the complete dates of of each 
@@ -50,14 +50,14 @@
 ##' to create this slot from data on \code{observed}.
 ##' @param LCL Lower control limit. See UCL above. 
 ##' 
-##' @name syndromic
-##' @return an object of the class \code{syndromic} with the slots
-##' corresponding to the parameters described. See \code{class-syndromic}
+##' @name syndromicD
+##' @return an object of the class \code{syndromicD} with the slots
+##' corresponding to the parameters described. See \code{class-syndromicD}
 ##'  for more details.
 ##' 
 ##' @import ISOweek
 ##' 
-##' @aliases syndromic 
+##' @aliases syndromicD 
 ##' @aliases setDates
 ##' @aliases setBaseline
 ##' @aliases setAlarms
@@ -67,19 +67,19 @@
 ##' @examples
 ##' ## Load data
 ##' data(observed)
-##' my.syndromic <- syndromic(observed[1:5,]) 
-##' my.syndromic <- syndromic(observed[1:5,],min.date="01/01/2010",max.date="05/01/2010")
-##' my.syndromic <- syndromic(observed[1:6,],min.date="01/01/2010",max.date="08/01/2010", 
+##' my.syndromicD <- syndromicD(observed[1:5,]) 
+##' my.syndromicD <- syndromicD(observed[1:5,],min.date="01/01/2010",max.date="05/01/2010")
+##' my.syndromicD <- syndromicD(observed[1:6,],min.date="01/01/2010",max.date="08/01/2010", 
 ##'                           weekends=FALSE) 
 ##' dates = seq(from=as.Date("01/01/2010",format ="%d/%m/%Y" ),
 ##'               to=as.Date("05/01/2010",format ="%d/%m/%Y" ), 
 ##'               by="days")
-##' my.syndromic <- syndromic(observed[1:5,],dates=dates) 
+##' my.syndromicD <- syndromicD(observed[1:5,],dates=dates) 
 ##'
 ##'
 
 
-syndromic <- function(observed, 
+syndromicD <- function(observed, 
                       dates=data.frame(), 
                       min.date=NULL, 
                       max.date=NULL, 
@@ -106,7 +106,7 @@ syndromic <- function(observed,
   }
       
   
-  new('syndromic', observed=observed, dates=dates, 
+  new('syndromicD', observed=observed, dates=dates, 
       baseline=baseline, alarms=alarms, UCL=UCL, LCL=LCL)
 }
 
@@ -115,7 +115,7 @@ syndromic <- function(observed,
 setGeneric("setDates<-",function(object,value){standardGeneric("setDates<-")})
  setReplaceMethod(
    f="setDates",
-   signature="syndromic",
+   signature="syndromicD",
    definition=function(object,value){
      object@dates <- value
      validObject(object)      #VALIDITY CONTROL
@@ -130,7 +130,7 @@ setGeneric("setDates<-",function(object,value){standardGeneric("setDates<-")})
 setGeneric("setBaseline<-",function(object,value){standardGeneric("setBaseline<-")})
 setReplaceMethod(
   f="setBaseline",
-  signature="syndromic",
+  signature="syndromicD",
   definition=function(object,value){
     object@baseline <- value
     validObject(object)      #VALIDITY CONTROL
@@ -141,7 +141,7 @@ setReplaceMethod(
 setGeneric("setAlarms<-",function(object,value){standardGeneric("setAlarms<-")})
 setReplaceMethod(
   f="setAlarms",
-  signature="syndromic",
+  signature="syndromicD",
   definition=function(object,value){
     object@alarms <- value
     validObject(object)      #VALIDITY CONTROL
@@ -152,7 +152,7 @@ setReplaceMethod(
 setGeneric("setUCL<-",function(object,value){standardGeneric("setUCL<-")})
 setReplaceMethod(
   f="setUCL",
-  signature="syndromic",
+  signature="syndromicD",
   definition=function(object,value){
     object@UCL <- value
     validObject(object)      #VALIDITY CONTROL
@@ -164,7 +164,7 @@ setReplaceMethod(
 setGeneric("setLCL<-",function(object,value){standardGeneric("setLCL<-")})
 setReplaceMethod(
   f="setLCL",
-  signature="syndromic",
+  signature="syndromicD",
   definition=function(object,value){
     object@LCL <- value
     validObject(object)      #VALIDITY CONTROL

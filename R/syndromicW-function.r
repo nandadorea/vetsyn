@@ -1,7 +1,7 @@
 ##' Create an object of the class \code{syndromicW} from pre-cleaned data.
 ##' 
 ##' Syndromic is the main class of the package. Two versions are available,
-##' \code{syndromic}, which is intended for use when data are to be monitored daily,
+##' \code{syndromicD}, which is intended for use when data are to be monitored daily,
 ##' and \code{syndromicW}, which is to be used when data are monitored weekly.
 ##' 
 ##' The observed data are assumed to be formatted as a \code{matrix}, in 
@@ -61,7 +61,7 @@
 ##' 
 ##' @import ISOweek
 ##' 
-##' @aliases syndromic 
+##' @aliases syndromicW
 ##' @aliases setDates
 ##' @aliases setBaseline
 ##' @aliases setAlarms
@@ -110,9 +110,9 @@ syndromicW <- function(observed,
 
 
 
-setGeneric("setDatesW<-",function(object,value){standardGeneric("setDatesW<-")})
+setGeneric("setDates<-",function(object,value){standardGeneric("setDates<-")})
  setReplaceMethod(
-   f="setDatesW",
+   f="setDates",
    signature="syndromicW",
    definition=function(object,value){
      object@dates <- value
@@ -125,9 +125,9 @@ setGeneric("setDatesW<-",function(object,value){standardGeneric("setDatesW<-")})
 #test0
 
 
-setGeneric("setBaselineW<-",function(object,value){standardGeneric("setBaselineW<-")})
+setGeneric("setBaseline<-",function(object,value){standardGeneric("setBaseline<-")})
 setReplaceMethod(
-  f="setBaselineW",
+  f="setBaseline",
   signature="syndromicW",
   definition=function(object,value){
     object@baseline <- value
@@ -136,9 +136,9 @@ setReplaceMethod(
   }
 )
 
-setGeneric("setAlarmsW<-",function(object,value){standardGeneric("setAlarmsW<-")})
+setGeneric("setAlarms<-",function(object,value){standardGeneric("setAlarms<-")})
 setReplaceMethod(
-  f="setAlarmsW",
+  f="setAlarms",
   signature="syndromicW",
   definition=function(object,value){
     object@alarms <- value
@@ -147,9 +147,9 @@ setReplaceMethod(
   }
 )
 
-setGeneric("setUCLW<-",function(object,value){standardGeneric("setUCLW<-")})
+setGeneric("setUCL<-",function(object,value){standardGeneric("setUCL<-")})
 setReplaceMethod(
-  f="setUCLW",
+  f="setUCL",
   signature="syndromicW",
   definition=function(object,value){
     object@UCL <- value
@@ -159,9 +159,9 @@ setReplaceMethod(
 )
 
 
-setGeneric("setLCLW<-",function(object,value){standardGeneric("setLCLW<-")})
+setGeneric("setLCL<-",function(object,value){standardGeneric("setLCL<-")})
 setReplaceMethod(
-  f="setLCLW",
+  f="setLCL",
   signature="syndromicW",
   definition=function(object,value){
     object@LCL <- value

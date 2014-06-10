@@ -132,7 +132,8 @@
 ##' formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5" and for WEEKLY data
 ##' "trend+sin+cos" See examples.
 ##' @param frequency in case pre-processing is applied using "glm" AND the sin/cos functions 
-##' are used, the cycle of repetitions need to be set. The default is 365, for yearly cycles.
+##' are used, the cycle of repetitions need to be set. The default is one year (
+##' 365 days or 52 weeks).
 ##' 
 ##' @seealso pre_process_glm
 ##' @seealso ewma_synd
@@ -166,7 +167,7 @@
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
 ##'my.syndromicD <- cusum_synd(x=my.syndromicD,
-##'                          syndrome="Musculoskeletal",
+##'                          syndromes="Musculoskeletal",
 ##'                          evaluate.window=30,
 ##'                          baseline.window=260,
 ##'                          limit.sd=c(2.5,3,3.5),
@@ -179,7 +180,7 @@
 ##'                          frequency=260)
 ##'
 ##'my.syndromicD <- cusum_synd(x=my.syndromicD,
-##'                           syndrome= c(1,2,4,5),
+##'                           syndromes= c(1,2,4,5),
 ##'                           evaluate.window=30,
 ##'                           baseline.window=260,
 ##'                           limit.sd=c(2.5,3,3.5),
@@ -349,13 +350,13 @@ if (pre.process=="diff"){
     cos = cos(2*pi*t/frequency)
     sin = sin(2*pi*t/frequency)
     year <- as.factor(y@dates$year[start:end])
-    AR1<-y@baseline[(start-1):(end-1)]
-    AR2<-y@baseline[(start-2):(end-2)]
-    AR3<-y@baseline[(start-3):(end-3)]
-    AR4<-y@baseline[(start-4):(end-4)]
-    AR5<-y@baseline[(start-5):(end-5)]
-    AR6<-y@baseline[(start-6):(end-6)]
-    AR7<-y@baseline[(start-7):(end-7)]
+    AR1<-y@baseline[(start-1):(end-1),syndrome]
+    AR2<-y@baseline[(start-2):(end-2),syndrome]
+    AR3<-y@baseline[(start-3):(end-3),syndrome]
+    AR4<-y@baseline[(start-4):(end-4),syndrome]
+    AR5<-y@baseline[(start-5):(end-5),syndrome]
+    AR6<-y@baseline[(start-6):(end-6),syndrome]
+    AR7<-y@baseline[(start-7):(end-7),syndrome]
     trend=t
     
     fn.formula=as.formula(paste0("days~",formula))
@@ -368,13 +369,13 @@ if (pre.process=="diff"){
     cos.new = cos(2*pi*t.new/frequency)
     sin.new = sin(2*pi*t.new/frequency)
     year.new <- as.factor(y@dates$year[(tpoint-guard.band+1):(tpoint)])
-    AR1.new<-y@baseline[(tpoint-guard.band):(tpoint-1)]
-    AR2.new<-y@baseline[(tpoint-1-guard.band):(tpoint-2)]
-    AR3.new<-y@baseline[(tpoint-2-guard.band):(tpoint-3)]
-    AR4.new<-y@baseline[(tpoint-3-guard.band):(tpoint-4)]
-    AR5.new<-y@baseline[(tpoint-4-guard.band):(tpoint-5)]
-    AR6.new<-y@baseline[(tpoint-5-guard.band):(tpoint-6)]
-    AR7.new<-y@baseline[(tpoint-6-guard.band):(tpoint-7)]
+    AR1.new<-y@baseline[(tpoint-guard.band):(tpoint-1),syndrome]
+    AR2.new<-y@baseline[(tpoint-1-guard.band):(tpoint-2),syndrome]
+    AR3.new<-y@baseline[(tpoint-2-guard.band):(tpoint-3),syndrome]
+    AR4.new<-y@baseline[(tpoint-3-guard.band):(tpoint-4),syndrome]
+    AR5.new<-y@baseline[(tpoint-4-guard.band):(tpoint-5),syndrome]
+    AR6.new<-y@baseline[(tpoint-5-guard.band):(tpoint-6),syndrome]
+    AR7.new<-y@baseline[(tpoint-6-guard.band):(tpoint-7),syndrome]
     
     
     new.data <- data.frame(t.new,month.new,dow.new,cos.new,sin.new,year.new,

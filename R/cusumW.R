@@ -13,7 +13,7 @@
 ##'                                     date.format="%d/%m/%Y",
 ##'                                     data=lab.daily)
 #'my.syndromicW <- cusum_synd(x=my.syndromicW,
-##'                          syndrome="Musculoskeletal",
+##'                          syndromes="Musculoskeletal",
 ##'                          evaluate.window=10,
 ##'                          baseline.window=104,
 ##'                          limit.sd=c(2.5,3,3.5),
@@ -26,7 +26,7 @@
 ##'                          frequency=52)
 ##'
 ##'my.syndromicW <- cusum_synd(x=my.syndromicW,
-##'                           syndrome= c(1,2,4,5),
+##'                           syndromes= c(1,2,4,5),
 ##'                           evaluate.window=10,
 ##'                           baseline.window=104,
 ##'                           limit.sd=c(2.5,3,3.5),
@@ -192,10 +192,10 @@ setMethod('cusum_synd',
                     cos = cos(2*pi*t/frequency)
                     sin = sin(2*pi*t/frequency)
                     year <- as.factor(y@dates$year[start:end])
-                    AR1<-y@baseline[(start-1):(end-1)]
-                    AR2<-y@baseline[(start-2):(end-2)]
-                    AR3<-y@baseline[(start-3):(end-3)]
-                    AR4<-y@baseline[(start-4):(end-4)]
+                    AR1<-y@baseline[(start-1):(end-1),syndrome]
+                    AR2<-y@baseline[(start-2):(end-2),syndrome]
+                    AR3<-y@baseline[(start-3):(end-3),syndrome]
+                    AR4<-y@baseline[(start-4):(end-4),syndrome]
                     trend=t
                     
                     fn.formula=as.formula(paste0("week~",formula))
@@ -206,13 +206,13 @@ setMethod('cusum_synd',
                     cos.new = cos(2*pi*t.new/frequency)
                     sin.new = sin(2*pi*t.new/frequency)
                     year.new <- as.factor(y@dates$year[(tpoint-guard.band+1):(tpoint)])
-                    AR1.new<-y@baseline[(tpoint-guard.band):(tpoint-1)]
-                    AR2.new<-y@baseline[(tpoint-1-guard.band):(tpoint-2)]
-                    AR3.new<-y@baseline[(tpoint-2-guard.band):(tpoint-3)]
-                    AR4.new<-y@baseline[(tpoint-3-guard.band):(tpoint-4)]
+                    AR1.new<-y@baseline[(tpoint-guard.band):(tpoint-1),syndrome]
+                    AR2.new<-y@baseline[(tpoint-1-guard.band):(tpoint-2),syndrome]
+                    AR3.new<-y@baseline[(tpoint-2-guard.band):(tpoint-3),syndrome]
+                    AR4.new<-y@baseline[(tpoint-3-guard.band):(tpoint-4),syndrome]
                     
                     
-                    new.data <- data.frame(t.new,,cos.new,sin.new,year.new,
+                    new.data <- data.frame(t.new,cos.new,sin.new,year.new,
                                            AR1.new,AR2.new,AR3.new,AR4.new)
                     colnames(new.data) <- c("trend","cos","sin","year",
                                             "AR1","AR2","AR3","AR4")

@@ -6,20 +6,17 @@
 ##' This function is provided for users interested in capturing
 ##' (saving or plotting) the results of this pre-processing step. 
 ##' However, in the context of syndromic
-##' surveillance through objects of the class \code{syndromic},
+##' surveillance through objects of the class syndromic (\code{syndromicD} or \code{syndromicW}),
 ##' pre-processing is performed in conjunction with the application of
 ##' control-charts, saving results into an object of the 
-##' class \code{syndromic} (within
+##' class \code{syndromic} (D or W) (within
 ##' detection algorithms. - See ewma_synd(), shew_synd() and cusum_synd())
 ##'
-##' @name pre_process_glm-methods
+##' @name pre_process_glm
 ##' @docType methods
-##' @seealso \code{\link{syndromic}}
-##' @aliases pre_process_glm
-##' @aliases pre_process_glm-methods
-##' @aliases pre_process_glm,syndromic-method
 ##'
-##' @param x a \code{syndromic} object, which must have at least 
+##' @param x a syndromic (\code{syndromicD} or \code{syndromicW})
+##'  object, which must have at least 
 ##' the slot of observed data and a data frame in the slot dates.
 ##' @param slot the slot in the \code{syndromic} object to be processed,
 ##' by default, "observed", but this argument can be used to
@@ -34,11 +31,18 @@
 ##' "poisson". if "nbinom" is used, the function
 ##' glm.nb is used instead.
 ##' @param formula the regression formula to be used. The following arguments
-##' are accepted: trend (for a monotonic trend), month, dow (day of week),
-##' sin, cos, Ar1 (auto-regressive for 1 days) to AR7. These elements can be combined
-##' into any formula. The default is formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5". See examples.
-##' @param period in case pre-processing is applied using "glm" AND the sin/cos functions 
-##' are used, the cycle of repetitions need to be set. The default is 365, for yearly cycles.
+##' are accepted for DAILY data (\code{syndromicD} class objects provided): 
+##' trend (for a monotonic trend), year, month, dow (day of week),
+##' sin, cos, Ar1 (auto-regressive for 1 days) to AR7. For WEEKLY data
+##' (\code{syndromicW} class objects provided): trend, sin, cos, year and 1 to 4 
+##' autoregressive variables.
+##' These elements can be combined
+##' into any formula. The default for DAILY data is 
+##' formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5" and for WEEKLY data
+##' "trend+sin+cos" See examples.
+##' @param frequency in case pre-processing is applied using "glm" AND the sin/cos functions 
+##' are used, the cycle of repetitions need to be set. The default is a year
+##' (365 days or 52 weeks).
 ##' @param plot whether plots comparing observed data and the result of 
 ##' the pre-processing should be displayed.
 ##' @param print.model whether the result of model fitting should be
@@ -58,26 +62,26 @@
 ##' DOI: 10.1016/j.prevetmed.2012.10.010.
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
 ##'                                  remove.dow=c(6,0),
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
-##'pre_processed_data <- pre_process_glm(my.syndromic)
-##'pre_processed_data <- pre_process_glm(my.syndromic,
+##'pre_processed_data <- pre_process_glm(my.syndromicD)
+##'pre_processed_data <- pre_process_glm(my.syndromicD,
 ##'                               syndromes="Musculoskeletal")
-##'pre_processed_data <- pre_process_glm(my.syndromic,
+##'pre_processed_data <- pre_process_glm(my.syndromicD,
 ##'                               syndromes=c("GIT","Musculoskeletal"))
-##'pre_processed_data <- pre_process_glm(my.syndromic,
+##'pre_processed_data <- pre_process_glm(my.syndromicD,
 ##'                               syndromes=3)
-##'pre_processed_data <- pre_process_glm(my.syndromic
+##'pre_processed_data <- pre_process_glm(my.syndromicD,
 ##'                               syndromes=c(1,3))
 ##'
-##'pre_processed_data <- pre_process_glm(my.syndromic,
+##'pre_processed_data <- pre_process_glm(my.syndromicD,
 ##'                               family="nbinom")
-##'pre_processed_data <- pre_process_glm(my.syndromic,slot="baseline")
+
                              
 
 setGeneric('pre_process_glm',
@@ -85,13 +89,13 @@ setGeneric('pre_process_glm',
            function(x, ...) standardGeneric('pre_process_glm'))
 
 setMethod('pre_process_glm',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x,
                     slot="observed",
                     syndromes=NULL,
                     family="poisson",
                     formula="dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7",
-                    period=365,
+                    frequency=365,
                     print.model=TRUE,
                     plot=TRUE)
         {
@@ -137,8 +141,8 @@ processed.matrix <- matrix(NA,ncol=dim(observed.matrix)[2],nrow=dim(observed.mat
         t = 1:length(days)
         month = as.factor(x@dates$month)
         dow <- as.factor(x@dates$dow)
-        cos = cos (2*pi*t/period)
-        sin = sin (2*pi*t/period)
+        cos = cos (2*pi*t/frequency)
+        sin = sin (2*pi*t/frequency)
         year <- as.factor(x@dates$year)
         AR1<-c(days[1],days[1:(length(days)-1)])
        AR2<-c(days[1:2],days[1:(length(days)-2)])

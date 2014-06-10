@@ -168,7 +168,7 @@
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
 ##'my.syndromicD <- ewma_synd(x=my.syndromicD,
-##'                          syndrome="Musculoskeletal",
+##'                          syndromes="Musculoskeletal",
 ##'                          evaluate.window=30,
 ##'                          baseline.window=260,
 ##'                          lambda=0.2,
@@ -182,7 +182,7 @@
 ##'                          frequency=260)
 ##'
 ##'my.syndromicD <- ewma_synd(x=my.syndromicD,
-##'                           syndrome= c(1,2,4,5),
+##'                           syndromes= c(1,2,4,5),
 ##'                           evaluate.window=30,
 ##'                           baseline.window=260,
 ##'                           lambda=0.2,

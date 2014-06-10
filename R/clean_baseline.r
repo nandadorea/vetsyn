@@ -1,5 +1,4 @@
-##' \code{clean_baseline}
-##'
+
 ##' Function to retrospectively remove possible outbreak signals and excessive
 ##' noise, producing an outbreak free baseline that will serve to
 ##' train outbreak-signal detection algorithms during prospective analysis.
@@ -11,14 +10,11 @@
 ##' (set by the user). These observations are substituted by the model
 ##' prediction for that time point.
 ##'
-##' @name clean_baseline-methods
+##' @name clean_baseline
 ##' @docType methods
-##' @seealso \code{\link{syndromic}}
-##' @aliases clean_baseline
-##' @aliases clean_baseline-methods
-##' @aliases clean_baseline,syndromic-method
-##'
-##' @param x a \code{syndromic} object, which must have at least 
+##' 
+##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object, 
+##' which must have at least 
 ##' the slot of observed data and a data frame in the slot dates.
 ##' @param syndromes an optional parameter, if not specified, all
 ##' columns in the slot observed of the syndromic object
@@ -30,16 +26,22 @@
 ##' glm.nb is used instead.
 ##' @param limit the confidence interval to be used in identifying outliers.
 ##' @param formula the regression formula to be used. The following arguments
-##' are accepted: trend (for a monotonic trend), month, dow (day of week), year, 
+##' are accepted for DAILY data (\code{syndromicD}): trend (for a monotonic trend), 
+##' month, dow (day of week), year, 
 ##' sin, cos, AR1 (auto-regressive for 1 days) to AR7. These elements can be combined
 ##' into any formula. The default is formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5". See examples. 
+##' @param frequency the frequency of repetition in the data, by default 
+##' one year (365 for DAILY data (object provided belongs to the class
+##' \code{syndromicD}) and 52 for WEEK data (object provided belongs to the class
+##' \code{syndromicW}))
 ##' @param plot whether plots comparing observed data and the result of 
 ##' the cleaning process should be displayed.
 ##' @param print.model whether the result of model fitting should be
 ##' printed on the console. This is recommended when the user is 
 ##' exploring which dependent variables to keep or drop.
 ##' 
-##' @return An object of the class syndromic which contains all 
+##' @return An object of the class syndromic (\code{syndromicD} or \code{syndromicW})
+##'  which contains all 
 ##' elements from the object provided in x, but in which
 ##' the slot baseline has been filled with an outbreak-free baseline
 ##' for each syndromic group. When the user chooses to restrict analyses to some 
@@ -58,47 +60,65 @@
 ##' DOI: 10.1016/j.prevetmed.2012.10.010.
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
 ##'                                  remove.dow=c(6,0),
 ##'                                  add.to=c(2,1),                                  
 ##'                                  data=lab.daily)
-##'my.syndromic <- clean_baseline(my.syndromic)
-##'my.syndromic <- clean_baseline(my.syndromic, formula="dow+month+year")
-##'my.syndromic <- clean_baseline(my.syndromic, formula="dow+sin+cos+trend")
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes="Musculoskeletal")
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes=c("GIT","Musculoskeletal"))
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes=3)
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes=c(1,3))
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                                 frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD, 
+##'                                 formula="dow+month+year",
+##'                                 frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD, formula="dow+sin+cos+trend",
+##'                                 frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                               syndromes="Musculoskeletal",
+##'                               frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                               syndromes=c("GIT","Musculoskeletal"),
+##'                               frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                               syndromes=3,
+##'                               frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                               syndromes=c(1,3),
+##'                               frequency=260)
 ##'
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               family="nbinom")
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes="Musculoskeletal",family="nbinom")
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes=c("GIT","Musculoskeletal"),family="nbinom")
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes=3,family="nbinom")
-##'my.syndromic <- clean_baseline(my.syndromic,
-##'                               syndromes=c(1,3),family="nbinom")
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                               family="nbinom",
+##'                               frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                               syndromes="Musculoskeletal",
+##'                               family="nbinom",
+##'                               frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                               syndromes=c("GIT","Musculoskeletal"),
+##'                               family="nbinom",
+##'                               frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                               syndromes=3,
+##'                               family="nbinom",
+##'                               frequency=260)
+##'my.syndromicD <- clean_baseline(my.syndromicD,
+##'                               syndromes=c(1,3),
+##'                               family="nbinom",
+##'                               frequency=260)
 
 setGeneric('clean_baseline',
            signature = 'x',
            function(x, ...) standardGeneric('clean_baseline'))
 
 setMethod('clean_baseline',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x,
                     syndromes=NULL,
                     family="poisson",
                     limit=0.95,
                     formula="dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7",
+                    frequency=365,
                     plot=TRUE,
                     print.model=TRUE)
         {
@@ -140,10 +160,11 @@ setMethod('clean_baseline',
        #aberration is detected
       baseline.matrix[,syndromes.num] <- observed.matrix[,syndromes.num]
       
-       period<-365
-      if (length(which(x@dates$weekday==0))==0){
-        period<-260
-      }
+     #now frequency
+#        period<-365
+#       if (length(which(x@dates$weekday==0))==0){
+#         period<-260
+#       }
        
        
        loop=0
@@ -151,11 +172,11 @@ setMethod('clean_baseline',
        loop=loop+1
         
         days = observed.matrix[,c]
-        t = 1:length(days)
+        trend = 1:length(days)
         month = as.factor(x@dates$month)
         dow <- as.factor(x@dates$dow)
-        cos = cos (2*pi*t/period)
-        sin = sin (2*pi*t/period)
+        cos = cos (2*pi*trend/frequency)
+        sin = sin (2*pi*trend/frequency)
         year <- as.factor(x@dates$year)
         AR1<-c(days[1],days[1:(length(days)-1)])
         AR2<-c(days[1:2],days[1:(length(days)-2)])
@@ -164,7 +185,7 @@ setMethod('clean_baseline',
         AR5<-c(days[1:5],days[1:(length(days)-5)])
         AR6<-c(days[1:6],days[1:(length(days)-6)])
         AR7<-c(days[1:7],days[1:(length(days)-7)])
-        trend=t
+        
 
         fn.formula=as.formula(paste0("days~",formula))
       
@@ -225,7 +246,7 @@ setMethod('clean_baseline',
       }
       
       y <- x
-      setBaseline(y) <- baseline.matrix
+      setBaselineD(y) <- baseline.matrix
       return(y)
        
           }

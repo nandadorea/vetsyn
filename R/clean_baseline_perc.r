@@ -13,14 +13,11 @@
 ##' how the running quantiles function handles the beginning and end of the
 ##' time series.
 ##'
-##' @name clean_baseline_perc-methods
+##' @name clean_baseline_perc
 ##' @docType methods
-##' @seealso \code{\link{syndromic}}
-##' @aliases clean_baseline_perc
-##' @aliases clean_baseline_perc-methods
-##' @aliases clean_baseline_perc,syndromic-method
 ##'
-##' @param x a syndromic object, which must have at least 
+##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object, 
+##' which must have at least 
 ##' the slot of observed data and a data frame in the slot dates.
 ##' @param syndromes an optional parameter, if not specified, all
 ##' columns in the slot observed of the syndromic object
@@ -33,7 +30,8 @@
 ##' @param plot whether plots comparing observed data and the result of 
 ##' the cleaning process should be displayed.
 ##' 
-##' @return An object of the class syndromic which contains all 
+##' @return An object of the class syndromic (\code{syndromicD} or \code{syndromicW})
+##'  which contains all 
 ##' elements from the object provided in x, but in which
 ##' the slot baseline has been filled with an outbreak-free baseline
 ##' for each syndromic group. When the user chooses to restrict analyses to some 
@@ -51,21 +49,20 @@
 ##' DOI: 10.1016/j.prevetmed.2012.10.010.
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
-##'                                  merge.weekends=TRUE,
 ##'                                  data=lab.daily)
-##'my.syndromic <- clean_baseline_perc(my.syndromic)
-##'my.syndromic <- clean_baseline_perc(my.syndromic,run.window=90)
-##'my.syndromic <- clean_baseline_perc(my.syndromic,
+##'my.syndromicD <- clean_baseline_perc(my.syndromicD)
+##'my.syndromicD <- clean_baseline_perc(my.syndromicD,run.window=90)
+##'my.syndromicD <- clean_baseline_perc(my.syndromicD,
 ##'                               syndromes="Musculoskeletal")
-##'my.syndromic <- clean_baseline_perc(my.syndromic,
+##'my.syndromicD <- clean_baseline_perc(my.syndromicD,
 ##'                               syndromes=c("GIT","Musculoskeletal"))
-##'my.syndromic <- clean_baseline_perc(my.syndromic,
+##'my.syndromicD <- clean_baseline_perc(my.syndromicD,
 ##'                               syndromes=3)
-##'my.syndromic <- clean_baseline_perc(my.syndromic,
+##'my.syndromicD <- clean_baseline_perc(my.syndromicD,
 ##'                               syndromes=c(1,3))
 
 
@@ -75,7 +72,7 @@ setGeneric('clean_baseline_perc',
            function(x, ...) standardGeneric('clean_baseline_perc'))
 
 setMethod('clean_baseline_perc',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x,
                     syndromes=NULL,
                     limit=0.95,
@@ -152,7 +149,7 @@ setMethod('clean_baseline_perc',
             }
             
             y <- x
-            setBaseline(y) <- baseline.matrix
+            setBaselineD(y) <- baseline.matrix
             return(y)
             
           }

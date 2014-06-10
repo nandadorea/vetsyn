@@ -1,14 +1,10 @@
-##' @name clean_baseline_perc-methods
+##' @name clean_baseline_perc
 ##' @docType methods
-##' @seealso \code{\link{syndromicW}}
-##' @aliases clean_baseline_perc
-##' @aliases clean_baseline_perc-methods
-##' @aliases clean_baseline_perc,syndromicW-method
 ##' @export
 ##' @importFrom caTools runquantile
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
+##'my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
@@ -97,8 +93,8 @@ setMethod('clean_baseline_perc',
                 if (loop==1){
                   par(mfrow=c(length(syndromes),1),mar=c(2,4,2,2))}
                 
-                plot(days, x=x@dates[,1], type="l",ylab=syndrome.name)
-                lines(x.smooth,x=x@dates[,1], col="red")
+                plot(days, x=ISOweek2date(x@dates[,1]), type="l",ylab=syndrome.name)
+                lines(x.smooth,x=ISOweek2date(x@dates[,1]), col="red")
                 legend("topleft", pch=3,col=c("black","red"),
                        c("Original series","Series with outliers removed"))
               }       
@@ -108,7 +104,7 @@ setMethod('clean_baseline_perc',
             }
             
             y <- x
-            setBaseline(y) <- baseline.matrix
+            setBaselineW(y) <- baseline.matrix
             return(y)
             
           }

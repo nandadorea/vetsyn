@@ -53,16 +53,14 @@
 ##'
 ##' @name shew_synd
 ##' @docType methods
-##' @aliases shew_synd
-##' @aliases shew_synd-methods
-##' @aliases shew_synd,syndromic-method
 ##'
-##' @param x a \code{syndromic} object. If pre-processing using
+##' @param x a syndromic (\code{syndromicD} or \code{syndromicW})  object. 
+##' If pre-processing using
 ##' regression is going to be used, the slot dates must contain
 ##' a data frame containing at least the columns for the regression 
-##' variables chosen to be used (year, dow, month).
+##' variables chosen to be used.
 ##' @param syndromes an optional parameter, if not specified, all
-##' columns in the slot observed of the \code{syndromic} object
+##' columns in the slot observed of the syndromic object
 ##' will be used. The user can choose to restrict the analyses to 
 ##' a few syndromic groups listing their name or column position
 ##' in the observed matrix. See examples.
@@ -79,7 +77,7 @@
 ##' a single value or as a vector. When a vector is provided, multiple 
 ##' detection results are given, and the alarm result stored is a sum
 ##' of how many detection limits were met. 
-##' @param alarm.dim The \code{syndromic} object is set to accept the result of 
+##' @param alarm.dim The syndromic object is set to accept the result of 
 ##' multiple detection algorithms. These results are stored as a third 
 ##' dimension in the slot alarms. Here the user can choose which order in that 
 ##' dimension should store the results of this algorithm.
@@ -124,10 +122,16 @@
 ##' "poisson". if "nbinom" is used, the function
 ##' glm.nb is used instead.
 ##' @param formula the regression formula to be used. The following arguments
-##' are accepted: trend (for a monotonic trend), month, dow (day of week),
-##' sin, cos, AR1 (auto-regressive for 1 days) to AR7. These elements can be combined
-##' into any formula. The default is formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5". See examples.
-##' @param period in case pre-processing is applied using "glm" AND the sin/cos functions 
+##' are accepted for DAILY data (\code{syndromicD} class objects provided): 
+##' trend (for a monotonic trend), year, month, dow (day of week),
+##' sin, cos, Ar1 (auto-regressive for 1 days) to AR7. For WEEKLY data
+##' (\code{syndromicW} class objects provided): trend, sin, cos, year and 1 to 4 
+##' autoregressive variables.
+##' These elements can be combined
+##' into any formula. The default for DAILY data is 
+##' formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5" and for WEEKLY data
+##' "trend+sin+cos" See examples.
+##' @param frequency in case pre-processing is applied using "glm" AND the sin/cos functions 
 ##' are used, the cycle of repetitions need to be set. The default is 365, for yearly cycles.
 ##' 
 ##' @seealso pre_process_glm
@@ -157,14 +161,14 @@
 ##' 
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
 ##'                                  remove.dow=c(6,0),
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
-##'my.syndromic <- shew_synd(x=my.syndromic,
+##'my.syndromicD <- shew_synd(x=my.syndromicD,
 ##'                          syndrome="Musculoskeletal",
 ##'                          evaluate.window=30,
 ##'                          baseline.window=260,
@@ -175,9 +179,9 @@
 ##'                          pre.process="glm",
 ##'                          family="nbinom",
 ##'                          formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5",
-##'                          period=260)
+##'                          frequency=260)
 ##'
-##'my.syndromic2 <- shew_synd(x=my.syndromic,
+##'my.syndromicD <- shew_synd(x=my.syndromicD,
 ##'                           syndrome= c(1,2,4,5),
 ##'                           evaluate.window=30,
 ##'                           baseline.window=260,
@@ -193,7 +197,7 @@ setGeneric('shew_synd',
            function(x, ...) standardGeneric('shew_synd'))
 
 setMethod('shew_synd',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x,
                     syndromes=NULL,
                     evaluate.window=1,
@@ -208,7 +212,7 @@ setMethod('shew_synd',
                     diff.window=7,
                     family="poisson",
                     formula="dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7",
-                    period=365
+                    frequency=365
           )
         {
     
@@ -236,7 +240,7 @@ y <- x
             #if slot alarms does not exist at all, fill it with NA
             #for the minmum dimensions required
             if (dim(y@alarms)[1]==0){
-              setAlarms(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
+              setAlarmsD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
               dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
               dimnames(y@alarms)[[3]][alarm.dim] <- "Shewhart"
               
@@ -256,7 +260,7 @@ y <- x
             #all the same for UCL
             if (UCL!=FALSE){
             if (dim(y@UCL)[1]==0){
-              setUCL(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
+              setUCLD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
               dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
               dimnames(y@UCL)[[3]][alarm.dim] <- "Shewhart"
               
@@ -278,7 +282,7 @@ y <- x
             #all the same for LCL
             if (LCL!=FALSE){
               if (dim(y@LCL)[1]==0){
-                setLCL(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
+                setLCLD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
                 dimnames(y@LCL)[[2]] <- dimnames(y@observed)[[2]]
                 dimnames(y@LCL)[[3]][alarm.dim] <- "Shewhart"
                 
@@ -298,7 +302,7 @@ y <- x
             
            #if Baseline does not exist at all, fill it with NA for the dimensions required 
             if (dim(y@baseline)[1]==0){
-              setBaseline(y)<-matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2],
+              setBaselineD(y)<-matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2],
                                      dimnames=dimnames(y@observed))
             }
             
@@ -345,8 +349,8 @@ if (pre.process=="diff"){
     t = 1:length(days)
     month = as.factor(y@dates$month[start:end])
     dow <- as.factor(y@dates$dow[start:end])
-    cos = cos(2*pi*t/period)
-    sin = sin(2*pi*t/period)
+    cos = cos(2*pi*t/frequency)
+    sin = sin(2*pi*t/frequency)
     year <- as.factor(y@dates$year[start:end])
     AR1<-y@baseline[(start-1):(end-1)]
     AR2<-y@baseline[(start-2):(end-2)]
@@ -364,8 +368,8 @@ if (pre.process=="diff"){
     t.new = c((t[length(t)-guard.band+2]:t[length(t)]),(t[length(t)]+1))
     month.new = as.factor(y@dates$month[(tpoint-guard.band+1):(tpoint)])
     dow.new <- as.factor(y@dates$dow[(tpoint-guard.band+1):(tpoint)])
-    cos.new = cos(2*pi*t.new/period)
-    sin.new = sin(2*pi*t.new/period)
+    cos.new = cos(2*pi*t.new/frequency)
+    sin.new = sin(2*pi*t.new/frequency)
     year.new <- as.factor(y@dates$year[(tpoint-guard.band+1):(tpoint)])
     AR1.new<-y@baseline[(tpoint-guard.band):(tpoint-1)]
     AR2.new<-y@baseline[(tpoint-1-guard.band):(tpoint-2)]

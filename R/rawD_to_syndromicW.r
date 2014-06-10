@@ -240,10 +240,14 @@ rawD_to_syndromicW <- function(id,
   syndrome.counts$week <- NULL
   syndrome.counts$year <- NULL
   
-  dates <- dates[,c("week","year")]
-    dates <- unique(dates)
-  ISOweek<- create_isoweek(dates$week,dates$year,reference.day=1)
-  dates <- cbind(ISOweek,dates)
+  
+  ISOweek <- date2ISOweek(dates[,1])
+    ISOweek<- paste0( (substr(as.character(ISOweek),1,9)),"1" )
+  week <- as.numeric(substr(as.character(ISOweek),7,8))
+  year <- as.numeric(substr(as.character(ISOweek),1,4))
+  dates <- data.frame(ISOweek,week,year)
+  dates <- unique(dates)
+  
     
   
   syndromicW(observed=as.matrix(syndrome.counts), dates=dates)

@@ -169,7 +169,7 @@
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
 ##'my.syndromicD <- shew_synd(x=my.syndromicD,
-##'                          syndrome="Musculoskeletal",
+##'                          syndromes="Musculoskeletal",
 ##'                          evaluate.window=30,
 ##'                          baseline.window=260,
 ##'                          limit.sd=c(2.5,3,3.5),
@@ -182,7 +182,7 @@
 ##'                          frequency=260)
 ##'
 ##'my.syndromicD <- shew_synd(x=my.syndromicD,
-##'                           syndrome= c(1,2,4,5),
+##'                           syndromes= c(1,2,4,5),
 ##'                           evaluate.window=30,
 ##'                           baseline.window=260,
 ##'                           limit.sd=c(2.5,3,3.5),

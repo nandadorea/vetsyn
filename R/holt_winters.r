@@ -35,14 +35,12 @@
 ##'
 ##' @name holt_winters_synd
 ##' @docType methods
-##' @aliases holt_winters_synd
-##' @aliases holt_winters_synd-methods
-##' @aliases holt_winters_synd,syndromic-method
 ##'
-##' @param x a \code{syndromic} object, which must have  
+##' @param x a syndromic (\code{syndromicD} or \code{syndromicW})
+##' object, which must have  
 ##' the slot of observed data, and a data frame containing the
 ##' variable  year in the slot dates. If the slot baseline is not 
-##' available, then the data in in the slot observed will be copied into
+##' available, then the data in the slot observed will be copied into
 ##' the baseline slot.
 ##' @param syndromes an optional parameter, if not specified, all
 ##' columns in the slot observed of the \code{syndromic} object
@@ -56,11 +54,12 @@
 ##' at least two cycles to initialize. That is, if the cycle of the data 
 ##' is weekly, then the two initial weeks of the data cannot be included
 ##' in the analyses.
-##' @param frequency The frequency of cycles in the time series. Even though
+##' @param frequency The frequency of cycles in the time series. For DAILY data
+##' (\code{syndromicD}): Even though
 ##' this is normally a year (frequency=365), we have found that the algorithm
 ##' works better with a frequency equal to the week (5 or 7 days, dependening
 ##' on whether weekends are included) when strong day-of-week effects are
-##' present in the data. 
+##' present in the data.  
 ##' @param baseline.window The length of the 
 ##' baseline used to train the algorithm in order 
 ##' to provide a forecast, which will serve to decide whether the current 
@@ -78,7 +77,7 @@
 ##' exceeded. If for instance the limits are set to c(2,2.5,3), then an observation 
 ##' which is greater than the 2.5 limit, but lower than 3, will have a detection score
 ##' of 2 (2 detection limits "broken"). 
-##' @param alarm.dim The \code{syndromic} object is set to accept the result of 
+##' @param alarm.dim The syndromic object is set to accept the result of 
 ##' multiple detection algorithms. These results are stored as a third 
 ##' dimension in the slot alarms. Here the user can choose which order in that 
 ##' dimension should store the results of this algorithm. If this is the first
@@ -116,7 +115,8 @@
 ##' @seealso shew_synd
 ##' @seealso cusum_synd
 ##' 
-##' @return An object of the class \code{syndromic} which contains all 
+##' @return An object of the class syndromic (\code{syndromicD} or \code{syndromicW},
+##' depending on which was provided as input) which contains all 
 ##' elements form the object provided in x, but in which
 ##' the slot \code{alarm} has been filled in the following way: for the
 ##' rows assigned in \code{evaluate.window}, columns indicated in
@@ -133,12 +133,12 @@
 ##' @import abind
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
 ##'                                  data=lab.daily)
-##'my.syndromic <- holt_winters_synd(x=my.syndromic,
+##'my.syndromicD <- holt_winters_synd(x=my.syndromicD,
 ##'                             evaluate.window=30,
 ##'                             frequency=7,
 ##'                             baseline.window=365,
@@ -147,14 +147,14 @@
 ##'                             correct.baseline=2,
 ##'                             alarm.dim=1)
 ##'
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
 ##'                                  remove.dow=c(6,0),
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
-##'my.syndromic <- holt_winters_synd(x=my.syndromic,
+##'my.syndromicD <- holt_winters_synd(x=my.syndromicD,
 ##'                             syndromes="Musculoskeletal",
 ##'                             evaluate.window=30,
 ##'                             frequency=5,
@@ -170,7 +170,7 @@ setGeneric('holt_winters_synd',
            function(x, ...) standardGeneric('holt_winters_synd'))
 
 setMethod('holt_winters_synd',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x,
                     syndromes=NULL,
                     evaluate.window=1,
@@ -210,7 +210,7 @@ setMethod('holt_winters_synd',
             #if slot alarms does not exist at all, fill it with NA
             #for the minmum dimensions required
             if (dim(y@alarms)[1]==0){
-              setAlarms(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
+              setAlarmsD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
               dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
               dimnames(y@alarms)[[3]][alarm.dim] <- "HoltWinters"
             }
@@ -229,7 +229,7 @@ setMethod('holt_winters_synd',
             #all the same for UCL
             if (UCL!=FALSE){
             if (dim(y@UCL)[1]==0){
-              setUCL(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
+              setUCLD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
               dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
               dimnames(y@UCL)[[3]][alarm.dim] <- "HoltWinters"
             }
@@ -248,7 +248,7 @@ setMethod('holt_winters_synd',
             
            #if Baseline does not exist at all, fill it with NA for the dimensions required 
             if (dim(y@baseline)[1]==0){
-              setBaseline(y)<-matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2],
+              setBaselineD(y)<-matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2],
                                      dimnames=dimnames(y@observed))
             }
             

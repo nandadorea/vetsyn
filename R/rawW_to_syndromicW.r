@@ -84,7 +84,7 @@
 ##' @import ISOweek
 ##' @export 
 ##' @examples
-##' data(lab.daily)
+##' data(lab.weekly)
 ##' my.syndromicW <- rawW_to_syndromicW (id=lab.weekly$SubmissionID,
 ##'                                   syndromes.var=lab.weekly$Syndrome,
 ##'                                   week.var=lab.weekly$DateofSubmission)

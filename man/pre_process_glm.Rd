@@ -90,7 +90,7 @@ pre_processed_data <- pre_process_glm(my.syndromicD,
 pre_processed_data <- pre_process_glm(my.syndromicD,
                               family="nbinom")
 data(lab.daily)
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",

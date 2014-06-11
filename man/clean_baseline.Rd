@@ -121,7 +121,7 @@ my.syndromicD <- clean_baseline(my.syndromicD,
                               family="nbinom",
                               frequency=260)
 data(lab.daily)
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",

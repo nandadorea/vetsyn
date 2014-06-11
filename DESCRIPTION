@@ -62,8 +62,6 @@ Collate:
     'lab.weekly-data.r'
     'lab.weekly.update-data.r'
     'observedW-data.r'
-    'rawD_to_syndromicW.r'
-    'rawW_to_syndromicW.r'
     'retro_summaryW.r'
     'showW.r'
     'subsettingW.r'
@@ -80,3 +78,4 @@ Collate:
     'syndromic_pageW.R'
     'update_syndromicD.r'
     'update_syndromicW.R'
+    'raw_to_syndromicW.r'

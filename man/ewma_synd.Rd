@@ -224,7 +224,7 @@ my.syndromicD <- ewma_synd(x=my.syndromicD,
                           pre.process="diff",
                           diff.window=5)
 data(lab.daily)
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                     syndromes.var=Syndrome,
                                     dates.var=DateofSubmission,
                                     date.format="\%d/\%m/\%Y",

@@ -62,7 +62,7 @@ plot_syndromic(x=my.syndromicD,
               syndromes=c(1,3),
               limit=NULL)
 data(lab.daily)
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",

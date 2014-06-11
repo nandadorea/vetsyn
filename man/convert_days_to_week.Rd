@@ -33,7 +33,7 @@
 }
 \examples{
 data(lab.daily)
-my.syndromic <- raw_to_syndromic (id=lab.daily$SubmissionID,
+my.syndromic <- raw_to_syndromicD (id=lab.daily$SubmissionID,
                                   syndromes.var=lab.daily$Syndrome,
                                   dates.var=lab.daily$DateofSubmission,
                                   date.format="\%d/\%m/\%Y")

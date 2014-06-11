@@ -167,7 +167,7 @@ my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                 data=lab.daily.update)
 data(lab.daily)
 data(lab.daily.update)
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                   syndromes.var=Syndrome,
                                   dates.var=DateofSubmission,
                                   date.format="\%d/\%m/\%Y",

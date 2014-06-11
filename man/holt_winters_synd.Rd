@@ -196,7 +196,7 @@ my.syndromicD <- holt_winters_synd(x=my.syndromicD,
                             alarm.dim=1,
                             UCL=2)
 data(lab.daily)
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                     syndromes.var=Syndrome,
                                     dates.var=DateofSubmission,
                                     date.format="\%d/\%m/\%Y",

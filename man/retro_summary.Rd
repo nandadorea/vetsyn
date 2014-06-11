@@ -99,7 +99,7 @@ setwd(paste0(wd,"/retro"))
 retro_summary(my.syndromicD)
 setwd(wd)
 data(lab.daily)
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                   syndromes.var=Syndrome,
                                   dates.var=DateofSubmission,
                                   date.format="\%d/\%m/\%Y",
@@ -107,7 +107,7 @@ my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
 retro_summary(my.syndromicW)
 
 
-my.syndromicW <- rawD_to_syndromicW (id=lab.daily$SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=lab.daily$SubmissionID,
                                  syndromes.var=lab.daily$Syndrome,
                                  dates.var=lab.daily$DateofSubmission,
                                  date.format="\%d/\%m/\%Y")

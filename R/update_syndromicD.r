@@ -1,19 +1,13 @@
-##' \code{update_syndromic}
+##' \code{update_syndromicD}
 ##'
-##' Updates an object of the class \code{syndromic}, adding additional rows
+##' Updates an object of the class \code{syndromicD}, adding additional rows
 ##' (additional time points) from raw, observed data. To understand
 ##' a syndromic object, please refer to the help page for the syndromic class.
 ##'
-##' @title update_syndromic
-##' 
 ##' @name update_syndromic
 ##' @docType methods
-##' @aliases update_syndromic
-##' @aliases update_syndromic-methods
-##' @aliases update_syndromic,syndromic-method
-##' 
-##' @param x the syndromic object to be updated (if one does not already exist,
-##' please use "raw_to_syndromic" or "syndromic")
+##' @param x the \code{syndromicD} object to be updated (if one does not already exist,
+##' please use "raw_to_syndromicD" or "syndromicD")
 ##' @param id indicates a variable (or multiple variables) which should
 ##' be used to identify unique events in the data. It can be provided as an R
 ##' vector (p.e. mydata$myid), as the name of a Data Frame column
@@ -49,7 +43,7 @@
 ##' @param data Optional argument. If used the other arguments can be specified
 ##' as column names within the dataset provided through this argument
 ##'
-##' @return an updated object of the class \code{syndromic} with the following slots: 
+##' @return an updated object of the class \code{syndromicD} with the following slots: 
 ##' (1) OBSERVED: The previous observed matrix is updated adding lines corresponding
 ##'  to the new events found in the new dataset;
 ##'  (2) DATES: also updated to include extra dates;
@@ -67,11 +61,23 @@
 ##' @examples
 ##' data(lab.daily)
 ##' data(lab.daily.update)
-##' my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##' my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
+##'                                 remove.dow=c(6,0),
+##'                                 add.to=c(2,1),                               
 ##'                                   data=lab.daily)
+##'  my.syndromicD <- update_syndromicD(x=my.syndromicD,
+##'                                 id=SubmissionID,
+##'                                 syndromes.var=Syndrome, 
+##'                                 add.syndromes=TRUE,
+##'                                 dates.var=DateofSubmission, 
+##'                                 date.format="%d/%m/%Y", 
+##'                                 remove.dow=c(6,0),
+##'                                 add.to=c(2,1),
+##'                                 replace.dates=FALSE,
+##'                                 data=lab.daily.update)
 ##'
 
 
@@ -81,7 +87,7 @@ setGeneric('update_syndromic',
            function(x, ...) standardGeneric('update_syndromic'))
 
 setMethod('update_syndromic',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x,
                              id,
                              syndromes.var, 
@@ -293,11 +299,11 @@ setMethod('update_syndromic',
   
   
     
-  y <- syndromic(observed=observed, dates=datesy)
-  setBaseline(y) <- baseline
-  setAlarms(y)<-alarms
-  setUCL(y)<-UCL
-  setLCL(y)<-LCL
+  y <- syndromicD(observed=observed, dates=datesy)
+  setBaselineD(y) <- baseline
+  setAlarmsD(y)<-alarms
+  setUCLD(y)<-UCL
+  setLCLD(y)<-LCL
   
   return(y)
 }

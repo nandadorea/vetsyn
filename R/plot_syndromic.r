@@ -1,19 +1,16 @@
 ##' \code{plot_syndromic}
 ##'
 ##' A more specific plotting option, with more control over the 
-##' options of which elements of the syndromic object to plot. 
+##' options of which elements of the syndromic (\code{syndromicD} or \code{syndromicW})
+##'  object to plot. 
 ##' The user can use the general "plot" function of R for a syndromic object as well. 
 ##'
 ##'
 ##' @name plot_syndromic
 ##' @docType methods
-##' @seealso \code{\link{syndromic}}
-##' @aliases plot_syndromic
-##' @aliases plot_syndromic-methods
-##' @aliases plot_syndromic,syndromic-method
 ##' 
 ##' 
-##' @param x a \code{syndromic} object.
+##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object.
 ##' @param syndromes an optional parameter, if not specified, all
 ##' columns in the slot observed (or baseline of the
 ##'  \code{syndromic} object
@@ -37,20 +34,20 @@
 ##' @export
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
 ##'                                  remove.dow=c(6,0),
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
-##'my.syndromic <- holt_winters_synd(x=my.syndromic,
+##'my.syndromicD <- holt_winters_synd(x=my.syndromicD,
 ##'                                 evaluate.window=30,
 ##'                                 frequency=5,
 ##'                                 baseline.window=260)
-##'plot_syndromic(x=my.syndromic,
+##'plot_syndromic(x=my.syndromicD,
 ##'               syndromes=c(1,3))
-##'plot_syndromic(x=my.syndromic,
+##'plot_syndromic(x=my.syndromicD,
 ##'               syndromes=c(1,3),
 ##'               limit=NULL)
 
@@ -60,7 +57,7 @@ setGeneric('plot_syndromic',
            function(x, ...) standardGeneric('plot_syndromic'))
 
 setMethod('plot_syndromic',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x,
                     syndromes=NULL,
                     window=365,

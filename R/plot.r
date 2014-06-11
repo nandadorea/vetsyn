@@ -1,13 +1,12 @@
 ##' Plot
 ##'
-##' Plot a \code{\link{syndromic}} object.
+##' Plot a syndromic (\code{syndromicD} or \code{syndromicW}) object.
 ##'
 ##'
 ##' @name plot-methods
-##' @aliases plot plot-methods plot,syndromic-method
 ##' @docType methods
 ##' @section Methods: \describe{
-##' \item{\code{signature(object = "syndromic")}}{
+##' \item{\code{signature(object = "syndromicD")}}{
 ##' Show information for the syndromic object.
 ##' }
 ##' }
@@ -17,7 +16,7 @@
 
 
 
-setMethod("plot","syndromic",
+setMethod("plot","syndromicD",
           function (x, syndromes=NULL,
                     window=365,
                     baseline=FALSE,
@@ -60,7 +59,7 @@ setMethod("plot","syndromic",
      start<-max(1, end-window+1)
 
 
-if (dim(x@alarms)!=0){
+if (dim(x@alarms)[1]!=0){
     
        algo.names<-dimnames(x@alarms)[[3]]
        #algorithms to be used
@@ -88,7 +87,7 @@ if (dim(x@alarms)!=0){
       for (s in syndromes.num){      
 
         
-        if (dim(x@alarms)==0){
+        if (dim(x@alarms)[1]==0){
           ymax<-max(x@observed[start:end,s])
           x.date <- x@dates[start:end,1]
           

@@ -1,22 +1,21 @@
 ##' \code{syndromic_page}
 ##'
 ##' A simple command to generate an html page that summarizes the current 
-##' state of a syndromic object. A "html" folder is created (or used if already existing)
+##' state of a syndromic (\code{syndromicD} 
+##' or \code{syndromicW}) object. A "html" folder is created (or used if already existing)
 ##' into the current working directory.
 ##'
 ##'
 ##' @name syndromic_page
 ##' @docType methods
-##' @seealso \code{\link{syndromic}}
-##' @aliases syndromic_page
-##' @aliases syndromic_page-methods
-##' @aliases syndromic_page,syndromic-method
 ##' 
-##' 
-##' @param x a \code{syndromic} object.
-##' @param week number of days in a week (for instance 7 for a full week and 5 for 
-##' weekdays only). This is used to choose how many days of alarms to display. The
-##' normal is to show the entire last week, but the user can set this number
+##' @param x a syndromic (\code{syndromicD} 
+##' or \code{syndromicW}) object.
+##' @param tpoints.display This is used to choose how many days of alarms to display. The
+##' normal for daily data (syndromic object provided is form the class \code{syndromicD} )
+##' is to show the entire last week (so 7 or 5 days, depending on whether weekends are
+##' included). For weekly data the user my choose for instance 4 weeks (one month). 
+##' The user can set this number
 ##' to any desired number of days to tabulate.
 ##' @param window the number of time points to plot, always finishing at the 
 ##' last time point recorded, or the date specified in the parameter "date" above.
@@ -47,6 +46,11 @@
 ##' using TRUE, the original data must be provided in the argument "data".
 ##' @param data the original data to tabulate in case "data.page" has been set to TRUE.
 ##' @param date.format the date format in the original data, if provided in the previous argument.
+##' For WEEKLY data, the original data may have been recorded daily or weekly (see 
+##' \code{rawD_to_syndromicW} and \code{rawW_to_syndromicW}). If theoriginal date are
+##' recorded daily, please indicate the date.format. If the original data are recorded
+##' weekly, remember that the date format MUST be ISOweek, and for date.format
+##' please provide the value "ISOweek". See examples.
 ##' @param syndromes.var the variable (column) in data to match to the syndromes
 ##' found in the slot observed
 ##' @param dates.var the variable (column) in data to look for dates, in order to
@@ -73,19 +77,19 @@
 ##' @export
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
 ##'                                  remove.dow=c(6,0),
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
-##'my.syndromic <- holt_winters_synd(x=my.syndromic,
+##'my.syndromicD <- holt_winters_synd(x=my.syndromicD,
 ##'                                 evaluate.window=30,
 ##'                                 frequency=5,
 ##'                                 baseline.window=260)
-##'syndromic_page (x=my.syndromic,
-##'                 week=5,
+##'syndromic_page (x=my.syndromicD,
+##'                 tpoints.display=5,
 ##'                 file.name="SpeciesX",
 ##'                 title="Lab data daily for Species X",
 ##'                 data.page=TRUE,
@@ -102,9 +106,9 @@ setGeneric('syndromic_page',
            function(x, ...) standardGeneric('syndromic_page'))
 
 setMethod('syndromic_page',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x,
-                    week=7,
+                    tpoints.display=7,
                     window=365,
                     baseline=TRUE,
                     UCL=1,
@@ -206,7 +210,7 @@ data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
                 (as.Date(data[,dates.var], format=date.format)==x@dates[dim(x@dates)[1],1])),
                 ]
 data.tables2[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
-                (as.Date(data[,dates.var], format=date.format)>(x@dates[dim(x@dates)[1],1]-week))),
+                (as.Date(data[,dates.var], format=date.format)>(x@dates[dim(x@dates)[1],1]-tpoints.display))),
                 ]
 }
 }
@@ -225,20 +229,20 @@ cat("<body>\n", file=html)
 cat('<a name="top"></a>\n', file=html)
 
 
-alarms.table<-rep(0,length(syndromes)*(week+1))
-dim(alarms.table)<-c(length(syndromes),(week+1))
+alarms.table<-rep(0,length(syndromes)*(tpoints.display+1))
+dim(alarms.table)<-c(length(syndromes),(tpoints.display+1))
 rownames(alarms.table)<- syndromes
 for (j in syndromes.num){
-  alarms.table[j,1:week] <- (alarms.sum[(end-(week-1)):end,j])
-  alarms.table[j,(week+1)]   <- limit[j]
+  alarms.table[j,1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,j])
+  alarms.table[j,(tpoints.display+1)]   <- limit[j]
 }
 
 
-counts.table<-rep(0,length(syndromes)*(week))
-dim(counts.table)<-c(length(syndromes),(week))
+counts.table<-rep(0,length(syndromes)*(tpoints.display))
+dim(counts.table)<-c(length(syndromes),(tpoints.display))
 rownames(counts.table)<- syndromes
 for (j in syndromes.num){
-  counts.table[j,1:week] <- round(x@observed[(end-(week-1)):end,j])  
+  counts.table[j,1:tpoints.display] <- round(x@observed[(end-(tpoints.display-1)):end,j])  
 }
 
 colors.table = rep (color.null,length(counts.table))
@@ -248,7 +252,7 @@ dim(colors.table)<-dim(counts.table)
 for (r in 1:dim(colors.table)[1]){
   for (c in 1:(dim(colors.table)[2])){
     if (alarms.table[r,c]>0) (colors.table[r,c]<-color.low)
-    if (alarms.table[r,c]>=alarms.table[r,(week+1)]) (colors.table[r,c]<-color.alarm)
+    if (alarms.table[r,c]>=alarms.table[r,(tpoints.display+1)]) (colors.table[r,c]<-color.alarm)
   }}
 
 cat(sprintf('<h1 align="center">%s</h1>\n', paste(title, x@dates[dim(x@dates)[1],1],sep=" ")),file=html)
@@ -258,14 +262,14 @@ cat("<TABLE border=\"1\" align=\"center\">\n", file=html)
 cat("<tr>\n", file=html)
 cat(sprintf("<td></td>\n<td colspan=\"2\"><center><b>Today</b></center></td>\n<td>____</td>\n
                 <td colspan=\"%s\"><center><b>Previous Days History</b></center></td>\n",
-            (week-1)), file=html)
+            (tpoints.display-1)), file=html)
 cat("</tr>\n", file=html)
 
 col.head <- "<td>_D-1_</td>\n"
 
 cat("<tr>\n", file=html)
-if (week>2){
-  for (d in 2:(week-1)){
+if (tpoints.display>2){
+  for (d in 2:(tpoints.display-1)){
     col.head <- paste0(col.head,"<td>_D-",d,"_</td>\n")
   }  
 }
@@ -279,21 +283,21 @@ cat("</tr>\n", file=html)
 for (r in 1:dim(counts.table)[1]){
 
   row.fill <- "<td></td>\n"
-  if (week>1){
-    for (d in 1:(week-1)){
+  if (tpoints.display>1){
+    for (d in 1:(tpoints.display-1)){
       row.fill <- paste0(row.fill,
-                         "<td BGCOLOR='",colors.table[r,(week-d)],"'><center>",
-                         counts.table[r,week-d],"</center></td>\n")
+                         "<td BGCOLOR='",colors.table[r,(tpoints.display-d)],"'><center>",
+                         counts.table[r,tpoints.display-d],"</center></td>\n")
     }  
   }  
   
   
   cat("<tr>\n", file=html)
   cat("<td><a href='#",rownames(counts.table)[r],"'>",rownames(counts.table)[r],"</a></td>\n
-      <td BGCOLOR='",colors.table[r,week],"'><center>",counts.table[r,week],
+      <td BGCOLOR='",colors.table[r,tpoints.display],"'><center>",counts.table[r,tpoints.display],
           "</center></td>\n
       <td BGCOLOR=\"",color.null,"\"><center><img src=\"",
-          paste("figures//alarmometer",alarms.table[r,week],".png",sep=""),
+          paste("figures//alarmometer",alarms.table[r,tpoints.display],".png",sep=""),
           "\" width=\"100\" height=\"80\" /></center></td>\n",
       row.fill, file=html)
   cat("</tr>\n", file=html)
@@ -412,6 +416,6 @@ if (data.page==TRUE){
 }
 
 
-setwd(workdir)
+on.exit(setwd(workdir),add=TRUE)
 }
 )

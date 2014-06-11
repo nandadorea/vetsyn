@@ -1,6 +1,7 @@
 ##' \code{syndromic_alarm}
 ##'
-##' A simple command to generate an alarm around a syndromic object - the
+##' A simple command to generate an alarm around a syndromic (\code{syndromicD} 
+##' or \code{syndromicW}) object - the
 ##' user can generate automated e-mails and also generate a pdf report of 
 ##' all syndromes in a syndromic object, or only those for which an 
 ##' alarm was generated.
@@ -8,13 +9,9 @@
 ##'
 ##' @name syndromic_alarm
 ##' @docType methods
-##' @seealso \code{\link{syndromic}}
-##' @aliases syndromic_alarm
-##' @aliases syndromic_alarm-methods
-##' @aliases syndromic_alarm,syndromic-method
 ##' 
 ##' 
-##' @param x a \code{syndromic} object.
+##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object.
 ##' @param pdf.report default is TRUE, that is, a pdf report will be generated. 
 ##' @param email.alarm.to email recipient(s) for when an alarm is detected. If
 ##' a pdf report has been generated, it will be attached to the email. See examples
@@ -29,7 +26,9 @@
 ##' @param date by default (NULL) it looks up alarms in the last date saved in the
 ##' syndromic object, but the user can set past dates in order to plot
 ##' historical alarms. Dates must be provided in the same format as they are
-##' stored in dates, that is "yyyy-mm-dd" (for instance "2013-12-31")
+##' stored in dates, that is, for \code{syndromicD} objects, in the format
+##' "yyyy-mm-dd" (for instance "2013-12-31"); and for \code{syndromicW} in the ISOweek
+##' format (for instance "2014-W01-2")
 ##' @param plot.all by default, only syndromes associated with an
 ##' alarm are plotted (plot.all=FALSE), but the user can set plot.all=TRUE
 ##' to plot all syndromes found in the syndromic object. 
@@ -80,18 +79,20 @@
 ##' @export
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromic <- raw_to_syndromic (id=SubmissionID,
+##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
 ##'                                  remove.dow=c(6,0),
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
-##'my.syndromic <- holt_winters_synd(x=my.syndromic,
+##'my.syndromicD <- holt_winters_synd(x=my.syndromicD,
 ##'                                 evaluate.window=30,
 ##'                                 frequency=5,
 ##'                                 baseline.window=260)
-##syndromic_alarm(x=my.syndromic,
+##'                                 
+##'  ##substitute 'at' for the appropriate synbol in the example below                               
+##'syndromic_alarm(x=my.syndromicD,
 ##'                plot.all=TRUE,
 ##'                email.alarm.to="<dorea.meyer'at'gmail.com>",
 ##'                email.noalarm.to="<dorea.meyer'at'gmail.com>")
@@ -103,7 +104,7 @@ setGeneric('syndromic_alarm',
            function(x, ...) standardGeneric('syndromic_alarm'))
 
 setMethod('syndromic_alarm',
-          signature(x = 'syndromic'),
+          signature(x = 'syndromicD'),
           function (x,
                     pdf.report=TRUE,
                     email.alarm.to=NULL,
@@ -334,6 +335,6 @@ if (length(syndromes.alarm)==0&&class(email.noalarm.to)!="NULL"){
                    password="rmail")
   }        
           }
-
+on.exit(setwd(workdir), add=TRUE)
 }
 )

@@ -6,7 +6,7 @@
 ##' @export
 ##' @examples
 ##' data(lab.weekly)
-##' my.syndromicW <- rawW_to_syndromicW (id=lab.weekly$SubmissionID,
+##' my.syndromicW <- raw_to_syndromicW (id=lab.weekly$SubmissionID,
 ##'                                   syndromes.var=lab.weekly$Syndrome,
 ##'                                   week.var=lab.weekly$DateofSubmission)
 ##'                                   
@@ -26,7 +26,7 @@
 ##'                 syndromes.var="Syndrome",
 ##'                 scale=9)     
 ##'data(lab.daily)
-##'my.syndromicW2 <- rawD_to_syndromicW (id=SubmissionID,
+##'my.syndromicW2 <- raw_to_syndromicW (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",

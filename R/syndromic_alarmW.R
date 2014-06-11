@@ -7,7 +7,7 @@
 ##' @export
 ##' @examples
 ##'data(lab.daily)
-##'my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+##'my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
@@ -18,7 +18,7 @@
 ##'                           pre.process="diff",
 ##'                           diff.window=4)
 ##'                           
-##'  ##substitute 'at' for the appropriate synbol in the example below
+##'  ##substitute 'at' for the appropriate syMbol in the example below
 ##'syndromic_alarm(x=my.syndromicW,
 ##'                plot.all=TRUE,
 ##'                email.alarm.to="<dorea.meyer'at'gmail.com>",

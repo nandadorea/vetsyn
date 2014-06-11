@@ -1,10 +1,11 @@
-##' \code{rawD_to_syndromicW}
+##' \code{raw_to_syndromicW}
 ##'
 ##' An object \code{syndromicW} (syndromic main class for data to be monitored weekly)
 ##' can be created from data that were originally recorded with the WEEK of the
-##' event (in which case please check the function \code{rawW_to_syndromicW});or when
+##' event or when
 ##' the DATE of the event was recorded, but the user wants to group events
-##' per week, this function \code{rawD_to_syndromicW} can be used. For data
+##' per week. The function will handle both cases, group events by week,
+##' and output counts by week. For data
 ##' already grouped into the number of observations per week, please see the
 ##' function \code{syndromicW}.
 ##' 
@@ -52,7 +53,8 @@
 ##' week, please convert the date to ISOweek format using the functions in this package,
 ##' and use, instead, the function \code{rawW_to_syndromicW}.
 ##'
-##' @title raw_to_syndromicW
+##' @name raw_to_syndromicW
+##' 
 ##' @param id indicates a variable (or multiple variables) which should
 ##' be used to identify unique events in the data. It can be provided as an R
 ##' vector (p.e. mydata$myid), as the name of a DataFrame column
@@ -68,12 +70,19 @@
 ##' (p.e. "Mastitis" or c("Mastitis","GIT") ).
 ##' @param dates.var The vector (dates.var=mydata$mydates) or column name
 ##' (dates.var=mydates, data=mydata) where the dates of the events are to be found.
+##' This parameter will be able to handle a column in which the DATE of the event
+##' was recorded or in which the WEEK of the event was recorded. In the latter case, however,
+##' the week MUST be in the ISOweek format (p.e., "2014-W02-1"). In any case the function will
+##' group events by week and outputs will be in the ISOweek format.
 ##' @param date.format The date.format of the date.variable.
-##' Default is "%d/%m/%Y". See strptime() for format specifications
+##' Default is "%d/%m/%Y". See strptime() for format specifications. If the dates 
+##' variable records the WEEKS of the events, please set date.format=ISOweek"
 ##' @param min.date An optional argument. If not provided, the minimum date found
-##' in the dataset is used.
+##' in the dataset is used. Must be provided in the same date format as set n "date.format",
+##' that is, the same format for dates when the DATE of the event was recorded,
+##' or ISOweek.
 ##' @param max.date An optional argument. If not provided, the maximum date found
-##' in the dataset is used.
+##' in the dataset is used.As with min.date, can be a date or a ISOweek.
 ##' @param sort Default is true, which organizes the groups found in syndromes.name
 ##' alphabetically. If set to FALSE, groups are listed in the order they are found
 ##' in the dataset or provided in syndromes.name.
@@ -92,47 +101,88 @@
 ##' @import ISOweek
 ##' @export 
 ##' @examples
+##' ##data recorded with the DATE of the event
 ##' data(lab.daily)
-##' my.syndromicW <- rawD_to_syndromicW (id=lab.daily$SubmissionID,
+##' my.syndromicW <- raw_to_syndromicW (id=lab.daily$SubmissionID,
 ##'                                   syndromes.var=lab.daily$Syndrome,
 ##'                                   dates.var=lab.daily$DateofSubmission,
 ##'                                   date.format="%d/%m/%Y")
 ##'
-##' my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+##' my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromicW <- rawD_to_syndromicW (id=list(HerdID,AnimalID),
+##' my.syndromicW <- raw_to_syndromicW (id=list(HerdID,AnimalID),
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+##' my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   syndromes.name=c("GIT","Musculoskeletal"),
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+##' my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   syndromes.name=c("GIT","Musculoskeletal","NonExisting"),
 ##'                                   dates.var=DateofSubmission,
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
 ##'
-##' my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+##' my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
 ##'                                   syndromes.var=Syndrome,
 ##'                                   dates.var=DateofSubmission,
 ##'                                   min.date="01/01/2011",
 ##'                                   date.format="%d/%m/%Y",
 ##'                                   data=lab.daily)
+##'                                   
+##'##data recorded with the WEEK of the event
+##' my.syndromicW <- raw_to_syndromicW (id=lab.weekly$SubmissionID,
+##'                                     syndromes.var=lab.weekly$Syndrome,
+##'                                     dates.var=lab.weekly$DateofSubmission,
+##'                                     date.format="ISOweek")
+##'
+##'my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
+##'                                    syndromes.var=Syndrome,
+##'                                    dates.var=DateofSubmission,
+##'                                    date.format="ISOweek",
+##'                                    data=lab.weekly)
+##'
+##'my.syndromicW <- raw_to_syndromicW (id=list(HerdID,AnimalID),
+##'                                    syndromes.var=Syndrome,
+##'                                    dates.var=DateofSubmission,
+##'                                    date.format="ISOweek",
+##'                                    data=lab.weekly)
+##'
+##'my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
+##'                                    syndromes.var=Syndrome,
+##'                                    syndromes.name=c("GIT","Musculoskeletal"),
+##'                                    dates.var=DateofSubmission,
+##'                                    date.format="ISOweek",
+##'                                    data=lab.weekly)
+##'
+##'my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
+##'                                    syndromes.var=Syndrome,
+##'                                    syndromes.name=c("GIT","Musculoskeletal","NonExisting"),
+##'                                    dates.var=DateofSubmission,
+##'                                    date.format="ISOweek",
+##'                                    data=lab.weekly)
+##'
+##'my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
+##'                                    syndromes.var=Syndrome,
+##'                                    dates.var=DateofSubmission,
+##'                                    date.format="ISOweek",
+##'                                    min.date="2010-W50-1",
+##'                                    data=lab.weekly)
 
 
-rawD_to_syndromicW <- function(id,
+
+raw_to_syndromicW <- function(id,
                              syndromes.var, 
                              syndromes.name,
                              dates.var, 
@@ -152,6 +202,117 @@ rawD_to_syndromicW <- function(id,
   #syndrome names if not supplied
   if (missing("syndromes.name"))  (syndromes.name <- unique(syndromes.var))
   if (sort==TRUE) (syndromes.name <- sort(syndromes.name) )
+  
+  
+  
+  if (date.format=="ISOweek"){
+    
+    
+    #making sure of ISOweek format
+    dates.var <- as.character(dates.var)
+    week <- as.numeric(substr(as.character(dates.var),7,8))
+    year <- as.numeric(substr(as.character(dates.var),1,4))
+    dates.var <- create_isoweek(week,year,reference.day=1)
+    
+    
+    #set date interval from data or based on user parameters
+    if (missing("min.date")) {
+      min.week <- as.numeric(substr(as.character(date2ISOweek(min(ISOweek2date(dates.var)))),7,8))
+      min.year <- as.numeric(substr(as.character(date2ISOweek(min(ISOweek2date(dates.var)))),1,4))
+    } else {
+      min.week <- as.numeric(substr(as.character(min.date),7,8)) 
+      min.year <- as.numeric(substr(as.character(min.date),1,4)) 
+    }
+    
+    if (missing("max.date")) {
+      max.week <- as.numeric(substr(as.character(date2ISOweek(max(ISOweek2date(dates.var)))),7,8))
+      max.year <- as.numeric(substr(as.character(date2ISOweek(max(ISOweek2date(dates.var)))),1,4))
+    } else {
+      max.week <- as.numeric(substr(as.character(max.date),7,8)) 
+      max.year <- as.numeric(substr(as.character(max.date),1,4)) 
+    }
+    
+    min.date <- ISOweek2date(create_isoweek(min.week,min.year,reference.day=1))
+    max.date <- ISOweek2date(create_isoweek(max.week,max.year,reference.day=1))
+    dates <- dates_df(min.date=min.date,max.date=max.date, 
+                      by="days",
+                      date.format = "%Y-%M-%d")
+    ISOweek <- date2ISOweek(dates[,1])
+    ISOweek<- paste0( (substr(as.character(ISOweek),1,9)),"1" )
+    week <- as.numeric(substr(as.character(ISOweek),7,8))
+    year <- as.numeric(substr(as.character(ISOweek),1,4))
+    dates <- data.frame(ISOweek,week,year)
+    dates <- unique(dates)
+    
+    
+    #count cases for each syndromic group
+    column <- 0
+    
+    for (syndrome in syndromes.name){
+      column <- column+1
+      
+      if (length(which(syndromes.var==syndrome))==0) {
+        nsubmissions <- rep(0,dim(dates)[1])} else {
+          
+          #Syndrome specific ID: syndromes may have been given as a list
+          if (is.list(id)==TRUE) {
+            id <- data.frame(matrix(unlist(id), nrow=length(id[[1]]), byrow=F))}
+          
+          #Syndrome specific ID: after converting lists to DF, 
+          #account for syndrome being vector
+          if (is.data.frame(id)==FALSE) {
+            id2 <- id[which(syndromes.var==syndrome)]
+          } else {
+            id2 <- id[which(syndromes.var==syndrome),]}
+          
+          #Syndrome specific dates:
+          dates.var2 <- dates.var[which(syndromes.var==syndrome)]
+          
+          #count submissions for this syndrome, per unique id and date
+          nsubmissions  <- data.frame(id2,dates.var2)
+          nsubmissions <- unique(nsubmissions)
+          counts <- rep(1,dim(nsubmissions)[1])
+          
+          #remove id
+          if (is.data.frame(id)==FALSE)  {
+            nsubmissions <- nsubmissions[,-1]
+          } else {
+            nsubmissions = nsubmissions[,-(1:(dim(id)[2]))]}
+          
+          #merge counts by date
+          
+          nsubmissions <- aggregate(counts,by=list(week=nsubmissions),FUN=sum)
+          
+          nsubmissions <- merge(dates, nsubmissions, by.x="ISOweek", by.y="week", all.x = TRUE) 
+          nsubmissions <- nsubmissions$x
+          nsubmissions[is.na(nsubmissions)==TRUE]<-0
+          
+        }
+      
+      if (column==1){
+        syndrome.counts <- as.matrix(nsubmissions)
+      } else {
+        syndrome.counts <- cbind(syndrome.counts,nsubmissions)
+      }
+      
+    }
+    
+    colnames(syndrome.counts) <- syndromes.name
+    
+    
+    
+    
+    
+    
+    
+  }else{
+  
+  
+  
+    
+  
+  
+  
   
   #set date interval from data or based on user parameters
   if (missing("min.date")) {
@@ -248,7 +409,7 @@ rawD_to_syndromicW <- function(id,
   dates <- data.frame(ISOweek,week,year)
   dates <- unique(dates)
   
-    
+  }  
   
   syndromicW(observed=as.matrix(syndrome.counts), dates=dates)
   

@@ -86,7 +86,7 @@ my.syndromicW <- syndromicW(observedW,min.week=1, min.year=2011,
 
 
 
-# rawD_to_syndromicW(id,
+# raw_to_syndromicW(id,
 #                                syndromes.var, 
 #                                syndromes.name,
 #                                dates.var, 
@@ -96,86 +96,82 @@ my.syndromicW <- syndromicW(observedW,min.week=1, min.year=2011,
 #                                sort=TRUE,
 #                                data=NULL) 
                                    
- my.syndromicW <- rawD_to_syndromicW (id=lab.daily$SubmissionID,
+ my.syndromicW <- raw_to_syndromicW (id=lab.daily$SubmissionID,
                                    syndromes.var=lab.daily$Syndrome,
                                    dates.var=lab.daily$DateofSubmission,
                                    date.format="%d/%m/%Y")
 
- my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                    syndromes.var=Syndrome,
                                    dates.var=DateofSubmission,
                                    date.format="%d/%m/%Y",
                                    data=lab.daily)
 
- my.syndromicW <- rawD_to_syndromicW (id=list(HerdID,AnimalID),
+ my.syndromicW <- raw_to_syndromicW (id=list(HerdID,AnimalID),
                                    syndromes.var=Syndrome,
                                    dates.var=DateofSubmission,
                                    date.format="%d/%m/%Y",
                                    data=lab.daily)
 
- my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                    syndromes.var=Syndrome,
                                    syndromes.name=c("GIT","Musculoskeletal"),
                                    dates.var=DateofSubmission,
                                    date.format="%d/%m/%Y",
                                    data=lab.daily)
 
- my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                    syndromes.var=Syndrome,
                                    syndromes.name=c("GIT","Musculoskeletal","NonExisting"),
                                    dates.var=DateofSubmission,
                                    date.format="%d/%m/%Y",
                                    data=lab.daily)
 
- my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
-                                   syndromes.var=Syndrome,
-                                   dates.var=DateofSubmission,
+ my.syndromicW <- raw_to_syndromicW (id=lab.daily$SubmissionID,
+                                   syndromes.var=lab.daily$Syndrome,
+                                   dates.var=lab.daily$DateofSubmission,
                                    min.date="01/01/2011",
-                                   date.format="%d/%m/%Y",
-                                   data=lab.daily)
+                                   date.format="%d/%m/%Y")
 
-# rawW_to_syndromicW(id,
-#                                syndromes.var, 
-#                                syndromes.name,
-#                                week.var,
-#                                min.week,
-#                                min.year,
-#                                max.week,
-#                                max.year,
-#                                sort=TRUE,
-#                                data=NULL)
+
+##
                                    
- my.syndromicW <- rawW_to_syndromicW (id=lab.weekly$SubmissionID,
+ my.syndromicW <- raw_to_syndromicW (id=lab.weekly$SubmissionID,
                                    syndromes.var=lab.weekly$Syndrome,
-                                   week.var=lab.weekly$DateofSubmission)
+                                   dates.var=lab.weekly$DateofSubmission,
+                                   date.format="ISOweek")
 
- my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
+ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                    syndromes.var=Syndrome,
-                                   week.var=DateofSubmission,
+                                   dates.var=DateofSubmission,
+                                   date.format="ISOweek",
                                    data=lab.weekly)
 
- my.syndromicW <- rawW_to_syndromicW (id=list(HerdID,AnimalID),
+ my.syndromicW <- raw_to_syndromicW (id=list(HerdID,AnimalID),
                                    syndromes.var=Syndrome,
-                                   week.var=DateofSubmission,
+                                   dates.var=DateofSubmission,
+                                   date.format="ISOweek",
                                    data=lab.weekly)
 
- my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
+ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                    syndromes.var=Syndrome,
                                    syndromes.name=c("GIT","Musculoskeletal"),
-                                   week.var=DateofSubmission,
+                                   dates.var=DateofSubmission,
+                                   date.format="ISOweek",
                                    data=lab.weekly)
 
- my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
+ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                    syndromes.var=Syndrome,
                                    syndromes.name=c("GIT","Musculoskeletal","NonExisting"),
-                                   week.var=DateofSubmission,
+                                   dates.var=DateofSubmission,
+                                   date.format="ISOweek",
                                    data=lab.weekly)
 
- my.syndromicW <- rawW_to_syndromicW (id=SubmissionID,
+ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                    syndromes.var=Syndrome,
-                                   week.var=DateofSubmission,
-                                   min.week=40,
-                                   min.year=2010,
+                                   dates.var=DateofSubmission,
+                                   date.format="ISOweek",
+                                   min.date="2010-W50-1",
                                    data=lab.weekly)
                                    
                                                                       
@@ -276,7 +272,7 @@ my.syndromicD <- clean_baseline(my.syndromicD,
 #                print.model=TRUE,
 #                frequency=52)
 
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                   syndromes.var=Syndrome,
                                   dates.var=DateofSubmission,
                                   date.format="%d/%m/%Y",
@@ -320,7 +316,7 @@ my.syndromicD <- clean_baseline_perc(my.syndromicD,
 my.syndromicD <- clean_baseline_perc(my.syndromicD,
                                syndromes=c(1,3))
 
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                   syndromes.var=Syndrome,
                                   dates.var=DateofSubmission,
                                   date.format="%d/%m/%Y",
@@ -402,7 +398,7 @@ my.syndromicD <- holt_winters_synd(x=my.syndromicD,
 #                   alarm.dim=1,
 #                   UCL=1
 
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                      syndromes.var=Syndrome,
                                      dates.var=DateofSubmission,
                                      date.format="%d/%m/%Y",
@@ -486,7 +482,7 @@ my.syndromicD <- ewma_synd(x=my.syndromicD,
 #           formula="trend+sin+cos",
 #           frequency=52)
 
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                      syndromes.var=Syndrome,
                                      dates.var=DateofSubmission,
                                      date.format="%d/%m/%Y",
@@ -559,7 +555,7 @@ pre_processed_data <- pre_process_glm(my.syndromicD,
 #                 print.model=TRUE,
 #                 plot=TRUE)
 
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                   syndromes.var=Syndrome,
                                   dates.var=DateofSubmission,
                                   date.format="%d/%m/%Y",
@@ -659,7 +655,7 @@ my.syndromicD <- shew_synd(x=my.syndromicD,
 #            formula="trend+sin+cos",
 #            frequency=52)
 
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                      syndromes.var=Syndrome,
                                      dates.var=DateofSubmission,
                                      date.format="%d/%m/%Y",
@@ -753,7 +749,7 @@ my.syndromicD <- cusum_synd(x=my.syndromicD,
 #            formula="trend+sin+cos",
 #            frequency=52)
 
-my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                      syndromes.var=Syndrome,
                                      dates.var=DateofSubmission,
                                      date.format="%d/%m/%Y",

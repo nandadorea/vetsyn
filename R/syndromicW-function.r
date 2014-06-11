@@ -9,8 +9,7 @@
 ##' columns correspond to each syndromic group to be monitored, and the
 ##' numbers refer to the number of observatiosn per group per time point.
 ##' For an example of data formatted this way use date(observedW). For data
-##' not formatted use directly the function \code{rawD_to_syndromicW} or
-##'  \code{rawW_to_syndromicW}.
+##' not formatted use directly the function \code{raw_to_syndromicW}.
 ##' 
 ##' The dates are expected to be a \code{data.frame} with the first column
 ##' in the \code{ISOweek} format, though the function will also accept a

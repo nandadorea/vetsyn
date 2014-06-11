@@ -24,7 +24,7 @@
 ##' @import ISOweek
 ##' @examples
 ##' data(lab.daily)
-##' my.syndromic <- raw_to_syndromic (id=lab.daily$SubmissionID,
+##' my.syndromic <- raw_to_syndromicD (id=lab.daily$SubmissionID,
 ##'                                   syndromes.var=lab.daily$Syndrome,
 ##'                                   dates.var=lab.daily$DateofSubmission,
 ##'                                   date.format="%d/%m/%Y")
@@ -36,14 +36,11 @@
 convert_days_to_week <- function(counts.df,
                                  dates.df,date.format="%Y-%m-%d") {
   
-  if (length(dates.df$week)==0||length(dates.df$year)==0){
-    dates.vector <- strptime (as.character(dates.df[1]), format = date.format)
-    year <- (dates.vector+1900)
-    week <- as.numeric(substring(ISOweek(dates.vector),7,8))
-  } else {
-    year <- dates.df$year
-    week <- dates.df$week
-  }
+
+  dates.vector <- as.Date(dates.df[,1],format = date.format)
+  week <- substr(as.character(date2ISOweek(dates.vector)),1,8)
+  year <- as.numeric(substr(as.character(date2ISOweek(dates.vector)),1,4))
+  
   
   synd.week<- aggregate(counts.df,by=list(week=week, year=year),sum)
   

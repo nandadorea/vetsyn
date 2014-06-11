@@ -6,7 +6,7 @@
 ##' @aliases subset 
 ##' @examples
 ##' data(lab.daily)
-##' my.syndromicW <- rawD_to_syndromicW (id=lab.daily$SubmissionID,
+##' my.syndromicW <- raw_to_syndromicW (id=lab.daily$SubmissionID,
 ##'                                   syndromes.var=lab.daily$Syndrome,
 ##'                                   dates.var=lab.daily$DateofSubmission,
 ##'                                   date.format="%d/%m/%Y")

@@ -1,11 +1,10 @@
 \docType{methods}
 \name{syndromic_alarm}
 \alias{syndromic_alarm}
-\alias{syndromic_alarm-methods}
-\alias{syndromic_alarm,syndromic-method}
 \title{\code{syndromic_alarm}}
 \arguments{
-  \item{x}{a \code{syndromic} object.}
+  \item{x}{a syndromic (\code{syndromicD} or
+  \code{syndromicW}) object.}
 
   \item{pdf.report}{default is TRUE, that is, a pdf report
   will be generated.}
@@ -29,7 +28,10 @@
   last date saved in the syndromic object, but the user can
   set past dates in order to plot historical alarms. Dates
   must be provided in the same format as they are stored in
-  dates, that is "yyyy-mm-dd" (for instance "2013-12-31")}
+  dates, that is, for \code{syndromicD} objects, in the
+  format "yyyy-mm-dd" (for instance "2013-12-31"); and for
+  \code{syndromicW} in the ISOweek format (for instance
+  "2014-W01-2")}
 
   \item{plot.all}{by default, only syndromes associated
   with an alarm are plotted (plot.all=FALSE), but the user
@@ -108,29 +110,47 @@
 }
 \description{
   A simple command to generate an alarm around a syndromic
-  object - the user can generate automated e-mails and also
-  generate a pdf report of all syndromes in a syndromic
-  object, or only those for which an alarm was generated.
+  (\code{syndromicD} or \code{syndromicW}) object - the
+  user can generate automated e-mails and also generate a
+  pdf report of all syndromes in a syndromic object, or
+  only those for which an alarm was generated.
 }
 \examples{
 data(lab.daily)
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",
                                  remove.dow=c(6,0),
                                  add.to=c(2,1),
                                  data=lab.daily)
-my.syndromic <- holt_winters_synd(x=my.syndromic,
+my.syndromicD <- holt_winters_synd(x=my.syndromicD,
                                 evaluate.window=30,
                                 frequency=5,
                                 baseline.window=260)
+
+ ##substitute 'at' for the appropriate synbol in the example below
+syndromic_alarm(x=my.syndromicD,
                plot.all=TRUE,
                email.alarm.to="<dorea.meyer'at'gmail.com>",
                email.noalarm.to="<dorea.meyer'at'gmail.com>")
-}
-\seealso{
-  \code{\link{syndromic}}
+data(lab.daily)
+my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+                                 syndromes.var=Syndrome,
+                                 dates.var=DateofSubmission,
+                                 date.format="\%d/\%m/\%Y",
+                                 data=lab.daily)
+my.syndromicW <- ewma_synd(x=my.syndromicW,
+                          evaluate.window=10,
+                          limit.sd=c(2.5,3,3.5),
+                          pre.process="diff",
+                          diff.window=4)
+
+ ##substitute 'at' for the appropriate synbol in the example below
+syndromic_alarm(x=my.syndromicW,
+               plot.all=TRUE,
+               email.alarm.to="<dorea.meyer'at'gmail.com>",
+               email.noalarm.to="<dorea.meyer'at'gmail.com>")
 }
 \keyword{methods}
 

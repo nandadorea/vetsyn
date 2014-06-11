@@ -1,6 +1,6 @@
-\name{syndromicW}
-\alias{syndromicW}
-\title{Create an object of the class \code{syndromicW} from pre-cleaned data.}
+\name{syndromicW-function}
+\alias{syndromicW-function}
+\title{syndromicW-function}
 \usage{
   syndromicW(observed, dates = data.frame(),
     min.week = NULL, max.week = NULL, min.year = NULL,
@@ -66,13 +66,16 @@
   \code{class-syndromic} for more details.
 }
 \description{
+  Create an object of the class \code{syndromicW} from
+  pre-cleaned data.
+}
+\details{
   Syndromic is the main class of the package. Two versions
   are available, \code{syndromicD}, which is intended for
   use when data are to be monitored daily, and
   \code{syndromicW}, which is to be used when data are
   monitored weekly.
-}
-\details{
+
   The observed data are assumed to be formatted as a
   \code{matrix}, in which each row corresponds to an
   observation time point (here, WEEKS), columns correspond

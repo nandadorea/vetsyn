@@ -1,17 +1,19 @@
 \docType{methods}
 \name{syndromic_page}
 \alias{syndromic_page}
-\alias{syndromic_page-methods}
-\alias{syndromic_page,syndromic-method}
 \title{\code{syndromic_page}}
 \arguments{
-  \item{x}{a \code{syndromic} object.}
+  \item{x}{a syndromic (\code{syndromicD} or
+  \code{syndromicW}) object.}
 
-  \item{week}{number of days in a week (for instance 7 for
-  a full week and 5 for weekdays only). This is used to
-  choose how many days of alarms to display. The normal is
-  to show the entire last week, but the user can set this
-  number to any desired number of days to tabulate.}
+  \item{tpoints.display}{This is used to choose how many
+  days of alarms to display. The normal for daily data
+  (syndromic object provided is form the class
+  \code{syndromicD} ) is to show the entire last week (so 7
+  or 5 days, depending on whether weekends are included).
+  For weekly data the user my choose for instance 4 weeks
+  (one month). The user can set this number to any desired
+  number of days to tabulate.}
 
   \item{window}{the number of time points to plot, always
   finishing at the last time point recorded, or the date
@@ -63,7 +65,14 @@
   "data.page" has been set to TRUE.}
 
   \item{date.format}{the date format in the original data,
-  if provided in the previous argument.}
+  if provided in the previous argument. For WEEKLY data,
+  the original data may have been recorded daily or weekly
+  (see \code{rawD_to_syndromicW} and
+  \code{rawW_to_syndromicW}). If theoriginal date are
+  recorded daily, please indicate the date.format. If the
+  original data are recorded weekly, remember that the date
+  format MUST be ISOweek, and for date.format please
+  provide the value "ISOweek". See examples.}
 
   \item{syndromes.var}{the variable (column) in data to
   match to the syndromes found in the slot observed}
@@ -101,25 +110,26 @@
 }
 \description{
   A simple command to generate an html page that summarizes
-  the current state of a syndromic object. A "html" folder
-  is created (or used if already existing) into the current
-  working directory.
+  the current state of a syndromic (\code{syndromicD} or
+  \code{syndromicW}) object. A "html" folder is created (or
+  used if already existing) into the current working
+  directory.
 }
 \examples{
 data(lab.daily)
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",
                                  remove.dow=c(6,0),
                                  add.to=c(2,1),
                                  data=lab.daily)
-my.syndromic <- holt_winters_synd(x=my.syndromic,
+my.syndromicD <- holt_winters_synd(x=my.syndromicD,
                                 evaluate.window=30,
                                 frequency=5,
                                 baseline.window=260)
-syndromic_page (x=my.syndromic,
-                week=5,
+syndromic_page (x=my.syndromicD,
+                tpoints.display=5,
                 file.name="SpeciesX",
                 title="Lab data daily for Species X",
                 data.page=TRUE,
@@ -128,9 +138,47 @@ syndromic_page (x=my.syndromic,
                 dates.var="DateofSubmission",
                 syndromes.var="Syndrome",
                 scale=9)
-}
-\seealso{
-  \code{\link{syndromic}}
+data(lab.weekly)
+my.syndromicW <- rawW_to_syndromicW (id=lab.weekly$SubmissionID,
+                                  syndromes.var=lab.weekly$Syndrome,
+                                  week.var=lab.weekly$DateofSubmission)
+
+my.syndromicW <- ewma_synd(x=my.syndromicW,
+                          evaluate.window=10,
+                          limit.sd=c(2.5,3,3.5),
+                          pre.process="diff",
+                          diff.window=4)
+syndromic_page (x=my.syndromicW,
+                tpoints.display=4,
+                file.name="SpeciesX",
+                title="Lab data daily for Species X",
+                data.page=TRUE,
+                data=lab.weekly,
+                date.format="ISOweek",
+                dates.var="DateofSubmission",
+                syndromes.var="Syndrome",
+                scale=9)
+data(lab.daily)
+my.syndromicW2 <- rawD_to_syndromicW (id=SubmissionID,
+                                 syndromes.var=Syndrome,
+                                 dates.var=DateofSubmission,
+                                 date.format="\%d/\%m/\%Y",
+                                 data=lab.daily)
+my.syndromicW2 <- ewma_synd(x=my.syndromicW2,
+                          evaluate.window=10,
+                          limit.sd=c(2.5,3,3.5),
+                          pre.process="diff",
+                          diff.window=4)
+syndromic_page(x=my.syndromicW2,
+                tpoints.display=4,
+                file.name="SpeciesX",
+                title="Lab data daily for Species X",
+                data.page=TRUE,
+                data=lab.daily,
+                date.format="\%d/\%m/\%Y",
+                dates.var="DateofSubmission",
+                syndromes.var="Syndrome",
+                scale=9)
 }
 \keyword{methods}
 

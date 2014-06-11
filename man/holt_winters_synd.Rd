@@ -1,15 +1,14 @@
 \docType{methods}
 \name{holt_winters_synd}
 \alias{holt_winters_synd}
-\alias{holt_winters_synd-methods}
-\alias{holt_winters_synd,syndromic-method}
 \title{\code{holt_winters_synd}}
 \arguments{
-  \item{x}{a \code{syndromic} object, which must have the
-  slot of observed data, and a data frame containing the
-  variable year in the slot dates. If the slot baseline is
-  not available, then the data in in the slot observed will
-  be copied into the baseline slot.}
+  \item{x}{a syndromic (\code{syndromicD} or
+  \code{syndromicW}) object, which must have the slot of
+  observed data, and a data frame containing the variable
+  year in the slot dates. If the slot baseline is not
+  available, then the data in the slot observed will be
+  copied into the baseline slot.}
 
   \item{syndromes}{an optional parameter, if not specified,
   all columns in the slot observed of the \code{syndromic}
@@ -27,11 +26,12 @@
   data cannot be included in the analyses.}
 
   \item{frequency}{The frequency of cycles in the time
-  series. Even though this is normally a year
-  (frequency=365), we have found that the algorithm works
-  better with a frequency equal to the week (5 or 7 days,
-  dependening on whether weekends are included) when strong
-  day-of-week effects are present in the data.}
+  series. For DAILY data (\code{syndromicD}): Even though
+  this is normally a year (frequency=365), we have found
+  that the algorithm works better with a frequency equal to
+  the week (5 or 7 days, dependening on whether weekends
+  are included) when strong day-of-week effects are present
+  in the data.}
 
   \item{baseline.window}{The length of the baseline used to
   train the algorithm in order to provide a forecast, which
@@ -57,8 +57,8 @@
   will have a detection score of 2 (2 detection limits
   "broken").}
 
-  \item{alarm.dim}{The \code{syndromic} object is set to
-  accept the result of multiple detection algorithms. These
+  \item{alarm.dim}{The syndromic object is set to accept
+  the result of multiple detection algorithms. These
   results are stored as a third dimension in the slot
   alarms. Here the user can choose which order in that
   dimension should store the results of this algorithm. If
@@ -113,19 +113,21 @@
   recording.}
 }
 \value{
-  An object of the class \code{syndromic} which contains
-  all elements form the object provided in x, but in which
-  the slot \code{alarm} has been filled in the following
-  way: for the rows assigned in \code{evaluate.window},
-  columns indicated in \code{syndromes} (or all columns
-  from observed if syndromes is left undefined), and for
-  the third dimension specified in \code{alarm.dim} (1 by
-  default), zeros have been assigned if no alarm was
-  generated; otherwise a numerical value gives the number
-  of alarms detected. That is, how many of the limits given
-  in \code{limits.sd} detected an abnormal observation. See
-  examples.  If the user sets a correct.baseline value, the
-  baseline will also have been modified.
+  An object of the class syndromic (\code{syndromicD} or
+  \code{syndromicW}, depending on which was provided as
+  input) which contains all elements form the object
+  provided in x, but in which the slot \code{alarm} has
+  been filled in the following way: for the rows assigned
+  in \code{evaluate.window}, columns indicated in
+  \code{syndromes} (or all columns from observed if
+  syndromes is left undefined), and for the third dimension
+  specified in \code{alarm.dim} (1 by default), zeros have
+  been assigned if no alarm was generated; otherwise a
+  numerical value gives the number of alarms detected. That
+  is, how many of the limits given in \code{limits.sd}
+  detected an abnormal observation. See examples.  If the
+  user sets a correct.baseline value, the baseline will
+  also have been modified.
 }
 \description{
   This function applies the \code{Holt-Winters()} algorithm
@@ -162,12 +164,12 @@
 }
 \examples{
 data(lab.daily)
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",
                                  data=lab.daily)
-my.syndromic <- holt_winters_synd(x=my.syndromic,
+my.syndromicD <- holt_winters_synd(x=my.syndromicD,
                             evaluate.window=30,
                             frequency=7,
                             baseline.window=365,
@@ -176,14 +178,14 @@ my.syndromic <- holt_winters_synd(x=my.syndromic,
                             correct.baseline=2,
                             alarm.dim=1)
 
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",
                                  remove.dow=c(6,0),
                                  add.to=c(2,1),
                                  data=lab.daily)
-my.syndromic <- holt_winters_synd(x=my.syndromic,
+my.syndromicD <- holt_winters_synd(x=my.syndromicD,
                             syndromes="Musculoskeletal",
                             evaluate.window=30,
                             frequency=5,
@@ -193,6 +195,20 @@ my.syndromic <- holt_winters_synd(x=my.syndromic,
                             correct.baseline=2,
                             alarm.dim=1,
                             UCL=2)
+data(lab.daily)
+my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+                                    syndromes.var=Syndrome,
+                                    dates.var=DateofSubmission,
+                                    date.format="\%d/\%m/\%Y",
+                                    data=lab.daily)
+my.syndromicW <- holt_winters_synd(x=my.syndromicW,
+                            evaluate.window=12,
+                            frequency=52,
+                            baseline.window=104,
+                            limit.sd=c(2.5,3,3.5), #default
+                            nahead=2,
+                            correct.baseline=2,
+                            alarm.dim=1)
 }
 \seealso{
   HoltWinters

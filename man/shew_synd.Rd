@@ -1,19 +1,17 @@
 \docType{methods}
 \name{shew_synd}
 \alias{shew_synd}
-\alias{shew_synd-methods}
-\alias{shew_synd,syndromic-method}
 \title{\code{shew_synd}}
 \arguments{
-  \item{x}{a \code{syndromic} object. If pre-processing
-  using regression is going to be used, the slot dates must
+  \item{x}{a syndromic (\code{syndromicD} or
+  \code{syndromicW}) object. If pre-processing using
+  regression is going to be used, the slot dates must
   contain a data frame containing at least the columns for
-  the regression variables chosen to be used (year, dow,
-  month).}
+  the regression variables chosen to be used.}
 
   \item{syndromes}{an optional parameter, if not specified,
-  all columns in the slot observed of the \code{syndromic}
-  object will be used. The user can choose to restrict the
+  all columns in the slot observed of the syndromic object
+  will be used. The user can choose to restrict the
   analyses to a few syndromic groups listing their name or
   column position in the observed matrix. See examples.}
 
@@ -35,8 +33,8 @@
   detection results are given, and the alarm result stored
   is a sum of how many detection limits were met.}
 
-  \item{alarm.dim}{The \code{syndromic} object is set to
-  accept the result of multiple detection algorithms. These
+  \item{alarm.dim}{The syndromic object is set to accept
+  the result of multiple detection algorithms. These
   results are stored as a third dimension in the slot
   alarms. Here the user can choose which order in that
   dimension should store the results of this algorithm.}
@@ -100,13 +98,18 @@
   "nbinom" is used, the function glm.nb is used instead.}
 
   \item{formula}{the regression formula to be used. The
-  following arguments are accepted: trend (for a monotonic
-  trend), month, dow (day of week), sin, cos, AR1
-  (auto-regressive for 1 days) to AR7. These elements can
-  be combined into any formula. The default is
-  formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5". See examples.}
+  following arguments are accepted for DAILY data
+  (\code{syndromicD} class objects provided): trend (for a
+  monotonic trend), year, month, dow (day of week), sin,
+  cos, Ar1 (auto-regressive for 1 days) to AR7. For WEEKLY
+  data (\code{syndromicW} class objects provided): trend,
+  sin, cos, year and 1 to 4 autoregressive variables. These
+  elements can be combined into any formula. The default
+  for DAILY data is
+  formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5" and for WEEKLY
+  data "trend+sin+cos" See examples.}
 
-  \item{period}{in case pre-processing is applied using
+  \item{frequency}{in case pre-processing is applied using
   "glm" AND the sin/cos functions are used, the cycle of
   repetitions need to be set. The default is 365, for
   yearly cycles.}
@@ -184,15 +187,15 @@
 }
 \examples{
 data(lab.daily)
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",
                                  remove.dow=c(6,0),
                                  add.to=c(2,1),
                                  data=lab.daily)
-my.syndromic <- shew_synd(x=my.syndromic,
-                         syndrome="Musculoskeletal",
+my.syndromicD <- shew_synd(x=my.syndromicD,
+                         syndromes="Musculoskeletal",
                          evaluate.window=30,
                          baseline.window=260,
                          limit.sd=c(2.5,3,3.5),
@@ -202,10 +205,10 @@ my.syndromic <- shew_synd(x=my.syndromic,
                          pre.process="glm",
                          family="nbinom",
                          formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5",
-                         period=260)
+                         frequency=260)
 
-my.syndromic2 <- shew_synd(x=my.syndromic,
-                          syndrome= c(1,2,4,5),
+my.syndromicD <- shew_synd(x=my.syndromicD,
+                          syndromes= c(1,2,4,5),
                           evaluate.window=30,
                           baseline.window=260,
                           limit.sd=c(2.5,3,3.5),
@@ -214,6 +217,35 @@ my.syndromic2 <- shew_synd(x=my.syndromic,
                           alarm.dim=3,
                           pre.process="diff",
                           diff.window=5)
+data(lab.daily)
+my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+                                    syndromes.var=Syndrome,
+                                    dates.var=DateofSubmission,
+                                    date.format="\%d/\%m/\%Y",
+                                    data=lab.daily)
+my.syndromicW <- shew_synd(x=my.syndromicW,
+                         syndromes="Musculoskeletal",
+                         evaluate.window=10,
+                         baseline.window=104,
+                         limit.sd=c(2.5,3,3.5),
+                         guard.band=2,
+                         correct.baseline=FALSE,
+                         alarm.dim=3,
+                         pre.process="glm",
+                         family="nbinom",
+                         formula="trend+sin+cos",
+                         frequency=52)
+
+my.syndromicW <- shew_synd(x=my.syndromicW,
+                          syndromes= c(1,2,4,5),
+                          evaluate.window=10,
+                          baseline.window=104,
+                          limit.sd=c(2.5,3,3.5),
+                          guard.band=2,
+                          correct.baseline=FALSE,
+                          alarm.dim=3,
+                          pre.process="diff",
+                          diff.window=4)
 }
 \seealso{
   pre_process_glm

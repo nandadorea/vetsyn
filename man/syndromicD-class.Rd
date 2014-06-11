@@ -1,8 +1,8 @@
 \docType{class}
-\name{syndromicW-class}
-\alias{syndromicW}
-\alias{syndromicW-class}
-\title{Class \code{"syndromicW"}}
+\name{syndromicD-class}
+\alias{syndromicD}
+\alias{syndromicD-class}
+\title{Class \code{"syndromicD"}}
 \description{
   Syndromic is the main class of the \code{vetsyn} package,
   but it has been specified for different types of data
@@ -74,9 +74,15 @@
 }
 \examples{
 ## Load data
-data(observedW)
-my.syndromicW <- syndromicW(observed,min.week=1, min.year=2011,
-                              max.week=22, max.year=2013)
+data(observed)
+my.syndromicD <- syndromicD(observed,min.date="01/01/2011",max.date="26/05/2013")
+my.syndromicD <- syndromicD(observed[1:5,],min.date="01/01/2010",max.date="05/01/2010")
+my.syndromicD <- syndromicD(observed[1:6,],min.date="01/01/2010",max.date="08/01/2010",
+                          weekends=FALSE)
+dates = seq(from=as.Date("01/01/2010",format ="\%d/\%m/\%Y" ),
+              to=as.Date("05/01/2010",format ="\%d/\%m/\%Y" ),
+              by="days")
+my.syndromicD <- syndromicD(observed[1:5,],dates=dates)
 }
 \keyword{classes}
 

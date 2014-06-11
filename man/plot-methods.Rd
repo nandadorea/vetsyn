@@ -1,15 +1,24 @@
 \docType{methods}
 \name{plot-methods}
-\alias{plot}
 \alias{plot-methods}
-\alias{plot,syndromic-method}
 \title{Plot}
 \description{
-  Plot a \code{\link{syndromic}} object.
+  Plot a syndromic (\code{syndromicD} or \code{syndromicW})
+  object.
+
+  Plot a syndromic (\code{syndromicD} or \code{syndromicW})
+  object.
 }
 \section{Methods}{
-  \describe{ \item{\code{signature(object = "syndromic")}}{
-  Show information for the syndromic object. } }
+  \describe{ \item{\code{signature(object =
+  "syndromicD")}}{ Show information for the syndromic
+  object. } }
+}
+
+\section{Methods}{
+  \describe{ \item{\code{signature(object =
+  "syndromicW")}}{ Show information for the syndromic
+  object. } }
 }
 \keyword{methods}
 

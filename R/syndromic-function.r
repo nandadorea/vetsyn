@@ -11,7 +11,6 @@
 ##' minimum and maximum date, and take care of constructing the appropriate
 ##' data frame (this is the recommended use). 
 ##'
-##' @title syndromicD-function
 ##' 
 ##' @param observed A \code{matrix} with the observed data
 ##' @param dates A \code{data.frame} with the complete dates of of each 
@@ -50,7 +49,7 @@
 ##' to create this slot from data on \code{observed}.
 ##' @param LCL Lower control limit. See UCL above. 
 ##' 
-##' @name syndromicD-function
+##' @name syndromicD
 ##' @return an object of the class \code{syndromicD} with the slots
 ##' corresponding to the parameters described. See \code{class-syndromicD}
 ##'  for more details.

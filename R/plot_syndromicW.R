@@ -2,8 +2,8 @@
 ##' @docType methods
 ##' @keywords methods
 ##' @export
-##' @examples
 ##' @import ISOweek
+##' @examples
 ##'data(lab.daily)
 ##'my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
 ##'                                  syndromes.var=Syndrome,
@@ -19,6 +19,7 @@
 ##'plot_syndromic(x=my.syndromicW,
 ##'               syndromes=c(1,3),
 ##'               limit=NULL)
+##'               
 
 
 setMethod('plot_syndromic',

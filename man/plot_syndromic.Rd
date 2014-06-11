@@ -1,11 +1,10 @@
 \docType{methods}
 \name{plot_syndromic}
 \alias{plot_syndromic}
-\alias{plot_syndromic-methods}
-\alias{plot_syndromic,syndromic-method}
 \title{\code{plot_syndromic}}
 \arguments{
-  \item{x}{a \code{syndromic} object.}
+  \item{x}{a syndromic (\code{syndromicD} or
+  \code{syndromicW}) object.}
 
   \item{syndromes}{an optional parameter, if not specified,
   all columns in the slot observed (or baseline of the
@@ -39,31 +38,44 @@
 }
 \description{
   A more specific plotting option, with more control over
-  the options of which elements of the syndromic object to
-  plot. The user can use the general "plot" function of R
-  for a syndromic object as well.
+  the options of which elements of the syndromic
+  (\code{syndromicD} or \code{syndromicW}) object to plot.
+  The user can use the general "plot" function of R for a
+  syndromic object as well.
 }
 \examples{
 data(lab.daily)
-my.syndromic <- raw_to_syndromic (id=SubmissionID,
+my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",
                                  remove.dow=c(6,0),
                                  add.to=c(2,1),
                                  data=lab.daily)
-my.syndromic <- holt_winters_synd(x=my.syndromic,
+my.syndromicD <- holt_winters_synd(x=my.syndromicD,
                                 evaluate.window=30,
                                 frequency=5,
                                 baseline.window=260)
-plot_syndromic(x=my.syndromic,
+plot_syndromic(x=my.syndromicD,
               syndromes=c(1,3))
-plot_syndromic(x=my.syndromic,
+plot_syndromic(x=my.syndromicD,
               syndromes=c(1,3),
               limit=NULL)
-}
-\seealso{
-  \code{\link{syndromic}}
+data(lab.daily)
+my.syndromicW <- rawD_to_syndromicW (id=SubmissionID,
+                                 syndromes.var=Syndrome,
+                                 dates.var=DateofSubmission,
+                                 date.format="\%d/\%m/\%Y",
+                                 data=lab.daily)
+my.syndromicW <- ewma_synd(x=my.syndromicW,
+                          evaluate.window=10,
+                          limit.sd=c(2.5,3,3.5),
+                          pre.process="diff",
+                          diff.window=4)
+plot_syndromic(x=my.syndromicW)
+plot_syndromic(x=my.syndromicW,
+              syndromes=c(1,3),
+              limit=NULL)
 }
 \keyword{methods}
 

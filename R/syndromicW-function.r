@@ -16,8 +16,6 @@
 ##' in the \code{ISOweek} format, though the function will also accept a
 ##' minimum and maximum week, and take care of constructing the appropriate
 ##' data frame (this is the recommended use). 
-##'
-##' @title syndromicW-function
 ##' 
 ##' @param observed A \code{matrix} with the observed data
 ##' @param dates A \code{data.frame} with the complete ISOweeks of of each 
@@ -54,7 +52,7 @@
 ##' to create this slot from data on \code{observed}.
 ##' @param LCL Lower control limit. See UCL above. 
 ##' 
-##' @name syndromicW-function
+##' @name syndromicW
 ##' @return an object of the class \code{syndromicW} with the slots
 ##' corresponding to the parameters described. See \code{class-syndromic}
 ##'  for more details.

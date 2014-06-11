@@ -2,7 +2,7 @@
 ##'
 ##' Syndromic is the main class of the \code{vetsyn} package, but it has been 
 ##' specified for different types of data streams. \code{syndromicD} is the class
-##' used for data that are recorded and monitored DAILY, while \code{syndromicW is
+##' used for data that are recorded and monitored DAILY, while \code{syndromicW} is
 ##' used when the time points for monitoring refer to WEEKS.
 ##' 
 ##' The \code{syndromicD} or \code{syndromicW} classes store observed data in 

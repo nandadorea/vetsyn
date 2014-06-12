@@ -42,6 +42,8 @@ _observed_ is a dataset that represents the number of daily counts to each syndr
 
 The center of the package are objectes of the class _**syndromic**_. These objects are designed to contain all information extracted from the data and relevant for syndromic surveillance, from counts to alarms, in one single place. The dimensions of the object serve as a way to keep data validated.
 
+There are two types of syndromic object - _**syndromicD**_, for data monitored DAILY (each time point equals one day), and _**syndromicW**_, for time points corresponding to WEEKS. They have the same general structure. The tutorial below is based on DAILY data, another tutorial is available for weekly data.
+
 _**syndromic**_ is a S4 class, which means the object is divided in slots that can be accessed using @:
 
 * __@observed__ - _t x S dimensions_: Here the obrserved data are stored - the number of events for each syndrome in each time point. The _observed_ slot has as many columns as the number of syndromes to be monitored, and as many rows as time points. At present the package is only able to deal with daily data (so each time point is one day).  
@@ -65,20 +67,20 @@ It is expected that the construction of a _**syndromic object**_ starts when the
 
 ```{r observed.to.syndromic}
 
-my.syndromic <- syndromic(observed,min.date="03/01/2011",max.date="28/05/2013")
+my.syndromic <- syndromicD(observed,min.date="03/01/2011",max.date="28/05/2013")
 ```
 
 If the dates are left blank, the user can use the function
       **setDates <-**
 to give a full, customized data-frame for the slots _@dates_. This will work as long as said data-frame has the exact same number of rows as the matrix provided for _@observed_.
 
-However, the user can take maximum advantage of the package by using its functions to convert the raw (classified) data into a formatted matrix to go into _@observed_. For that, one would use the function *raw_to_syndromic()*. 
+However, the user can take maximum advantage of the package by using its functions to convert the raw (classified) data into a formatted matrix to go into _@observed_. For that, one would use the function *raw_to_syndromicD()*. 
 
 It requires that the user specifies which column in the raw data stores the dates (and the format of the dates); which column or columns (**id**) should be used to identify the unique cases (see below for examples when more than one column are needed); and where the syndromic classification can be found (**syndromes.var**).
 
 ```{r raw.to.syndromic}
 
-  my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+  my.syndromic <- raw_to_syndromicD (id=SubmissionID, 
                                     syndromes.var=Syndrome,
                                     dates.var=DateofSubmission, 
                                     date.format="%d/%m/%Y", 
@@ -87,7 +89,7 @@ It requires that the user specifies which column in the raw data stores the date
 
 The function counts the number of cases (ids) per syndrome, per day, and stores all in a syndromic object. In the process, any repeated cases (multiple ids with the same syndromic classification in the same day) are discarded. Also, the dates are counted as a complete sequence. If for instance an observation exists for day 2013-11-01, and the next observation is on date 2013-11-04, then 4 rows are created (days 1, 2, 3 and 4 of November) and days 2 and 3 are assigned a count of zero. 
 
-Below you can see several other examples of how the *raw_to_syndromic()* function can be used.
+Below you can see several other examples of how the *raw_to_syndromicD()* function can be used.
 
 Note that the user does not have to count _all_ nor _only_ the syndromes that appear int he data. If a set list of syndromes exist for your syndromic surveillance system, that can be provided as a list. Any syndromes in the list not found in the data will be assigned a count of zero for every day. Any syndromes appearing in the data which are not in the list will be ignored. This is important in order to prevent that data from different time periods end up generating a different set of syndromic groups. 
 
@@ -95,14 +97,14 @@ Note that the user does not have to count _all_ nor _only_ the syndromes that ap
 ```{r raw.to.syndromic2}
 
 ####multiple ID columns
-  my.syndromic <- raw_to_syndromic (id=list(HerdID,AnimalID), 
+  my.syndromic <- raw_to_syndromicD (id=list(HerdID,AnimalID), 
                                     syndromes.var=Syndrome,
                                     dates.var=DateofSubmission, 
                                     date.format="%d/%m/%Y", 
                                     sort=TRUE,
                                     data=lab.daily)
 ####specific syndromes
-   my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+   my.syndromic <- raw_to_syndromicD (id=SubmissionID, 
                                     syndromes.var=Syndrome,
                                     syndromes.name=c("GIT","Musculoskeletal"),
                                     dates.var=DateofSubmission, 
@@ -112,7 +114,7 @@ Note that the user does not have to count _all_ nor _only_ the syndromes that ap
 
 ####fix the dates
 ##start precisely at the beginning of the year
-  my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+  my.syndromic <- raw_to_syndromicD (id=SubmissionID, 
                                     syndromes.var=Syndrome,
                                     dates.var=DateofSubmission, 
                                     date.format="%d/%m/%Y", 
@@ -122,7 +124,7 @@ Note that the user does not have to count _all_ nor _only_ the syndromes that ap
                                     data=lab.daily)
 
 ####ignore weekends and add Saturday's counts to Friday, and Sunday's counts to Mondays
-  my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+  my.syndromic <- raw_to_syndromicD (id=SubmissionID, 
                                     syndromes.var=Syndrome,
                                     dates.var=DateofSubmission, 
                                     date.format="%d/%m/%Y", 
@@ -135,7 +137,7 @@ Note that the user does not have to count _all_ nor _only_ the syndromes that ap
 
 
 ##### this is the syndromic object we will work with for the rest of this tutorial
-my.syndromic <- raw_to_syndromic (id=SubmissionID, 
+my.syndromic <- raw_to_syndromicD (id=SubmissionID, 
                                     syndromes.var=Syndrome,
                                     dates.var=DateofSubmission, 
                                     date.format="%d/%m/%Y", 
@@ -534,7 +536,7 @@ At every new time point (p.e. daily), however, we expect to get more data, and t
 
 ## Updating the syndromic object to include a new time point
 
-We would do that in a similar way we did when we used *raw_to_syndromic*, by appointing the data we got, and where in those data the dates, syndromic classification and events ID can be found. The difference is that now we provide a _syndromic object_ we intend to append the data to. 
+We would do that in a similar way we did when we used *raw_to_syndromicD*, by appointing the data we got, and where in those data the dates, syndromic classification and events ID can be found. The difference is that now we provide a _syndromic object_ we intend to append the data to. 
 
 The package contains an example set - _lab.daily.update_ - which contains data from the same data source used so far in this tutorial, with one extra day. It simulates the available of new data for an implemented syndromic surveillance system, which could (and in this case does) overlap with data already seen by the algorithms on the previous time point. 
 

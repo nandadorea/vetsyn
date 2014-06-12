@@ -982,13 +982,14 @@ syndromic_page(x=my.syndromicW,
 #                   replace.dates=TRUE,
 #                   data=NULL)
 
-  my.syndromicW <- update_syndromic(x=my.syndromicW,
-                                 id=lab.daily.update$SubmissionID,
-                                 syndromes.var=lab.daily.update$Syndrome, 
+my.syndromicW <- update_syndromic(x=my.syndromicW,
+                                 id=lSubmissionID,
+                                 syndromes.var=Syndrome, 
                                  add.syndromes=TRUE,
-                                 dates.var=lab.daily.update$DateofSubmission, 
+                                 dates.var=DateofSubmission, 
                                  date.format="%d/%m/%Y", 
-                                 replace.dates=TRUE)
+                                 replace.dates=TRUE,
+                                 data=lab.daily.update)
 
 
  my.syndromicW <- update_syndromic(x=my.syndromicW,

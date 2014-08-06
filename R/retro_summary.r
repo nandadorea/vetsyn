@@ -153,7 +153,7 @@ setMethod('retro_summary',
               cat("t = 1:length(days)\n", file=rmd)
               cat("\n", file=rmd)
               cat("week    <-  matrix.week[,s]\n", file=rmd)
-              cat("week.ts <-  ts(week, start = c(matrix.week.full[1,2],matrix.week.full[1,1]),\n", file=rmd)
+              cat("week.ts <-  ts(week, start = c(matrix.week.full[1,2],as.numeric(substr(as.character(matrix.week.full[1,1]),7,8))),\n", file=rmd)
               cat("               frequency = 52)\n", file=rmd)
               cat("t.week <- 1:length(week)\n", file=rmd)
               cat("```\n", file=rmd)

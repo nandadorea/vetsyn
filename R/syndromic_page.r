@@ -206,10 +206,10 @@ if(data.page==TRUE){
   data.tables2 = list()
     
   for (syndrome in syndromes.num){
-data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
+data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&
                 (as.Date(data[,dates.var], format=date.format)==x@dates[dim(x@dates)[1],1])),
                 ]
-data.tables2[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
+data.tables2[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&
                 (as.Date(data[,dates.var], format=date.format)>(x@dates[dim(x@dates)[1],1]-tpoints.display))),
                 ]
 }

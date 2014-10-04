@@ -153,6 +153,14 @@ processed.matrix <- matrix(NA,ncol=dim(observed.matrix)[2],nrow=dim(observed.mat
        AR7<-c(days[1:7],days[1:(length(days)-7)])
        trend=t
        
+       if (length(x@dates$holidays)>0) {
+         holidays <- x@dates$holidays
+       }
+       
+       if (length(x@dates$afterholidays)>0) {
+         afterholidays <- x@dates$afterholidays
+       }
+       
        fn.formula=as.formula(paste0("days~",formula))
        
       

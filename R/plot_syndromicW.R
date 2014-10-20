@@ -118,14 +118,14 @@ setMethod('plot_syndromic',
               #plot observed data
               par(new=T, yaxt="n")
               plot(x@observed[start:end,s],x=x.date, yaxt="s", 
-                   ylim=c(0,ymax), type="l", 
+                   ylim=c(ymin,ymax), type="l", 
                    main=colnames(x@observed)[s],xlab="Days", ylab="Events")
               
               
               if (n.algos==1){
                 par(new=T, yaxt="n")
                 barplot(alarms.array[start:end,s,1], 
-                        ylim=c(0,ymax.bar), border=2+a-1,col=2+a-1)
+                        ylim=c(0,ymax.bar), border=2+n.algos-1,col=2+n.algos-1)
               }else{
                 
                 if (n.algos>0){
@@ -141,7 +141,7 @@ setMethod('plot_syndromic',
               
               par(new=T, yaxt="n")
               plot(x@observed[start:end,s],x=x.date, 
-                   ylim=c(0,ymax), type="l", lwd=1.5,  col.lab=0, ylab="",xlab="") 
+                   ylim=c(ymin,ymax), type="l", lwd=1.5,  col.lab=0, ylab="",xlab="") 
               
               if (baseline==TRUE){
                 lines(x=x.date, y=x@baseline[start:end,s],col="blue")

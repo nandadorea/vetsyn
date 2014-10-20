@@ -243,7 +243,8 @@ y <- x
                 dimnames(y@alarms)[[2]] <- list(dimnames(y@observed)[[2]])
               } else{
                 dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
-              }                  dimnames(y@alarms)[[3]][alarm.dim] <- "CUSUM"
+              }                  
+              dimnames(y@alarms)[[3]][alarm.dim] <- "CUSUM"
               
             }
             

@@ -88,7 +88,8 @@ setMethod('ewma_synd',
                 dimnames(y@alarms)[[2]] <- list(dimnames(y@observed)[[2]])
               } else{
                 dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
-              }                  dimnames(y@alarms)[[3]][alarm.dim] <- "EWMA"
+              }                  
+              dimnames(y@alarms)[[3]][alarm.dim] <- "EWMA"
               
             }
             

@@ -21,11 +21,6 @@
 ##'                               syndromes=c(1,3))
 
 
-
-setGeneric('clean_baseline_perc',
-           signature = 'x',
-           function(x, ...) standardGeneric('clean_baseline_perc'))
-
 setMethod('clean_baseline_perc',
           signature(x = 'syndromicW'),
           function (x,

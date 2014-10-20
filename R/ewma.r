@@ -243,7 +243,11 @@ y <- x
             #for the minmum dimensions required
             if (dim(y@alarms)[1]==0){
               setAlarmsD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
-              dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
+              if (length(dimnames(y@observed)[[2]])==1) {
+                dimnames(y@alarms)[[2]] <- list(dimnames(y@observed)[[2]])
+              } else{
+                dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
+              }    
               dimnames(y@alarms)[[3]][alarm.dim] <- "EWMA"
               
             }
@@ -263,7 +267,11 @@ y <- x
             if (UCL!=FALSE){
             if (dim(y@UCL)[1]==0){
               setUCLD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
-              dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
+              if (length(dimnames(y@observed)[[2]])==1) {
+                dimnames(y@UCL)[[2]] <- list(dimnames(y@observed)[[2]])
+              } else{
+                dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
+              }   
               dimnames(y@UCL)[[3]][alarm.dim] <- "EWMA"
               
             }

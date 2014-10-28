@@ -75,6 +75,9 @@ setMethod('pre_process_glm',
             for (c in syndromes.num){      
               loop=loop+1
               
+              attach(x@dates,warn.conflicts=FALSE)
+              
+              
               week = observed.matrix[,c]
               t = 1:length(week)
               cos = cos (2*pi*t/frequency)

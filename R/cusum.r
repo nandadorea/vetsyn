@@ -157,6 +157,7 @@
 ##' @importFrom qcc cusum
 ##' @import abind
 ##' @importFrom MASS glm.nb
+##' @importFrom stringr str_replace_all
 ##' @examples
 ##'data(lab.daily)
 ##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
@@ -212,8 +213,8 @@ setMethod('cusum_synd',
                     formula="dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7",
                     frequency=365
           )
-        {
-    
+{
+            
             ##check that syndromes is valid
             if (class(syndromes)=="NULL"){
               syndromes <- colnames(x@observed)
@@ -230,9 +231,9 @@ setMethod('cusum_synd',
               syndromes.num <- match(syndromes,colnames(x@observed))
             }
             
-           #pulling to a new object to modify directly in the object
-y <- x            
-
+            #pulling to a new object to modify directly in the object
+            y <- x            
+            
             #require(abind)
             
             #if slot alarms does not exist at all, fill it with NA
@@ -252,36 +253,36 @@ y <- x
             if (dim(y@alarms)[3]<alarm.dim){
               add <- alarm.dim-dim(y@alarms)[3]
               for (d in (dim(y@alarms)[3]+1):(dim(y@alarms)[3]+add) ){
-              y@alarms<-abind(y@alarms,
-                              matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
-                              along=3)
+                y@alarms<-abind(y@alarms,
+                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
+                                along=3)
               }
               dimnames(y@alarms)[[3]][alarm.dim] <- "CUSUM"              
             }
             
             #all the same for UCL
             if (UCL!=FALSE){
-            if (dim(y@UCL)[1]==0){
-              setUCLD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
-              if (length(dimnames(y@observed)[[2]])==1) {
-                dimnames(y@UCL)[[2]] <- list(dimnames(y@observed)[[2]])
-              } else{
-                dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
-              }   
-              dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"
-              
-            }
-            
-            #if slot existed, but not up to alarm.dim, add the needed dimensions
-            if (dim(y@UCL)[3]<alarm.dim){
-              add <- alarm.dim-dim(y@UCL)[3]
-              for (d in (dim(y@UCL)[3]+1):(dim(y@UCL)[3]+add) ){
-                y@UCL<-abind(y@UCL,
-                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
-                                along=3)
+              if (dim(y@UCL)[1]==0){
+                setUCLD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
+                if (length(dimnames(y@observed)[[2]])==1) {
+                  dimnames(y@UCL)[[2]] <- list(dimnames(y@observed)[[2]])
+                } else{
+                  dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
+                }   
+                dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"
+                
               }
-              dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"              
-            }
+              
+              #if slot existed, but not up to alarm.dim, add the needed dimensions
+              if (dim(y@UCL)[3]<alarm.dim){
+                add <- alarm.dim-dim(y@UCL)[3]
+                for (d in (dim(y@UCL)[3]+1):(dim(y@UCL)[3]+add) ){
+                  y@UCL<-abind(y@UCL,
+                               matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
+                               along=3)
+                }
+                dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"              
+              }
             }
             
             
@@ -306,204 +307,208 @@ y <- x
               }
             }            
             
-           #if Baseline does not exist at all, fill it with NA for the dimensions required 
+            #if Baseline does not exist at all, fill it with NA for the dimensions required 
             if (dim(y@baseline)[1]==0){
               setBaselineD(y)<-matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2],
-                                     dimnames=dimnames(y@observed))
+                                      dimnames=dimnames(y@observed))
             }
             
             
- #number of time points to iterate           
-range <- (dim(y@observed)[1]-evaluate.window+1):dim(y@observed)[1]                
+            #number of time points to iterate           
+            range <- (dim(y@observed)[1]-evaluate.window+1):dim(y@observed)[1]                
             
             
-for (syndrome in syndromes.num){
-  
-  if (sum(y@baseline[,syndrome],na.rm=TRUE)==0){
-    y@baseline[,syndrome]<-y@observed[,syndrome]
-  }
-  
-  for (tpoint in range){
-      
-      #if baseline for the syndrome in question is not available
-      #(filled with NA just to reach dimensions necessary), then
-      #for the syndrome in use replace with data from observed
-      if (sum(y@baseline[,syndrome],na.rm=TRUE)==0){
-        y@baseline[,syndrome]<-y@observed[,syndrome]
-      }
-    
-      
-if (pre.process=="diff"){
-  
-  start = tpoint-baseline.window-guard.band-diff.window
-  end   = tpoint-1
-  
-  baseline <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
-  to.cc    <- c(rep(NA,diff.window),diff(baseline,diff.window))
-  
-  correct  <- y@baseline[(tpoint-diff.window),syndrome]  
-  
-  
-} else {
-  if (pre.process=="glm"){
-    
-    
-    start = tpoint-baseline.window-guard.band
-    end   = tpoint-1
-    
-    days <- y@baseline[start:end,syndrome]
-    t = 1:length(days)
-    month = as.factor(y@dates$month[start:end])
-    dow <- as.factor(y@dates$dow[start:end])
-    cos = cos(2*pi*t/frequency)
-    sin = sin(2*pi*t/frequency)
-    year <- as.factor(y@dates$year[start:end])
-    AR1<-y@baseline[(start-1):(end-1),syndrome]
-    AR2<-y@baseline[(start-2):(end-2),syndrome]
-    AR3<-y@baseline[(start-3):(end-3),syndrome]
-    AR4<-y@baseline[(start-4):(end-4),syndrome]
-    AR5<-y@baseline[(start-5):(end-5),syndrome]
-    AR6<-y@baseline[(start-6):(end-6),syndrome]
-    AR7<-y@baseline[(start-7):(end-7),syndrome]
-    trend=t
-    
-    if (length(y@dates$holidays)>0) {
-      holidays <- y@dates$holidays
-    }
-    
-    if (length(y@dates$afterholidays)>0) {
-      afterholidays <- y@dates$afterholidays
-    }
-    
-    
-    fn.formula=as.formula(paste0("days~",formula))
-    
-    
-    #####for prediction part
-    t.new = c((t[length(t)-guard.band+2]:t[length(t)]),(t[length(t)]+1))
-    month.new = as.factor(y@dates$month[(tpoint-guard.band+1):(tpoint)])
-    dow.new <- as.factor(y@dates$dow[(tpoint-guard.band+1):(tpoint)])
-    cos.new = cos(2*pi*t.new/frequency)
-    sin.new = sin(2*pi*t.new/frequency)
-    year.new <- as.factor(y@dates$year[(tpoint-guard.band+1):(tpoint)])
-    AR1.new<-y@baseline[(tpoint-guard.band):(tpoint-1),syndrome]
-    AR2.new<-y@baseline[(tpoint-1-guard.band):(tpoint-2),syndrome]
-    AR3.new<-y@baseline[(tpoint-2-guard.band):(tpoint-3),syndrome]
-    AR4.new<-y@baseline[(tpoint-3-guard.band):(tpoint-4),syndrome]
-    AR5.new<-y@baseline[(tpoint-4-guard.band):(tpoint-5),syndrome]
-    AR6.new<-y@baseline[(tpoint-5-guard.band):(tpoint-6),syndrome]
-    AR7.new<-y@baseline[(tpoint-6-guard.band):(tpoint-7),syndrome]
-    
-    
-    new.data <- data.frame(t.new,month.new,dow.new,cos.new,sin.new,year.new,
-                           AR1.new,AR2.new,AR3.new,AR4.new,AR5.new,
-                           AR6.new,AR7.new)
-    colnames(new.data) <- c("trend","month","dow","cos","sin","year",
-                            "AR1","AR2","AR3","AR4","AR5",
-                            "AR6","AR7")
-    
-    if (length(y@dates$holidays)>0) {
-      holidays.new <- y@dates$holidays[(tpoint-guard.band+1):(tpoint)]
-      colnames2 <- c(colnames(new.data),"holidays")
-      new.data <- cbind(new.data,holidays.new)
-      colnames(new.data) <- colnames2
-      
-    }
-    if (length(y@dates$afterholidays)>0) {
-      afterholidays.new <- y@dates$afterholidays[(tpoint-guard.band+1):(tpoint)]
-      colnames2 <- c(colnames(new.data),"afterholidays")
-      new.data <- cbind(new.data,afterholidays.new)
-      colnames(new.data) <- colnames2
-      
-    }
-    
-    if (family=="nbinom"){
-      #require(MASS)
-      fit1     <- glm.nb(fn.formula)
-      
-    }else{
-      #distribution=family
-      fit1 <- glm(fn.formula, family=family)
-    }
-    
-    predict.bas <- predict.glm(fit1,type="response")
-    predict.new <- predict.glm(fit1, newdata=new.data,type="response")
-    
-    to.cc <- days - predict.bas
-    to.cc <- c(to.cc,
-                      (y@observed[tpoint] - predict.new[guard.band]) )
-    correct <- predict.new[guard.band]
-    
-  }else{
-    
-    start = tpoint-baseline.window-guard.band
-    end   = tpoint-1
-    
-    to.cc <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
-    correct <- 0
-    
-  }
-}     
-    
-      for (l in 1:length(limit.sd)){
-        #require(qcc)
-        cusum1 = cusum(to.cc,
-                     center=mean(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
-                     std.dev=sd(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
-                     decision.interval=limit.sd[l],plot=FALSE)
-        
-        UCL.value= ceiling(correct  +  cusum1$center+
-                             (cusum1$std.dev*
-                                (cusum1$decision.interval-cusum1$pos[length(cusum1$pos)-1])))
-        LCL.value= floor(correct  -  cusum1$center+
-                           (cusum1$std.dev*
-                              (cusum1$decision.interval+cusum1$neg[length(cusum1$neg)-1])))
-        #before deciding if an alarm exists, a zero is automatically added to the
-        #time point if this is the first loop for two reasons:
-        #1-because if the data were never analysed, the slot had a NA before,
-        #and adding 0 will signal that it has now been processed
-        #2-because if the data HAS been analyzed before, we want the results of these
-        #analyses to OVERRIDE, not to SUM to the previous analyses.
-        if(l==1){
-          y@alarms[tpoint,syndrome,alarm.dim]<-0
-        }
-        
-        if (l==UCL){
-          y@UCL[tpoint,syndrome,alarm.dim]<-UCL.value
-        }
-        
-        if (l==LCL){
-          y@LCL[tpoint,syndrome,alarm.dim]<-LCL.value
-        }
-        
-        #ADD a one if the result of this loop was a detection
-        if (length(cusum1$violations$upper)>0&&
-              cusum1$violations$upper[length(cusum1$violations$upper)]==length(to.cc)){
-          y@alarms[tpoint,syndrome,alarm.dim]<-y@alarms[tpoint,syndrome,alarm.dim]+1
-        }
-        
-        if (length(cusum1$violations$lower)>0&&LCL==l&&
-              cusum1$violations$lower[length(cusum1$violations$lower)]==length(to.cc)){
-          y@alarms[tpoint,syndrome,alarm.dim]<-y@alarms[tpoint,syndrome,alarm.dim]-1
-        }
-        
-        
-        #Correct baseline IF the user indicated so
-        if (correct.baseline==l){
-          y@baseline[tpoint,syndrome]<- y@observed[tpoint,syndrome]
-          if (length(cusum1$violations$upper)>0&&
-                cusum1$violations$upper[length(cusum1$violations$upper)]==length(to.cc)){
-            y@baseline[tpoint,syndrome] <- max(0,UCL.value)
+            for (syndrome in syndromes.num){
+              
+              if (sum(y@baseline[,syndrome],na.rm=TRUE)==0){
+                y@baseline[,syndrome]<-y@observed[,syndrome]
+              }
+              
+              for (tpoint in range){
+                
+                #if baseline for the syndrome in question is not available
+                #(filled with NA just to reach dimensions necessary), then
+                #for the syndrome in use replace with data from observed
+                if (sum(y@baseline[,syndrome],na.rm=TRUE)==0){
+                  y@baseline[,syndrome]<-y@observed[,syndrome]
+                }
+                
+                
+                if (pre.process=="diff"){
+                  
+                  start = tpoint-baseline.window-guard.band-diff.window
+                  end   = tpoint-1
+                  
+                  baseline <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
+                  to.cc    <- c(rep(NA,diff.window),diff(baseline,diff.window))
+                  
+                  correct  <- y@baseline[(tpoint-diff.window),syndrome]  
+                  
+                  
+                } else {
+                  if (pre.process=="glm"){
+                    
+                    
+                    start = tpoint-baseline.window-guard.band
+                    end   = tpoint-1
+                    
+                    
+                    attach(y@dates[start:end,],warn.conflicts=FALSE)
+                    
+                    days <- y@baseline[start:end,syndrome]
+                    t = 1:length(days)
+                    month = as.factor(y@dates$month[start:end])
+                    dow <- as.factor(y@dates$dow[start:end])
+                    cos = cos(2*pi*t/frequency)
+                    sin = sin(2*pi*t/frequency)
+                    year <- as.factor(y@dates$year[start:end])
+                    AR1<-y@baseline[(start-1):(end-1),syndrome]
+                    AR2<-y@baseline[(start-2):(end-2),syndrome]
+                    AR3<-y@baseline[(start-3):(end-3),syndrome]
+                    AR4<-y@baseline[(start-4):(end-4),syndrome]
+                    AR5<-y@baseline[(start-5):(end-5),syndrome]
+                    AR6<-y@baseline[(start-6):(end-6),syndrome]
+                    AR7<-y@baseline[(start-7):(end-7),syndrome]
+                    trend=t
+                    
+                    
+                    fn.formula=as.formula(paste0("days~",formula))
+                    
+                    
+                    #####for prediction part
+                    t.new = c((t[length(t)-guard.band+2]:t[length(t)]),(t[length(t)]+1))
+                    month.new = as.factor(y@dates$month[(tpoint-guard.band+1):(tpoint)])
+                    dow.new <- as.factor(y@dates$dow[(tpoint-guard.band+1):(tpoint)])
+                    cos.new = cos(2*pi*t.new/frequency)
+                    sin.new = sin(2*pi*t.new/frequency)
+                    year.new <- as.factor(y@dates$year[(tpoint-guard.band+1):(tpoint)])
+                    AR1.new<-y@baseline[(tpoint-guard.band):(tpoint-1),syndrome]
+                    AR2.new<-y@baseline[(tpoint-1-guard.band):(tpoint-2),syndrome]
+                    AR3.new<-y@baseline[(tpoint-2-guard.band):(tpoint-3),syndrome]
+                    AR4.new<-y@baseline[(tpoint-3-guard.band):(tpoint-4),syndrome]
+                    AR5.new<-y@baseline[(tpoint-4-guard.band):(tpoint-5),syndrome]
+                    AR6.new<-y@baseline[(tpoint-5-guard.band):(tpoint-6),syndrome]
+                    AR7.new<-y@baseline[(tpoint-6-guard.band):(tpoint-7),syndrome]
+                    
+                    new.data <- data.frame(t.new,month.new,dow.new,cos.new,sin.new,year.new,
+                                           AR1.new,AR2.new,AR3.new,AR4.new,AR5.new,
+                                           AR6.new,AR7.new)
+                    colnames(new.data) <- c("trend","month","dow","cos","sin","year",
+                                            "AR1","AR2","AR3","AR4","AR5",
+                                            "AR6","AR7")
+                    
+                    
+                    regular=colnames(new.data)
+                    formula <- str_replace_all(formula, pattern=" ", repl="")
+                    formula.items <- strsplit(formula,split="[+]")[[1]]
+                    
+                    
+                    if (length(which(is.na(match(formula.items,regular))==TRUE))>0){
+                      new <- which(is.na(match(formula.items,regular))==TRUE)
+                      
+                      for (n in new){
+                        assign(paste0(formula.items[n],".new"),
+                               with(y@dates,
+                                    get(formula.items[n])[(tpoint-guard.band+1):(tpoint)])
+                        )
+                        
+                        colnames2 <- c(colnames(new.data),formula.items[n])
+                        new.data <- cbind(new.data,get(paste0(formula.items[n],".new")))
+                        colnames(new.data) <- colnames2
+                        
+                      }
+                    }
+                    
+                    
+                    
+                    
+                    if (family=="nbinom"){
+                      #require(MASS)
+                      fit1     <- glm.nb(fn.formula)
+                      
+                    }else{
+                      #distribution=family
+                      fit1 <- glm(fn.formula, family=family)
+                    }
+                    
+                    predict.bas <- predict.glm(fit1,type="response")
+                    predict.new <- predict.glm(fit1, newdata=new.data,type="response")
+                    
+                    to.cc <- days - predict.bas
+                    to.cc <- c(to.cc,
+                               (y@observed[tpoint] - predict.new[guard.band]) )
+                    correct <- predict.new[guard.band]
+                    
+                  }else{
+                    
+                    start = tpoint-baseline.window-guard.band
+                    end   = tpoint-1
+                    
+                    to.cc <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
+                    correct <- 0
+                    
+                  }
+                }     
+                
+                for (l in 1:length(limit.sd)){
+                  #require(qcc)
+                  cusum1 = cusum(to.cc,
+                                 center=mean(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
+                                 std.dev=sd(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
+                                 decision.interval=limit.sd[l],plot=FALSE)
+                  
+                  UCL.value= ceiling(correct  +  cusum1$center+
+                                       (cusum1$std.dev*
+                                          (cusum1$decision.interval-cusum1$pos[length(cusum1$pos)-1])))
+                  LCL.value= floor(correct  -  cusum1$center+
+                                     (cusum1$std.dev*
+                                        (cusum1$decision.interval+cusum1$neg[length(cusum1$neg)-1])))
+                  #before deciding if an alarm exists, a zero is automatically added to the
+                  #time point if this is the first loop for two reasons:
+                  #1-because if the data were never analysed, the slot had a NA before,
+                  #and adding 0 will signal that it has now been processed
+                  #2-because if the data HAS been analyzed before, we want the results of these
+                  #analyses to OVERRIDE, not to SUM to the previous analyses.
+                  if(l==1){
+                    y@alarms[tpoint,syndrome,alarm.dim]<-0
+                  }
+                  
+                  if (l==UCL){
+                    y@UCL[tpoint,syndrome,alarm.dim]<-UCL.value
+                  }
+                  
+                  if (l==LCL){
+                    y@LCL[tpoint,syndrome,alarm.dim]<-LCL.value
+                  }
+                  
+                  #ADD a one if the result of this loop was a detection
+                  if (length(cusum1$violations$upper)>0&&
+                        cusum1$violations$upper[length(cusum1$violations$upper)]==length(to.cc)){
+                    y@alarms[tpoint,syndrome,alarm.dim]<-y@alarms[tpoint,syndrome,alarm.dim]+1
+                  }
+                  
+                  if (length(cusum1$violations$lower)>0&&LCL==l&&
+                        cusum1$violations$lower[length(cusum1$violations$lower)]==length(to.cc)){
+                    y@alarms[tpoint,syndrome,alarm.dim]<-y@alarms[tpoint,syndrome,alarm.dim]-1
+                  }
+                  
+                  
+                  #Correct baseline IF the user indicated so
+                  if (correct.baseline==l){
+                    y@baseline[tpoint,syndrome]<- y@observed[tpoint,syndrome]
+                    if (length(cusum1$violations$upper)>0&&
+                          cusum1$violations$upper[length(cusum1$violations$upper)]==length(to.cc)){
+                      y@baseline[tpoint,syndrome] <- max(0,UCL.value)
+                    }
+                  }
+                  
+                  
+                  
+                  
+                }
+              }
+            }
+            
+            return(y)          
           }
-        }
-        
-        
-        
-        
-    }
-  }
-}
-            
-              return(y)          
-            }
 )

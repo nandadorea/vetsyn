@@ -5,6 +5,7 @@
 ##' @importFrom qcc cusum
 ##' @import abind
 ##' @importFrom MASS glm.nb
+##' @importFrom stringr str_replace_all
 ##' @examples
 ##'data(lab.daily)
 ##'my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
@@ -194,6 +195,8 @@ setMethod('cusum_synd',
                     start = tpoint-baseline.window-guard.band
                     end   = tpoint-1
                     
+                    attach(y@dates[start:end,],warn.conflicts=FALSE)
+                    
                     week <- y@baseline[start:end,syndrome]
                     t = 1:length(week)
                     
@@ -224,6 +227,29 @@ setMethod('cusum_synd',
                                            AR1.new,AR2.new,AR3.new,AR4.new)
                     colnames(new.data) <- c("trend","cos","sin","year",
                                             "AR1","AR2","AR3","AR4")
+                    
+                    
+                    regular=colnames(new.data)
+                    formula <- str_replace_all(formula, pattern=" ", repl="")
+                    formula.items <- strsplit(formula,split="[+]")[[1]]
+                    
+                    
+                    if (length(which(is.na(match(formula.items,regular))==TRUE))>0){
+                      new <- which(is.na(match(formula.items,regular))==TRUE)
+                      
+                      for (n in new){
+                        assign(paste0(formula.items[n],".new"),
+                               with(y@dates,
+                                    get(formula.items[n])[(tpoint-guard.band+1):(tpoint)])
+                        )
+                        
+                        colnames2 <- c(colnames(new.data),formula.items[n])
+                        new.data <- cbind(new.data,get(paste0(formula.items[n],".new")))
+                        colnames(new.data) <- colnames2
+                        
+                      }
+                    }
+                    
                     
                     
                     if (family=="nbinom"){

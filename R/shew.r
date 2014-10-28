@@ -156,6 +156,7 @@
 ##' @importFrom qcc stats.xbar.one
 ##' @importFrom qcc sd.xbar.one
 ##' @importFrom qcc limits.xbar.one
+##' @importFrom stringr str_replace_all
 ##' @import abind
 ##' @importFrom MASS glm.nb
 ##' 
@@ -353,6 +354,8 @@ if (pre.process=="diff"){
     start = tpoint-baseline.window-guard.band
     end   = tpoint-1
     
+    attach(y@dates[start:end,],warn.conflicts=FALSE)
+    
     days <- y@baseline[start:end,syndrome]
     t = 1:length(days)
     month = as.factor(y@dates$month[start:end])
@@ -369,13 +372,6 @@ if (pre.process=="diff"){
     AR7<-y@baseline[(start-7):(end-7),syndrome]
     trend=t
     
-    if (length(y@dates$holidays)>0) {
-      holidays <- y@dates$holidays
-    }
-    
-    if (length(y@dates$afterholidays)>0) {
-      afterholidays <- y@dates$afterholidays
-    }
     
     fn.formula=as.formula(paste0("days~",formula))
     
@@ -403,19 +399,25 @@ if (pre.process=="diff"){
                             "AR1","AR2","AR3","AR4","AR5",
                             "AR6","AR7")
     
-    if (length(y@dates$holidays)>0) {
-      holidays.new <- y@dates$holidays[(tpoint-guard.band+1):(tpoint)]
-      colnames2 <- c(colnames(new.data),"holidays")
-      new.data <- cbind(new.data,holidays.new)
-      colnames(new.data) <- colnames2
+    regular=colnames(new.data)
+    formula <- str_replace_all(formula, pattern=" ", repl="")
+    formula.items <- strsplit(formula,split="[+]")[[1]]
+    
+    
+    if (length(which(is.na(match(formula.items,regular))==TRUE))>0){
+      new <- which(is.na(match(formula.items,regular))==TRUE)
       
-    }
-    if (length(y@dates$afterholidays)>0) {
-      afterholidays.new <- y@dates$afterholidays[(tpoint-guard.band+1):(tpoint)]
-      colnames2 <- c(colnames(new.data),"afterholidays")
-      new.data <- cbind(new.data,afterholidays.new)
-      colnames(new.data) <- colnames2
-      
+      for (n in new){
+        assign(paste0(formula.items[n],".new"),
+               with(y@dates,
+                    get(formula.items[n])[(tpoint-guard.band+1):(tpoint)])
+        )
+        
+        colnames2 <- c(colnames(new.data),formula.items[n])
+        new.data <- cbind(new.data,get(paste0(formula.items[n],".new")))
+        colnames(new.data) <- colnames2
+        
+      }
     }
     
     if (family=="nbinom"){

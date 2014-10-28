@@ -83,7 +83,6 @@
 ##'                               family="nbinom")
 
                              
-
 setGeneric('pre_process_glm',
            signature = 'x',
            function(x, ...) standardGeneric('pre_process_glm'))
@@ -98,114 +97,106 @@ setMethod('pre_process_glm',
                     frequency=365,
                     print.model=TRUE,
                     plot=TRUE)
-        {
-    
-      ##check that syndromes is valid
-       if (class(syndromes)=="NULL"){
-         syndromes <- colnames(x@observed)
-         }else{
-         if (class(syndromes)!="character"&&class(syndromes)!="numeric") {
-     stop("if provided, argument syndromes must be a character or numeric vector")
-           }
-         }
-      
-       
-       ##check that valid dates are entered
-       if (dim(x@observed)[1]!=dim(x@dates)[1]){
-         stop("valid data not found in the slot dates")
-       }
-       
-      
-       #make sure syndrome list is always numeric
-       #even if user gives as a list of names
-       if (class(syndromes)=="numeric") {
-       syndromes.num <- syndromes
-       }else{
-         syndromes.num <- match(syndromes,colnames(x@observed))
-       }
-
-       #pulling data from the object to work out of the object
-       if (slot=="baseline"){
-      observed.matrix <- x@baseline
-       } else {
-      observed.matrix <- x@observed }
-       
-processed.matrix <- matrix(NA,ncol=dim(observed.matrix)[2],nrow=dim(observed.matrix)[1])
-              
-       
-       loop=0
-      for (c in syndromes.num){      
-       loop=loop+1
-        
-        days = observed.matrix[,c]
-        t = 1:length(days)
-        month = as.factor(x@dates$month)
-        dow <- as.factor(x@dates$dow)
-        cos = cos (2*pi*t/frequency)
-        sin = sin (2*pi*t/frequency)
-        year <- as.factor(x@dates$year)
-        AR1<-c(days[1],days[1:(length(days)-1)])
-       AR2<-c(days[1:2],days[1:(length(days)-2)])
-       AR3<-c(days[1:3],days[1:(length(days)-3)])
-       AR4<-c(days[1:4],days[1:(length(days)-4)])
-       AR5<-c(days[1:5],days[1:(length(days)-5)])
-       AR6<-c(days[1:6],days[1:(length(days)-6)])
-       AR7<-c(days[1:7],days[1:(length(days)-7)])
-       trend=t
-       
-       if (length(x@dates$holidays)>0) {
-         holidays <- x@dates$holidays
-       }
-       
-       if (length(x@dates$afterholidays)>0) {
-         afterholidays <- x@dates$afterholidays
-       }
-       
-       fn.formula=as.formula(paste0("days~",formula))
-       
-      
-      
-      if (family=="nbinom"){
-        #require(MASS)
-        fit1     <- glm.nb(fn.formula)  
-        predict1 <- predict(fit1, type="response", se.fit=TRUE)
-        series   <- predict1$fit
-    
-      }else{
-        #distribution=family            
-        
-        fit1 <- glm(fn.formula, family=family)
-        predict1 <- predict(fit1, type="response", se.fit=TRUE)
-        series   <- predict1$fit
-      }    
-        
-       residuals <- days-series
-         
-          syndrome.name <- colnames(observed.matrix)[c]
-         
-        ##plotting and prinitng    
-        if (print.model==TRUE){
-              print(syndrome.name)
-              print(fit1)    
+          {
+            
+            ##check that syndromes is valid
+            if (class(syndromes)=="NULL"){
+              syndromes <- colnames(x@observed)
+            }else{
+              if (class(syndromes)!="character"&&class(syndromes)!="numeric") {
+                stop("if provided, argument syndromes must be a character or numeric vector")
+              }
             }
-      
-          
-        if (plot==TRUE) {
-          
-          if (loop==1){
-            par(mfrow=c(length(syndromes),1),mar=c(2,4,2,2))}
-          
-          plot(residuals, type="l",ylab=syndrome.name)
-          lines(days,col="grey")
-          legend("topleft", pch=3,col=c("black","grey"),
-                 c("Pre-processed series","Original series"))
-        }       
-        
-       processed.matrix[,c] <- residuals
-       
-      }
-      
-      return(processed.matrix)
-       
+            
+            ##check that valid dates are entered
+            if (dim(x@observed)[1]!=dim(x@dates)[1]){
+              stop("valid data not found in the slot dates")
+            }
+            
+            
+            #make sure syndrome list is always numeric
+            #even if user gives as a list of names
+            if (class(syndromes)=="numeric") {
+              syndromes.num <- syndromes
+            }else{
+              syndromes.num <- match(syndromes,colnames(x@observed))
+            }
+            
+            #pulling data from the object to work out of the object
+            if (slot=="baseline"){
+              observed.matrix <- x@baseline
+            } else {
+              observed.matrix <- x@observed }
+            
+            processed.matrix <- matrix(NA,ncol=dim(observed.matrix)[2],nrow=dim(observed.matrix)[1])
+            
+            
+            loop=0
+            for (c in syndromes.num){      
+              loop=loop+1
+              
+              attach(x@dates,warn.conflicts=FALSE)
+              
+              days = observed.matrix[,c]
+              t = 1:length(days)
+              month = as.factor(x@dates$month)
+              dow <- as.factor(x@dates$dow)
+              cos = cos (2*pi*t/frequency)
+              sin = sin (2*pi*t/frequency)
+              year <- as.factor(x@dates$year)
+              AR1<-c(days[1],days[1:(length(days)-1)])
+              AR2<-c(days[1:2],days[1:(length(days)-2)])
+              AR3<-c(days[1:3],days[1:(length(days)-3)])
+              AR4<-c(days[1:4],days[1:(length(days)-4)])
+              AR5<-c(days[1:5],days[1:(length(days)-5)])
+              AR6<-c(days[1:6],days[1:(length(days)-6)])
+              AR7<-c(days[1:7],days[1:(length(days)-7)])
+              trend=t
+              
+              fn.formula=as.formula(paste0("days~",formula))
+              
+              
+              if (family=="nbinom"){
+                #require(MASS)
+                fit1     <- glm.nb(fn.formula)  
+                predict1 <- predict(fit1, type="response", se.fit=TRUE)
+                series   <- predict1$fit
+                
+              }else{
+                #distribution=family            
+                
+                fit1 <- glm(fn.formula, family=family)
+                predict1 <- predict(fit1, type="response", se.fit=TRUE)
+                series   <- predict1$fit
+              }    
+              
+              residuals <- days-series
+              
+              syndrome.name <- colnames(observed.matrix)[c]
+              
+              ##plotting and prinitng    
+              if (print.model==TRUE){
+                print(syndrome.name)
+                print(fit1)    
+              }
+              
+              
+              if (plot==TRUE) {
+                
+                if (loop==1){
+                  par(mfrow=c(length(syndromes),1),mar=c(2,4,2,2))}
+                
+                plot(residuals, type="l",ylab=syndrome.name)
+                lines(days,col="grey")
+                legend("topleft", pch=3,col=c("black","grey"),
+                       c("Pre-processed series","Original series"))
+              }       
+              
+              processed.matrix[,c] <- residuals
+              
+            }
+            
+            return(processed.matrix)
+            
           }
 )

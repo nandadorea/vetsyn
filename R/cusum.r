@@ -367,6 +367,15 @@ if (pre.process=="diff"){
     AR7<-y@baseline[(start-7):(end-7),syndrome]
     trend=t
     
+    if (length(y@dates$holidays)>0) {
+      holidays <- y@dates$holidays
+    }
+    
+    if (length(y@dates$afterholidays)>0) {
+      afterholidays <- y@dates$afterholidays
+    }
+    
+    
     fn.formula=as.formula(paste0("days~",formula))
     
     
@@ -392,7 +401,21 @@ if (pre.process=="diff"){
     colnames(new.data) <- c("trend","month","dow","cos","sin","year",
                             "AR1","AR2","AR3","AR4","AR5",
                             "AR6","AR7")
+    
+    if (length(y@dates$holidays)>0) {
+      holidays.new <- y@dates$holidays[(tpoint-guard.band+1):(tpoint)]
+      colnames2 <- c(colnames(new.data),"holidays")
+      new.data <- cbind(new.data,holidays.new)
+      colnames(new.data) <- colnames2
       
+    }
+    if (length(y@dates$afterholidays)>0) {
+      afterholidays.new <- y@dates$afterholidays[(tpoint-guard.band+1):(tpoint)]
+      colnames2 <- c(colnames(new.data),"afterholidays")
+      new.data <- cbind(new.data,afterholidays.new)
+      colnames(new.data) <- colnames2
+      
+    }
     
     if (family=="nbinom"){
       #require(MASS)

@@ -397,19 +397,27 @@ if (pre.process=="diff"){
     AR6.new<-y@baseline[(tpoint-5-guard.band):(tpoint-6),syndrome]
     AR7.new<-y@baseline[(tpoint-6-guard.band):(tpoint-7),syndrome]
     
+    new.data <- data.frame(t.new,month.new,dow.new,cos.new,sin.new,year.new,
+                           AR1.new,AR2.new,AR3.new,AR4.new,AR5.new,
+                           AR6.new,AR7.new)
+    colnames(new.data) <- c("trend","month","dow","cos","sin","year",
+                            "AR1","AR2","AR3","AR4","AR5",
+                            "AR6","AR7")
+    
     if (length(y@dates$holidays)>0) {
       holidays.new <- y@dates$holidays[(tpoint-guard.band+1):(tpoint)]
+      colnames2 <- c(colnames(new.data),"holidays")
+      new.data <- cbind(new.data,holidays.new)
+      colnames(new.data) <- colnames2
+      
     }
     if (length(y@dates$afterholidays)>0) {
       afterholidays.new <- y@dates$afterholidays[(tpoint-guard.band+1):(tpoint)]
+      colnames2 <- c(colnames(new.data),"afterholidays")
+      new.data <- cbind(new.data,afterholidays.new)
+      colnames(new.data) <- colnames2
+      
     }
-    
-    new.data <- data.frame(t.new,month.new,dow.new,cos.new,sin.new,year.new,
-                           AR1.new,AR2.new,AR3.new,AR4.new,AR5.new,
-                           AR6.new,AR7.new,holidays.new,afterholidays.new)
-    colnames(new.data) <- c("trend","month","dow","cos","sin","year",
-                            "AR1","AR2","AR3","AR4","AR5",
-                            "AR6","AR7","holidays","afterholidays")
       
     
     if (family=="nbinom"){

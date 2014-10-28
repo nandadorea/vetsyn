@@ -159,7 +159,7 @@ raw_to_syndromicD <- function(id,
   }
   
   if (remove.dow!=FALSE&&length(add.to)!=length(remove.dow)) {
-    stop("the argumento add.to must have the exact same vector length
+    stop("the argument add.to must have the exact same vector length
          as remove.dow")
   }
   

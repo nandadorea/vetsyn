@@ -175,7 +175,7 @@ setMethod('plot_syndromic',
         
         par(new=T, yaxt="n")
         plot(x@observed[start:end,s],x=x.date, 
-             ylim=c(0,ymax), type="l", lwd=1.5,  col.lab=0, ylab="",xlab="") 
+             ylim=c(min(x@observed[start:end,s]),ymax), type="l", lwd=1.5,  col.lab=0, ylab="",xlab="") 
         
         if (baseline==TRUE){
         lines(x=x.date, y=x@baseline[start:end,s],col="blue")

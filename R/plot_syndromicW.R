@@ -89,6 +89,8 @@ setMethod('plot_syndromic',
               
               #set limits
               ymax<-max(x@observed[start:end,s])
+              ymin<-min(x@observed[start:end,s])
+              
               ymax.bar <- max(1,max(alarms.sum[,s]))
               x.date <- ISOweek2date(x@dates[start:end,1])
               

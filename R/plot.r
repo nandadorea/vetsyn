@@ -89,6 +89,7 @@ if (dim(x@alarms)[1]!=0){
         
         if (dim(x@alarms)[1]==0){
           ymax<-max(x@observed[start:end,s])
+          ymin<-min(x@observed[start:end,s])
           x.date <- x@dates[start:end,1]
           
           #plot observed data

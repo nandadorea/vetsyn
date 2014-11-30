@@ -158,7 +158,7 @@
 ##' @importFrom qcc ewma
 ##' @import abind
 ##' @importFrom MASS glm.nb
-##' @importFrom stringr str_replace_all
+##' @import stringr
 ##' @examples
 ##'data(lab.daily)
 ##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,

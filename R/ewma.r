@@ -453,7 +453,7 @@ if (pre.process=="diff"){
     
       for (l in 1:length(limit.sd)){
         #require(qcc)
-        ewma1 = ewma(to.cc,
+        ewma1 = ewma1(to.cc,
                      center=mean(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
                      std.dev=sd(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
                      lambda=lambda,nsigmas=limit.sd[l],plot=FALSE)

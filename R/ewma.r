@@ -155,10 +155,10 @@
 ##' 
 ##' @keywords methods
 ##' @export
+##' @importFrom stringr str_replace_all
 ##' @importFrom qcc ewma
-##' @import abind
 ##' @importFrom MASS glm.nb
-##' @import stringr
+##' @import abind
 ##' @examples
 ##'data(lab.daily)
 ##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,

@@ -27,6 +27,7 @@ Imports:
     abind,
     ISOweek,
     knitr,
+    stringr,
     MASS
 Suggests:
     testthat

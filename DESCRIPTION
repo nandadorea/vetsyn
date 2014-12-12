@@ -28,7 +28,9 @@ Imports:
     ISOweek,
     knitr,
     stringr,
-    MASS
+    MASS,
+    mail,
+    sendmailR
 Suggests:
     testthat
 Collate:

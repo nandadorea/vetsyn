@@ -29,8 +29,7 @@ dates_df <- function (min.date, max.date,
 
 
 
-ewmaSmooth1 <- function (x, y, lambda = 0.2, start, ...) 
-{
+ewmaSmooth1 <- function (x, y, lambda = 0.2, start, ...){
   if (length(y) != length(x)) 
     stop("x and y must have the same length!")
   if (abs(lambda) > 1) 
@@ -59,8 +58,7 @@ ewmaSmooth1 <- function (x, y, lambda = 0.2, start, ...)
 
 ewma1 <- function (data, sizes, center, std.dev, lambda = 0.2, nsigmas = 3, 
                    data.name, labels, newdata, newsizes, newlabels, plot = TRUE, 
-                   ...) 
-{
+                   ...){
   call <- match.call()
   if (missing(data)) 
     stop("'data' argument is not specified")

@@ -14,7 +14,7 @@
   contain dates}
 
   \item{date.format}{the date format in the dates variable,
-  by default "\%Y-\%m-\%d".}
+  by default "%Y-%m-%d".}
 }
 \description{
   Converts a matrix of daily counts into weekly counts,

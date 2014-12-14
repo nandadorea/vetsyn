@@ -436,6 +436,7 @@ my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                   remove.dow=c(6,0),
                                   add.to=c(2,1),
                                   data=lab.daily)
+#system.time({
 my.syndromicD <- ewma_synd(x=my.syndromicD,
                           syndrome="Musculoskeletal",
                           evaluate.window=10,
@@ -449,10 +450,12 @@ my.syndromicD <- ewma_synd(x=my.syndromicD,
                           family="nbinom",
                           formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5",
                           frequency=260)
+#})
 
+#system.time({
 my.syndromicD <- ewma_synd(x=my.syndromicD,
-                           syndrome= c(1,2,4,5),
-                           evaluate.window=10,
+                           #syndrome= c(1,2,4,5),
+                           evaluate.window=60,
                            baseline.window=260,
                            lambda=0.2,
                            limit.sd=c(2.5,3,3.5),
@@ -461,7 +464,7 @@ my.syndromicD <- ewma_synd(x=my.syndromicD,
                            alarm.dim=2,
                            pre.process="diff",
                            diff.window=5)
-
+})
 
 
 

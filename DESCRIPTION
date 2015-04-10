@@ -30,7 +30,8 @@ Imports:
     stringr,
     MASS,
     mail,
-    sendmailR
+    sendmailR,
+    xtable
 Suggests:
     testthat
 Collate:

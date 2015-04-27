@@ -87,10 +87,14 @@ syndromicW <- function(observed,
     dates <- dates_df(min.date=min.date,max.date=max.date, 
                           by="days",
                           date.format = "%Y-%M-%d")
-    dates <- dates[,c("week","year")]
-    dates <- unique(dates)
-    ISOweek<- create_isoweek(dates$week,dates$year,reference.day=1)
-    dates <- cbind(ISOweek,dates)
+     isoweekv <- date2ISOweek(dates[,1])
+       isoweekv.week <- substr(as.character(isoweekv),1,8)
+    week <- as.integer(substr(as.character(isoweekv),7,8))
+    year <- as.integer(substr(as.character(isoweekv),1,4))
+    
+    dates <- data.frame(ISOweek=isoweekv[!duplicated(isoweekv.week)],
+                        week=week[!duplicated(isoweekv.week)],
+                        year=year[!duplicated(isoweekv.week)])   
     
   }
       

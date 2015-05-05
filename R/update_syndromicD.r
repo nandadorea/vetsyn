@@ -22,7 +22,7 @@
 ##' @param dates.var The vector (dates.var=mydata$mydates) or column name
 ##' (dates.var=mydates, data=mydata) where the dates of the events are to be found.
 ##' @param date.format The date.format of the date.variable.
-##' Default is "%d/%m/%Y". See strptime() for format specifications
+##' Default is d/m/Y. See strptime() for format specifications
 ##' @param remove.dow An optional argument, by default set to FALSE. This allows
 ##' the user to specify weekdays that must be removed from the dataset, for instance
 ##' when weekends are not relevant. This must be se to integers between 0 and 6

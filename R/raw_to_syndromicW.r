@@ -75,7 +75,7 @@
 ##' the week MUST be in the ISOweek format (p.e., "2014-W02-1"). In any case the function will
 ##' group events by week and outputs will be in the ISOweek format.
 ##' @param date.format The date.format of the date.variable.
-##' Default is "%d/%m/%Y". See strptime() for format specifications. If the dates 
+##' Default is d/m/Y. See strptime() for format specifications. If the dates 
 ##' variable records the WEEKS of the events, please set date.format=ISOweek"
 ##' @param min.date An optional argument. If not provided, the minimum date found
 ##' in the dataset is used. Must be provided in the same date format as set n "date.format",

@@ -29,7 +29,7 @@ should be provided as character value or vector
 (dates.var=mydates, data=mydata) where the dates of the events are to be found.}
 
 \item{date.format}{The date.format of the date.variable.
-Default is "%d/%m/%Y". See strptime() for format specifications}
+Default is d/m/Y. See strptime() for format specifications}
 
 \item{min.date}{An optional argument. If not provided, the minimum date found
 in the dataset is used.}

@@ -26,7 +26,7 @@
 ##' @param dates.var The vector (dates.var=mydata$mydates) or column name
 ##' (dates.var=mydates, data=mydata) where the dates of the events are to be found.
 ##' @param date.format The date.format of the date.variable.
-##' Default is "%d/%m/%Y". See strptime() for format specifications. If the
+##' Default is d/m/Y. See strptime() for format specifications. If the
 ##' data have already been recorded weekly, then the column "dates.var" MUST
 ##' be in the ISOweek format, and the date.format must be set to "ISOweek".
 ##' @param replace.dates a logical argument indicating whether dates in the

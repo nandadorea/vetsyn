@@ -24,7 +24,7 @@
 ##' in the matrix \code{observed}.
 ##' @param max.date see min.date above
 ##' @param date.format The date.format of the min.date and max.date provided.
-##' Default is "%d/%m/%Y". See strptime() for format specifications.
+##' Default is d/m/Y. See strptime() for format specifications.
 ##' @param weekends An optional argument, by default set to TRUE, meaning
 ##' weekends will be included in the sequence of dates generated.
 ##' If observed data refers to weekdays only, then weekends should be set to FALSE,

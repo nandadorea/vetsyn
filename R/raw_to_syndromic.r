@@ -54,7 +54,7 @@
 ##' @param dates.var The vector (dates.var=mydata$mydates) or column name
 ##' (dates.var=mydates, data=mydata) where the dates of the events are to be found.
 ##' @param date.format The date.format of the date.variable.
-##' Default is "%d/%m/%Y". See strptime() for format specifications
+##' Default is d/m/Y. See strptime() for format specifications
 ##' @param min.date An optional argument. If not provided, the minimum date found
 ##' in the dataset is used.
 ##' @param max.date An optional argument. If not provided, the maximum date found

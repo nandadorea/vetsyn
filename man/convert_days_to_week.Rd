@@ -2,7 +2,10 @@
 % Please edit documentation in R/convert_days_to_week.r
 \name{convert_days_to_week}
 \alias{convert_days_to_week}
-\title{convert_days_to_week}
+\title{Converts a matrix of daily counts into weekly counts, using the
+ISOweek standard, provided that a deparate data frame is
+appointed from which to extract the actual dates corresponding to each
+row of the matrix.}
 \usage{
 convert_days_to_week(counts.df, dates.df, date.format = "\%Y-\%m-\%d")
 }
@@ -12,15 +15,9 @@ columns corresponding to syndromic groups}
 
 \item{dates.df}{a data frame where the first column contain dates}
 
-\item{date.format}{the date format in the dates variable, by default "%Y-%m-%d".}
+\item{date.format}{the date format in the dates variable, by default Y-m-d.}
 }
 \description{
-Converts a matrix of daily counts into weekly counts, using the
-ISOweek standard, provided that a deparate data frame is
-appointed from which to extract the actual dates corresponding to each
-row of the matrix.
-}
-\details{
 This is an internal function of the package vetsyn, made available as an
 exported funciton in order to allow users to take advantage of the
 function retro_summary() from the package. That function

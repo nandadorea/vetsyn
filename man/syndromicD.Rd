@@ -32,7 +32,7 @@ in the matrix \code{observed}.}
 \item{max.date}{see min.date above}
 
 \item{date.format}{The date.format of the min.date and max.date provided.
-Default is "%d/%m/%Y". See strptime() for format specifications.}
+Default is d/m/Y. See strptime() for format specifications.}
 
 \item{weekends}{An optional argument, by default set to TRUE, meaning
 weekends will be included in the sequence of dates generated.

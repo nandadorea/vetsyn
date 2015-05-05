@@ -33,7 +33,7 @@ syndromic object should be added (set to TRUE) or ignored (set to FALSE).}
 (dates.var=mydates, data=mydata) where the dates of the events are to be found.}
 
 \item{date.format}{The date.format of the date.variable.
-Default is "%d/%m/%Y". See strptime() for format specifications}
+Default is d/m/Y. See strptime() for format specifications}
 
 \item{replace.dates}{a logical argument indicating whether dates in the
 new dataset for which data were already available in the syndromic object should
@@ -79,7 +79,7 @@ syndromic object should be added (set to TRUE) or ignored (set to FALSE).}
 (dates.var=mydates, data=mydata) where the dates of the events are to be found.}
 
 \item{date.format}{The date.format of the date.variable.
-Default is "%d/%m/%Y". See strptime() for format specifications. If the
+Default is d/m/Y. See strptime() for format specifications. If the
 data have already been recorded weekly, then the column "dates.var" MUST
 be in the ISOweek format, and the date.format must be set to "ISOweek".}
 

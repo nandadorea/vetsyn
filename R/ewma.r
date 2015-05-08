@@ -416,13 +416,11 @@ if (pre.process=="diff"){
                             "AR6","AR7")
     
     
-    if(length(y@dates$holidays)>0){
-      new.data <- cbind(new.data,holidays.new)
-      colnames(new.data) <- c(colnames(new.data),"holidays")
+     if(length(y@dates$holidays)>0){
+      new.data <- cbind(new.data,holidays=holidays.new)
     }
     if(length(y@dates$afterholidays)>0){
-      new.data <- cbind(new.data,afterholidays.new)
-      colnames(new.data) <- c(colnames(new.data),"afterholidays")
+      new.data <- cbind(new.data,afterholidays=afterholidays.new)
     }
     
     

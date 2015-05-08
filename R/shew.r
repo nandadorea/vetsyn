@@ -372,6 +372,13 @@ if (pre.process=="diff"){
     AR7<-y@baseline[(start-7):(end-7),syndrome]
     trend=t
     
+    if(length(y@dates$holidays)>0){
+      holidays <- y@dates$holidays[start:end]
+    }
+    if(length(y@dates$afterholidays)>0){
+      afterholidays <- y@dates$afterholidays[start:end]
+    }
+    
     
     fn.formula=as.formula(paste0("days~",formula))
     
@@ -398,6 +405,16 @@ if (pre.process=="diff"){
     colnames(new.data) <- c("trend","month","dow","cos","sin","year",
                             "AR1","AR2","AR3","AR4","AR5",
                             "AR6","AR7")
+    
+    if(length(y@dates$holidays)>0){
+       holidays.new <- y@dates$holidays[(tpoint-guard.band+1):(tpoint)]
+      new.data <- cbind(new.data,holidays=holidays.new)
+    }
+    if(length(y@dates$afterholidays)>0){
+      new.data <- cbind(new.data,afterholidays=afterholidays.new)
+      afterholidays.new <- y@dates$afterholidays[(tpoint-guard.band+1):(tpoint)]
+    }
+    
     
     regular=colnames(new.data)
     formula <- str_replace_all(formula, pattern=" ", repl="")

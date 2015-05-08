@@ -439,6 +439,11 @@ if (pre.process=="diff"){
     
   }else{
     
+        warning("You have not provided a valid pre-processing method,
+              EWMA will be applied to your raw data - 
+            acceptable methods are glm or diff, see help")
+
+        
     start = tpoint-baseline.window-guard.band
     end   = tpoint-1
     

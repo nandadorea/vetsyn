@@ -375,10 +375,10 @@ if (pre.process=="diff"){
     trend=t
     
     if(length(y@dates$holidays)>0){
-      holidays <- y@dates$holidays
+      holidays <- y@dates$holidays[start:end]
     }
     if(length(y@dates$afterholidays)>0){
-      afterholidays <- y@dates$afterholidays
+      afterholidays <- y@dates$afterholidays[start:end]
     }
     
     fn.formula=as.formula(paste0("days~",formula))

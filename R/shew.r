@@ -411,8 +411,10 @@ if (pre.process=="diff"){
       new.data <- cbind(new.data,holidays=holidays.new)
     }
     if(length(y@dates$afterholidays)>0){
+
       afterholidays.new <- y@dates$afterholidays[(tpoint-guard.band+1):(tpoint)]
       new.data <- cbind(new.data,afterholidays=afterholidays.new)
+
     }
     
     

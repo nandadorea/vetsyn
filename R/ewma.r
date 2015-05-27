@@ -479,6 +479,17 @@ if (pre.process=="diff"){
                      std.dev=sd(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
                      lambda=lambda,nsigmas=limit.sd[l],plot=FALSE)
         
+        
+        last <-  length(to.cc) 
+        alarm.detected <- 0
+        
+        if(length(ewma1$violations)>0){
+        if(ewma1$violations[length(ewma1$violations)]==last&
+             ewma1$y[last]>ewma1$limits[last,2]){
+          alarm.detected <- 1
+        }}
+        
+        
         UCL.value= ceiling(correct  +  ewma1$limits[[length(ewma1$limits[,2]),2]])
         LCL.value= floor(correct    +  ewma1$limits[[length(ewma1$limits[,1]),1]])
         #before deciding if an alarm exists, a zero is automatically added to the
@@ -500,7 +511,7 @@ if (pre.process=="diff"){
         }
         
         #ADD a one if the result of this loop was a detection
-        if (y@observed[tpoint,syndrome]>max(0,UCL.value)){
+        if (alarm.detected){
           y@alarms[tpoint,syndrome,alarm.dim]<-y@alarms[tpoint,syndrome,alarm.dim]+1
         }
         

@@ -478,6 +478,18 @@ setMethod('cusum_synd',
                                  std.dev=sd(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
                                  decision.interval=limit.sd[l],plot=FALSE)
                   
+                  
+                  
+        last <-  length(to.cc) 
+        alarm.detected <- 0
+        
+        if(length(cusum1$violations[[2]])>0){
+        if(cusum1$violations[[2]][length(cusum1$violations[[2]])]==last){
+          alarm.detected <- 1
+        }}
+        
+                  
+                  
                   UCL.value= ceiling(correct  +  cusum1$center+
                                        (cusum1$std.dev*
                                           (cusum1$decision.interval-cusum1$pos[length(cusum1$pos)-1])))
@@ -503,8 +515,7 @@ setMethod('cusum_synd',
                   }
                   
                   #ADD a one if the result of this loop was a detection
-                  if (length(cusum1$violations$upper)>0&&
-                        cusum1$violations$upper[length(cusum1$violations$upper)]==length(to.cc)){
+                  if (alarm.detected){
                     y@alarms[tpoint,syndrome,alarm.dim]<-y@alarms[tpoint,syndrome,alarm.dim]+1
                   }
                   

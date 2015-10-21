@@ -128,7 +128,7 @@ setMethod('retro_summary',
    
             cat("matrix.days <- x@observed\n", file=rmd)
             cat("matrix.week.full <- convert_days_to_week(x@observed,x@dates)\n", file=rmd)
-            cat("matrix.week <- matrix.week.full[,-(1:2)]\n", file=rmd)
+            cat("matrix.week <- matrix.week.full[,-(1,2),drop=FALSE]\n", file=rmd)
             cat(paste0("frequency=",frequency,"\n"), file=rmd)
             
             cat("```\n", file=rmd)

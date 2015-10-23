@@ -18,6 +18,8 @@ syndromic_alarm(x, ...)
 \arguments{
 \item{x}{a syndromic (\code{syndromicD} or \code{syndromicW}) object.}
 
+\item{...}{Additional arguments to the method.}
+
 \item{pdf.report}{default is TRUE, that is, a pdf report will be generated.}
 
 \item{email.alarm.to}{email recipient(s) for when an alarm is detected. If

@@ -18,6 +18,7 @@
 ##' @param x a syndromic (\code{syndromicD} or \code{syndromicW})
 ##'  object, which must have at least 
 ##' the slot of observed data and a data frame in the slot dates.
+##' @param ... Additional arguments to the method.
 ##' @param slot the slot in the \code{syndromic} object to be processed,
 ##' by default, "observed", but this argument can be used to
 ##' change it to "baseline"

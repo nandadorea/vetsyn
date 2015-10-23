@@ -21,6 +21,8 @@ variable  year in the slot dates. If the slot baseline is not
 available, then the data in the slot observed will be copied into
 the baseline slot.}
 
+\item{...}{Additional arguments to the method.}
+
 \item{syndromes}{an optional parameter, if not specified, all
 columns in the slot observed of the \code{syndromic} object
 will be used. The user can choose to restrict the analyses to

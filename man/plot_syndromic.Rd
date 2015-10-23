@@ -13,6 +13,8 @@ plot_syndromic(x, ...)
 \arguments{
 \item{x}{a syndromic (\code{syndromicD} or \code{syndromicW}) object.}
 
+\item{...}{Additional arguments to the method.}
+
 \item{syndromes}{an optional parameter, if not specified, all
 columns in the slot observed (or baseline of the
  \code{syndromic} object

@@ -59,6 +59,7 @@
 ##' regression is going to be used, the slot dates must contain
 ##' a data frame containing at least the columns for the regression 
 ##' variables chosen to be used.
+##' @param ... Additional arguments to the method.
 ##' @param syndromes an optional parameter, if not specified, all
 ##' columns in the slot observed of the syndromic object
 ##' will be used. The user can choose to restrict the analyses to 

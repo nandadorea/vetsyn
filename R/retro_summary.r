@@ -22,6 +22,7 @@
 ##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object, 
 ##' from where dates and observed
 ##' data will be extracted.
+##' @param ... Additional arguments to the method.
 ##' @param object.name a name for the title in the html file, by default
 ##' "my.syndromic".
 ##' @param file.name a name for the rmd/html file to be created with

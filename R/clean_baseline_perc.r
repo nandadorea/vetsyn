@@ -19,6 +19,7 @@
 ##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object, 
 ##' which must have at least 
 ##' the slot of observed data and a data frame in the slot dates.
+##' @param ... Additional arguments to the method.
 ##' @param syndromes an optional parameter, if not specified, all
 ##' columns in the slot observed of the syndromic object
 ##' will be used. The user can choose to restriict the analyses to 

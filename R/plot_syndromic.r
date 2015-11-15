@@ -110,7 +110,7 @@ setMethod('plot_syndromic',
        if(length(algorithms)==1&&algorithms!=0){
          n.algos <- 1
        }else{
-          n.algos<-dim(alarms.array)[3]
+          n.algos<-dim(alarms.array)[2]
        }
        alarms.sum<-apply(alarms.array,MARGIN=c(1,2),FUN="sum",na.rm=TRUE)
        

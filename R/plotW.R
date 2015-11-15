@@ -76,7 +76,7 @@ setMethod("plot","syndromicW",
               if(length(algorithms)==1&&algorithms!=0){
                 n.algos <- 1
               }else{
-                n.algos<-dim(alarms.array)[3]
+                n.algos<-dim(alarms.array)[2]
               }
               alarms.sum<-apply(alarms.array,MARGIN=c(1,2),FUN="sum",na.rm=TRUE)
             }
@@ -95,7 +95,7 @@ setMethod("plot","syndromicW",
                 #plot observed data
                 plot(x@observed[start:end,s],x=x.date, yaxt="s", 
                      ylim=c(0,ymax), type="l", 
-                     main=colnames(x@observed)[s],xlab="Days", ylab="Events")
+                     main=colnames(x@observed)[s],xlab="Weeks", ylab="Events")
                 
                 
                 if (baseline==TRUE){
@@ -138,7 +138,7 @@ setMethod("plot","syndromicW",
                 par(new=T, yaxt="n")
                 plot(x@observed[start:end,s],x=x.date, yaxt="s", 
                      ylim=c(0,ymax), type="l", 
-                     main=colnames(x@observed)[s],xlab="Days", ylab="Events")
+                     main=colnames(x@observed)[s],xlab="Weeks", ylab="Events")
                 
                 
                 if (n.algos==1){

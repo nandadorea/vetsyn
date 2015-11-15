@@ -91,7 +91,7 @@ setMethod('syndromic_page',
               alarms.array <- x@alarms
               algorithms <- 1:dim(x@alarms)[3]
             }else{
-              alarms.array <- x@alarms[,,algorithms]
+              alarms.array <- x@alarms[,,algorithms,drop=FALSE]
             }
             
             

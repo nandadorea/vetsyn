@@ -68,7 +68,7 @@ setMethod("plot","syndromicW",
                 alarms.array <- x@alarms
                 algorithms <- 1:dim(x@alarms)[3]
               }else{
-                alarms.array <- x@alarms[,,algorithms]
+                alarms.array <- x@alarms[,,algorithms,drop=FALSE]
               }
               
               
@@ -76,7 +76,7 @@ setMethod("plot","syndromicW",
               if(length(algorithms)==1&&algorithms!=0){
                 n.algos <- 1
               }else{
-                n.algos<-dim(alarms.array)[2]
+                n.algos<-dim(alarms.array)[3]
               }
               alarms.sum<-apply(alarms.array,MARGIN=c(1,2),FUN="sum",na.rm=TRUE)
             }

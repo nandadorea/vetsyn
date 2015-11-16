@@ -11,6 +11,7 @@
 ##' 
 ##' @param x a syndromic (\code{syndromicD} 
 ##' or \code{syndromicW}) object.
+##' @param ... Additional arguments to the method.
 ##' @param tpoints.display This is used to choose how many days of alarms to display. The
 ##' normal for daily data (syndromic object provided is form the class \code{syndromicD} )
 ##' is to show the entire last week (so 7 or 5 days, depending on whether weekends are

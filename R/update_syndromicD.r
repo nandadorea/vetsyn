@@ -8,6 +8,7 @@
 ##' @docType methods
 ##' @param x the \code{syndromicD} object to be updated (if one does not already exist,
 ##' please use "raw_to_syndromicD" or "syndromicD")
+##' @param ... Additional arguments to the method.
 ##' @param id indicates a variable (or multiple variables) which should
 ##' be used to identify unique events in the data. It can be provided as an R
 ##' vector (p.e. mydata$myid), as the name of a Data Frame column

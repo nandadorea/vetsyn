@@ -19,6 +19,8 @@ syndromic_page(x, ...)
 \item{x}{a syndromic (\code{syndromicD}
 or \code{syndromicW}) object.}
 
+\item{...}{Additional arguments to the method.}
+
 \item{tpoints.display}{This is used to choose how many days of alarms to display. The
 normal for daily data (syndromic object provided is form the class \code{syndromicD} )
 is to show the entire last week (so 7 or 5 days, depending on whether weekends are

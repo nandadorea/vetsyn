@@ -15,6 +15,8 @@ retro_summary(x, ...)
 from where dates and observed
 data will be extracted.}
 
+\item{...}{Additional arguments to the method.}
+
 \item{object.name}{a name for the title in the html file, by default
 "my.syndromic".}
 

@@ -12,6 +12,7 @@
 ##' 
 ##' 
 ##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object.
+##' @param ... Additional arguments to the method.
 ##' @param pdf.report default is TRUE, that is, a pdf report will be generated. 
 ##' @param email.alarm.to email recipient(s) for when an alarm is detected. If
 ##' a pdf report has been generated, it will be attached to the email. See examples

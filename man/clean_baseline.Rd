@@ -18,6 +18,8 @@ clean_baseline(x, ...)
 which must have at least
 the slot of observed data and a data frame in the slot dates.}
 
+\item{...}{Additional arguments to the method.}
+
 \item{syndromes}{an optional parameter, if not specified, all
 columns in the slot observed of the syndromic object
 will be used. The user can choose to restrict the analyses to

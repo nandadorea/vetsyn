@@ -16,6 +16,8 @@ pre_process_glm(x, ...)
  object, which must have at least
 the slot of observed data and a data frame in the slot dates.}
 
+\item{...}{Additional arguments to the method.}
+
 \item{slot}{the slot in the \code{syndromic} object to be processed,
 by default, "observed", but this argument can be used to
 change it to "baseline"}

@@ -73,6 +73,8 @@
 ##' @param pdf.dir whether to create (or use) a directory called "PDF_reports" within the current
 ##' working directory, to save the files. If set to FALSE, the current working directory
 ##' is used. The current working directory is not changed by using the function.
+##' @param width the width, in inches, if a pdf file is to be generated.
+##' @param height the height, in inches, if a pdf file is to be generated.
 ##' 
 ##' @keywords methods
 ##' @import mail

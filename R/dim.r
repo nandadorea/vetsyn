@@ -4,6 +4,7 @@
 ##' @name dim
 ##' @docType methods
 ##' @keywords methods
+##' @param x syndromic object
 ##' @export
 ##' @import methods
 ##' @return a vector with three items: (1) The number of time points monitored 

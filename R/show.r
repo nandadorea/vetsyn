@@ -11,6 +11,7 @@
 ##' Show information for a syndromic object.
 ##' }
 ##' }
+##' @param object a syndromic object
 ##' @keywords methods
 ##' @export
 ##' @import methods

@@ -10,6 +10,25 @@
 ##' Show information for the syndromic object.
 ##' }
 ##' }
+##' @param x a syndromic object
+##' @param syndromes an optional parameter, if not specified, all
+##' columns in the slot observed (or baseline of the
+##'  \code{syndromic} object
+##' will be used. The user can choose to restrict the plotting to 
+##' a few syndromic groups listing their name or column position
+##' in the observed matrix. See examples.
+##' @param window the number of time points to plot, always finishing at the 
+##' last time point recorded.
+##' @param baseline whether to plot the baseline, by default equal to TRUE.
+##' @param UCL the dimension of the slot UCL, from the syndromic object, from which
+##' the user wants to plot the UCL. Set to NULL or to 0 if it is not desired to plot the UCL.
+##' @param algorithms an optional parameter specifying which dimensions
+##' of the alarm slot to plot. If not specified (NULL), all are plotted. If set 
+##' to zero, none are plotted.
+##' @param limit an optional parameter establishing a score above which
+##' alarms are considered worth of notice. Notice that this is not a
+##' statistical value, but a score equivalent to the number of algorithms
+##' employed and the number of limits set to them. See the tutorial for details.
 ##' @keywords methods
 ##' @export
 ##' @import methods

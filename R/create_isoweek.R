@@ -7,7 +7,7 @@
 ##' 
 ##' @param week the week of the year
 ##' @param year the year
-##' @param reference-day the ISOweek format also stores the actual day of the week,
+##' @param reference.day the ISOweek format also stores the actual day of the week,
 ##' creating a daily sequence. users can set a reference day. if only interested
 ##' in weekly data, it's suggested to leave as the default reference.day=1
 ##' 

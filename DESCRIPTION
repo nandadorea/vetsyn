@@ -22,7 +22,6 @@ Depends:
     methods
 Imports:
     fitdistrplus,
-    timeDate,
     caTools,
     qcc,
     abind,

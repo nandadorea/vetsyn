@@ -14,7 +14,7 @@ dates_df <- function (min.date, max.date,
   mday <- date$mday
   yday <- date$yday
   dow <- date$wday
-  week <- as.numeric(substring(ISOweek(date),7,8))
+  week <- as.numeric(substring(ISOweek::ISOweek(date),7,8))
   weekday <- rep(1,length(date))
       weekday[dow==0|dow==6] <- 0
   dates <- as.data.frame(dates.v)

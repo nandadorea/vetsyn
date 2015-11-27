@@ -2,6 +2,7 @@
 ##' @docType methods
 ##' @export
 ##' @import MASS 
+##' @import knitr 
 ##' @examples
 ##' data(lab.daily)
 ##' my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
@@ -256,7 +257,7 @@ setMethod('retro_summary',
 
 
             }
-            require(knitr)
+            #require(knitr)
             print(paste0("Summary saved successully into ",getwd(),"/",file.name,".Rmd,and knit into ",file.name,".html"))
             on.exit(close(rmd))
             on.exit(knit2html(paste0(file.name,".Rmd")), add=TRUE)

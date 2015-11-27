@@ -354,7 +354,7 @@ setMethod('cusum_synd',
                     end   = tpoint-1
                     
                     
-                    attach(y@dates[start:end,],warn.conflicts=FALSE)
+                    #attach(y@dates[start:end,],warn.conflicts=FALSE)
                     
                     days <- y@baseline[start:end,syndrome]
                     t = 1:length(days)

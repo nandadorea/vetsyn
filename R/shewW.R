@@ -198,7 +198,7 @@ setMethod('shew_synd',
                     start = tpoint-baseline.window-guard.band
                     end   = tpoint-1
                     
-                    attach(y@dates[start:end,],warn.conflicts=FALSE)
+                    #attach(y@dates[start:end,],warn.conflicts=FALSE)
                     
                     
                     week <- y@baseline[start:end,syndrome]

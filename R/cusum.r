@@ -417,7 +417,7 @@ setMethod('cusum_synd',
     
                     
                     regular=colnames(new.data)
-                    formula <- str_replace_all(formula, pattern=" ", repl="")
+                    formula <- str_replace_all(formula, pattern=" ", replacement="")
                     formula.items <- strsplit(formula,split="[+]")[[1]]
                     
                     

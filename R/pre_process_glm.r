@@ -154,11 +154,11 @@ setMethod('pre_process_glm',
               AR7<-c(days[1:7],days[1:(length(days)-7)])
               trend=t
               
-              if(length(y@dates$holidays)>0){
-      holidays <- y@dates$holidays
+              if(length(x@dates$holidays)>0){
+      holidays <- x@dates$holidays
     }
-    if(length(y@dates$afterholidays)>0){
-      afterholidays <- y@dates$afterholidays
+    if(length(x@dates$afterholidays)>0){
+      afterholidays <- x@dates$afterholidays
     }
               
               fn.formula=as.formula(paste0("days~",formula))

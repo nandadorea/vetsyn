@@ -64,9 +64,6 @@
 ##'   }
 ##'   }
 ##'   
-##' @name syndromicD-class
-##' @docType class
-##' @keywords classes
 ##' @export
 ##' @aliases syndromicD
 ##' @examples

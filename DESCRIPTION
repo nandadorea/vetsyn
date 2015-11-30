@@ -83,3 +83,4 @@ Collate:
     'update_syndromicD.r'
     'update_syndromicW.R'
     'raw_to_syndromicW.r'
+RoxygenNote: 5.0.1

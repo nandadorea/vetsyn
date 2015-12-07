@@ -60,7 +60,6 @@ Collate:
     'observed-data.r'
     'convert_days_to_week.r'
     'clean_baseline_percW.r'
-    'clean_baselineW.r'
     'create_isoweek.R'
     'dimW.r'
     'lab.weekly-data.r'

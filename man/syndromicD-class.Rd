@@ -85,5 +85,4 @@ dates = seq(from=as.Date("01/01/2010",format ="\%d/\%m/\%Y" ),
 my.syndromicD <- syndromicD(observed[1:5,],dates=dates) 
 
 }
-\keyword{classes}
 

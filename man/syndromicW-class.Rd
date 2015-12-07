@@ -79,5 +79,4 @@ my.syndromicW <- syndromicW(observed,min.week=1, min.year=2011,
                               max.week=22, max.year=2013)
 
 }
-\keyword{classes}
 

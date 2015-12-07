@@ -1,10 +1,8 @@
-##' Get dimension information for a syndromic object (\code{syndromicD} or 
-##' \code{syndromicW}).
+##' Get dimension information for a \code{syndromicD} object
 ##'
-##' @name dim
 ##' @docType methods
 ##' @keywords methods
-##' @param x syndromic object
+##' @param x \code{syndromicD} object
 ##' @export
 ##' @import methods
 ##' @return a vector with three items: (1) The number of time points monitored 

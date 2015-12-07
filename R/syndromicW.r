@@ -64,9 +64,6 @@
 ##'   }
 ##'   }
 ##'   
-##' @name syndromicW-class
-##' @docType class
-##' @keywords classes
 ##' @export
 ##' @aliases syndromicW
 ##' @examples

@@ -4,10 +4,8 @@
 ##' \code{syndromicW}) with all of its slots, by a start and end number of rows.
 ##'
 ##'
-##' @name "["-methods
 ##' @docType methods
 ##' @keywords methods
-##' @export
 ##' @import methods
 ##' @examples
 ##' data(lab.daily)
@@ -21,7 +19,8 @@
 ##' subset <- my.syndromicD[1,10]
 ##'
 
-
+##' @rdname  "["-methods
+##' @export
 setMethod(
   f= "[",
   signature="syndromicD",
@@ -51,3 +50,35 @@ setMethod(
   }
 )
 
+
+
+##' @rdname  "["-methods
+##' @export
+setMethod(
+  f= "[",
+  signature="syndromicW",
+  definition=function(x,i,j){
+    
+    new.syndromic = syndromicW(observed=x@observed[i:j,], dates=x@dates[i:j,])
+    
+        
+    if (length(x@baseline)!=0){
+      setBaselineW(new.syndromic)<-x@baseline[i:j,]
+    }
+    
+    if (length(x@alarms)!=0){
+      setAlarmsW(new.syndromic)<-x@alarms[i:j,,]
+    }
+    
+    if (length(x@UCL)!=0){
+      setUCLW(new.syndromic)<-x@UCL[i:j,,]
+    }
+    
+    if (length(x@LCL)!=0){
+      setLCLW(new.syndromic)<-x@LCL[i:j,,]
+    }
+    
+    return(new.syndromic)
+    
+  }
+)

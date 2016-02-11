@@ -1,4 +1,7 @@
-##' Create an object of the class \code{syndromicD} from pre-cleaned data.
+##' Syndromic is the main class of the package. Two versions are available,
+##' \code{syndromicD}, which is intended for use when data are to be monitored daily,
+##' and \code{syndromicW}, which is to be used when data are monitored weekly.
+##' 
 ##' The observed data are assumed to be formatted as a \code{matrix}, in 
 ##' which each row corresponds to an observation time point (DAYS),
 ##' columns correspond to each syndromic group to be monitored, and the

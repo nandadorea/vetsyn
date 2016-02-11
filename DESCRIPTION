@@ -64,6 +64,7 @@ Collate:
     'lab.weekly.update-data.r'
     'observedW-data.r'
     'raw_to_syndromic.r'
+    'raw_to_syndromicW.r'
     'shew.r'
     'update_syndromic.r'
 RoxygenNote: 5.0.1

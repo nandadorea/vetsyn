@@ -32,7 +32,7 @@ Imports:
     mail,
     xtable
 Suggests:
-    testthat
+    testthat, 
     sendmailR
 Collate:
     'syndromic.r'

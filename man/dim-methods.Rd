@@ -3,9 +3,13 @@
 \docType{methods}
 \name{dim,syndromicD-method}
 \alias{dim,syndromicD-method}
-\title{Get dimension information for a \code{syndromicD} object}
+\alias{dim,syndromicW-method}
+\title{Get dimension information for a \code{syndromicD} 
+or \code{syndromicW} object}
 \usage{
 \S4method{dim}{syndromicD}(x)
+
+\S4method{dim}{syndromicW}(x)
 }
 \arguments{
 \item{x}{\code{syndromicD} object}
@@ -18,7 +22,8 @@ observed; (3) The number of detection algorithms used,
 as determined by the third dimension of the slot alarms.
 }
 \description{
-Get dimension information for a \code{syndromicD} object
+Get dimension information for a \code{syndromicD} 
+or \code{syndromicW} object
 }
 \examples{
 data(lab.daily)
@@ -30,6 +35,15 @@ dim(my.syndromicD)
 columns <- dim(my.syndromicD)[2]
 print(columns)
 
+##WEEKLY
+data(lab.daily)
+my.syndromicW <- rawD_to_syndromicW (id=lab.daily$SubmissionID,
+                                  syndromes.var=lab.daily$Syndrome,
+                                  dates.var=lab.daily$DateofSubmission,
+                                  date.format="\%d/\%m/\%Y")
+dim(my.syndromicW)
+columns <- dim(my.syndromicW)[2]
+print(columns)
+
 }
-\keyword{methods}
 

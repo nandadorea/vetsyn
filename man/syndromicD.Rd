@@ -2,13 +2,9 @@
 % Please edit documentation in R/syndromic-function.r
 \name{syndromicD}
 \alias{syndromicD}
-\title{Create an object of the class \code{syndromicD} from pre-cleaned data.
-The observed data are assumed to be formatted as a \code{matrix}, in 
-which each row corresponds to an observation time point (DAYS),
-columns correspond to each syndromic group to be monitored, and the
-numbers refer to the number of observatiosn per group per time point.
-For an example of data formatted this way use date(observed). For data
-not formatted use directly the function "raw_to_syndromicD".}
+\title{Syndromic is the main class of the package. Two versions are available,
+\code{syndromicD}, which is intended for use when data are to be monitored daily,
+and \code{syndromicW}, which is to be used when data are monitored weekly.}
 \usage{
 syndromicD(observed, dates = data.frame(), min.date = NULL,
   max.date = NULL, date.format = "\%d/\%m/\%Y", weekends = TRUE,
@@ -68,6 +64,14 @@ corresponding to the parameters described. See \code{class-syndromicD}
  for more details.
 }
 \description{
+The observed data are assumed to be formatted as a \code{matrix}, in 
+which each row corresponds to an observation time point (DAYS),
+columns correspond to each syndromic group to be monitored, and the
+numbers refer to the number of observatiosn per group per time point.
+For an example of data formatted this way use date(observed). For data
+not formatted use directly the function "raw_to_syndromicD".
+}
+\details{
 The dates are expected to be a \code{data.frame} with the first column
 in the \code{dates} format, though the function will also accept a
 minimum and maximum date, and take care of constructing the appropriate

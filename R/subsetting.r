@@ -19,7 +19,7 @@
 ##' subset <- my.syndromicD[1,10]
 ##'
 
-##' @rdname  "["-methods
+##' @rdname  subset-methods
 ##' @export
 setMethod(
   f= "[",
@@ -52,7 +52,7 @@ setMethod(
 
 
 
-##' @rdname  "["-methods
+##' @rdname  subset-methods
 ##' @export
 setMethod(
   f= "[",

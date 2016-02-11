@@ -31,6 +31,6 @@ my.syndromic <- raw_to_syndromicD (id=lab.daily$SubmissionID,
                                   syndromes.var=lab.daily$Syndrome,
                                   dates.var=lab.daily$DateofSubmission,
                                   date.format="\%d/\%m/\%Y")
-weekly <- convert_days_to_week(my.syndromic@@observed; my.syndromic@@dates)
+weekly <- convert_days_to_week(my.syndromic@observed; my.syndromic@dates)
 }
 

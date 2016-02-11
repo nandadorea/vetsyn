@@ -5,11 +5,10 @@
 ##' user can generate automated e-mails and also generate a pdf report of 
 ##' all syndromes in a syndromic object, or only those for which an 
 ##' alarm was generated.
-##'
-##'
-##' @name syndromic_alarm
-##' @docType methods
 ##' 
+##' Emails can be sent from the R interface (without attachments). For email attachments, 
+##' the package "sendmailR" should be installed and loaded.
+##'
 ##' 
 ##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object.
 ##' @param ... Additional arguments to the method.
@@ -58,7 +57,9 @@
 ##' the name of the file to be saved.
 ##' @param email.from e-mail client to use when sending alarms, if left as NULL, the
 ##' default email in the package mail will be used, but it doesn't support
-##' attachments (email will be sent without a pdf report attachment)
+##' attachments (email will be sent without a pdf report attachment). For emails with
+##' attachment, please install and load the package "sendmailR", and see smtpServer
+##' set up below.
 ##' @param smtpServer to be used as control prameter in the mail sending function. 
 ##' The smtpServer for the email client provided as the "email.from" above. If left as NULL, the
 ##' default email in the package mail will be used, but it doesn't support attachments
@@ -78,7 +79,6 @@
 ##' 
 ##' @keywords methods
 ##' @import mail
-##' @import sendmailR
 ##' @examples
 ##'data(lab.daily)
 ##'my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
@@ -326,6 +326,10 @@ setwd(workdir)
 if (length(syndromes.alarm)>0&&class(email.alarm.to)!="NULL"){
   
   if(class(email.from)!="NULL"&&class(smtpServer)!="NULL"){
+   
+    try(if(!require("sendmailR")) stop("please install and load the package sendmailR"))
+    
+
     sendmailR::sendmail(from=email.from, 
                         to=email.alarm.to, 
                         subject=subject, 

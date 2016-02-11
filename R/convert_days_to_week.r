@@ -28,7 +28,7 @@
 ##'                                   syndromes.var=lab.daily$Syndrome,
 ##'                                   dates.var=lab.daily$DateofSubmission,
 ##'                                   date.format="%d/%m/%Y")
-##' weekly <- convert_days_to_week(my.syndromic'at'observed; my.syndromic'at'dates)
+##' weekly <- convert_days_to_week(my.syndromic@@observed; my.syndromic@@dates)
 
 
 

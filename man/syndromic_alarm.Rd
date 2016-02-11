@@ -123,11 +123,10 @@ my.syndromicD <- holt_winters_synd(x=my.syndromicD,
                                 frequency=5,
                                 baseline.window=260)
                                 
- ##substitute 'at' for the appropriate synbol in the example below                               
 syndromic_alarm(x=my.syndromicD,
                plot.all=TRUE,
-               email.alarm.to="<dorea.meyer'at'gmail.com>",
-               email.noalarm.to="<dorea.meyer'at'gmail.com>")
+               email.alarm.to="<dorea.meyer@@gmail.com>",
+               email.noalarm.to="<dorea.meyer@@gmail.com>")
                
 data(lab.daily)
 my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
@@ -141,11 +140,10 @@ my.syndromicW <- ewma_synd(x=my.syndromicW,
                           pre.process="diff",
                           diff.window=4)
                           
- ##substitute 'at' for the appropriate syMbol in the example below
 syndromic_alarm(x=my.syndromicW,
                plot.all=TRUE,
-               email.alarm.to="<dorea.meyer'at'gmail.com>",
-               email.noalarm.to="<dorea.meyer'at'gmail.com>")
+               email.alarm.to="<dorea.meyer@@gmail.com>",
+               email.noalarm.to="<dorea.meyer@@gmail.com>")
                
 }
 \keyword{methods}

@@ -53,7 +53,8 @@
 ##' week, please convert the date to ISOweek format using the functions in this package,
 ##' and use, instead, the function \code{rawW_to_syndromicW}.
 ##'
-##' @name raw_to_syndromicW
+##' @rdname raw_to_syndromic-methods
+##' @docType methods
 ##' 
 ##' @param id indicates a variable (or multiple variables) which should
 ##' be used to identify unique events in the data. It can be provided as an R

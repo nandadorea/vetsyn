@@ -52,7 +52,7 @@
 ##' to create this slot from data on \code{observed}.
 ##' @param LCL Lower control limit. See UCL above. 
 ##' 
-##' @name syndromicD
+##' @name syndromicD-function
 ##' @return an object of the class \code{syndromicD} with the slots
 ##' corresponding to the parameters described. See \code{class-syndromicD}
 ##'  for more details.

@@ -2,7 +2,6 @@
 % Please edit documentation in R/syndromic.r
 \docType{class}
 \name{syndromicD-class}
-\alias{syndromicD}
 \alias{syndromicD-class}
 \title{Class \code{"syndromicD"}}
 \description{
@@ -71,6 +70,8 @@ numerical format.
     to record the maximum number that would have generated an alarm.
   }
   }
+  
+  @name syndromicD-class
 }
 \examples{
 ## Load data

@@ -65,6 +65,10 @@
 ##'   }
 ##'
 ##' }
+##'
+##' @rdname retro_summary-methods
+##' @docType methods
+##' 
 ##' @keywords methods
 ##' @import MASS 
 ##' @import knitr 

@@ -30,6 +30,10 @@
 ##' @keywords methods
 ##' @import methods
 ##' @import ISOweek
+##'
+##' @rdname plot-methods
+##' @docType methods
+##' 
 
 
 ##' @rdname plot-methods

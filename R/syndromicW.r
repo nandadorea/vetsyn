@@ -64,8 +64,10 @@
 ##'   }
 ##'   }
 ##'   
+##'
+##' @name syndromicW-class
+##' 
 ##' @export
-##' @aliases syndromicW
 ##' @examples
 ##' ## Load data
 ##' data(observedW)

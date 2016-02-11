@@ -6,8 +6,10 @@
 ##' into the current working directory.
 ##'
 ##'
-##' @name syndromic_page
+##'
+##' @rdname syndromic_page-methods
 ##' @docType methods
+##' 
 ##' 
 ##' @param x a syndromic (\code{syndromicD} 
 ##' or \code{syndromicW}) object.

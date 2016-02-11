@@ -3,9 +3,9 @@
 ##' Shows information for a syndromic object (\code{syndromicD} or 
 ##' \code{syndromicW}).
 ##'
-##'
-##' @name show
+##' @rdname show-methods
 ##' @docType methods
+##' 
 ##' @section Methods: \describe{
 ##' \item{\code{signature(object = "syndromic")}}{
 ##' Show information for a syndromic object.
@@ -14,7 +14,7 @@
 ##' @param object a syndromic object
 ##' @keywords methods
 ##' @import methods
-
+##' 
 ##' @rdname show-methods
 ##' @export
 

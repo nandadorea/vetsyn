@@ -2,12 +2,8 @@
 ##'
 ##' Code to plot a syndromic final score when an alarm scale is used 
 ##'
-##'
-##' @name alarmometer
+##' @rdname alarmometer-methods
 ##' @docType methods
-##' @aliases alarmometer
-##' @aliases alarmometer-methods
-##' 
 ##' 
 ##' @param score the observed alarm score for which an alarm meter is desired.
 ##' @param scale the maximum possible score (scale of alarms). Based on the number

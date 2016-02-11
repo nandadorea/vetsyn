@@ -64,8 +64,8 @@
 ##'   }
 ##'   }
 ##'   
+##'   @name syndromicD-class
 ##' @export
-##' @aliases syndromicD
 ##' @examples
 ##' ## Load data
 ##' data(observed)

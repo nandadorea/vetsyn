@@ -149,6 +149,11 @@
 ##'  limits given in \code{limits.sd} detected an abnormal observation. See examples.
 ##'  If the user sets a correct.baseline value, the baseline will also have 
 ##'  been modified.
+##'
+##'
+##' @rdname shew_synd-methods
+##' @docType methods
+##' 
 ##' 
 ##' @keywords methods
 ##' @importFrom qcc stats.xbar.one

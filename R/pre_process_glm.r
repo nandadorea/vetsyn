@@ -48,6 +48,9 @@
 ##' exploring which dependent variables to keep or drop.
 ##' 
 ##' @return A matrix with all the pre-processed vectors. 
+##'
+##' @rdname pre_process_glm-methods
+##' @docType methods
 ##' 
 ##' @keywords methods
 ##' @importFrom MASS glm.nb

@@ -2,7 +2,6 @@
 % Please edit documentation in R/syndromicW.r
 \docType{class}
 \name{syndromicW-class}
-\alias{syndromicW}
 \alias{syndromicW-class}
 \title{Class \code{"syndromicW"}}
 \description{

@@ -13,7 +13,7 @@
 ##' how the running quantiles function handles the beginning and end of the
 ##' time series.
 ##'
-##' @name clean_baseline_perc
+##' @rdname clean_baseline_perc-methods
 ##' @docType methods
 ##'
 ##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object, 

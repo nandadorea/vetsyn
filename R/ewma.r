@@ -132,6 +132,8 @@
 ##' @param frequency in case pre-processing is applied using "glm" AND the sin/cos functions 
 ##' are used, the cycle of repetitions need to be set. The default is a yearly cycle
 ##' (365 days or 52 weeks).
+##' @rdname ewma_synd-methods
+##' @docType methods
 ##' 
 ##' @seealso pre_process_glm
 ##' @seealso shew_synd

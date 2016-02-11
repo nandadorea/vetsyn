@@ -1,11 +1,13 @@
-##' \code{update_syndromicD}
+##' \code{update_syndromic}
 ##'
 ##' Updates an object of the class \code{syndromicD} or  \code{syndromicW}, adding additional rows
 ##' (additional time points) from raw, observed data. To understand
 ##' a syndromic object, please refer to the help page for the syndromic class.
 ##'
-##' @name update_syndromic
+##'
+##' @rdname update_syndromic-methods
 ##' @docType methods
+##' 
 ##' @param x the \code{syndromic} object to be updated (if one does not already exist,
 ##' please use "raw_to_syndromic(D or W)" or "syndromic(D or W)")
 ##' @param ... Additional arguments to the method.
@@ -59,7 +61,6 @@
 ##'    
 ##' @import ISOweek
 ##' @import abind
-##' @export
 ##' 
 ##' @examples
 ##'   ## examples for DAILY data

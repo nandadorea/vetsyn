@@ -1,10 +1,8 @@
 ##' Creates weeks in the format ISOweek from week and year provided as numerical formats 
 ##'
-##' @title create_isoweek
-##' @name create_isoweek
-##'
-##' @aliases create_isoweek
-##' 
+##' @rdname create_isoweek-methods
+##' @docType methods
+##'  
 ##' @param week the week of the year
 ##' @param year the year
 ##' @param reference.day the ISOweek format also stores the actual day of the week,

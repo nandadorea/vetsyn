@@ -26,6 +26,9 @@
 ##' alarms are considered worth of notice. Notice that this is not a
 ##' statistical value, but a score equivalent to the number of algorithms
 ##' employed and the number of limits set to them. See the tutorial for details.
+##'
+##' @rdname plot_syndromic-methods
+##' @docType methods
 ##' 
 ##' @keywords methods
 ##' @examples

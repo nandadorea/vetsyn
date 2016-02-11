@@ -50,8 +50,7 @@
 ##'  confidence intervals}
 ##'  }
 ##'  
-##'
-##' @name cusum_synd
+##' @rdname cusum_synd-methods
 ##' @docType methods
 ##'
 ##' @param x a syndromic (\code{syndromicD} or \code{syndromicW}) object. 

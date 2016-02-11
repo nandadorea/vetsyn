@@ -10,10 +10,9 @@
 ##' during restrospective analysis of syndromic data. When those R codes are run
 ##' manually by the user, this function may be needed. 
 ##'
-##' @name convert_days_to_week
+##' @rdname convert_days_to_week-methods
+##' @docType methods
 ##'
-##' @aliases convert_days_to_week
-##' 
 ##' @param counts.df a matrix with rows corresponding to daily counts, and
 ##' columns corresponding to syndromic groups
 ##' @param dates.df a data frame where the first column contain dates

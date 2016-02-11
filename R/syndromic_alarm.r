@@ -77,6 +77,10 @@
 ##' @param width the width, in inches, if a pdf file is to be generated.
 ##' @param height the height, in inches, if a pdf file is to be generated.
 ##' 
+##'
+##' @rdname syndromic_alarm-methods
+##' @docType methods
+##' 
 ##' @keywords methods
 ##' @import mail
 ##' @examples

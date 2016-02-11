@@ -1,6 +1,9 @@
 ##' Get dimension information for a \code{syndromicD} 
 ##' or \code{syndromicW} object
 ##'
+##' @rdname dim-methods
+##' @docType methods
+##' 
 ##' @param x \code{syndromicD} object
 ##' @import methods
 ##' @return a vector with three items: (1) The number of time points monitored 
@@ -8,7 +11,6 @@
 ##' syndromic groups monitored, as determined by the number of columns in the slot
 ##' observed; (3) The number of detection algorithms used,
 ##' as determined by the third dimension of the slot alarms. 
-##' 
 ##' @examples
 ##' data(lab.daily)
 ##' my.syndromicD <- raw_to_syndromicD (id=lab.daily$SubmissionID,

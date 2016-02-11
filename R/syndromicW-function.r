@@ -57,7 +57,7 @@
 ##'  for more details.
 ##' 
 ##' @import ISOweek
-##' 
+##' @name syndromicW-function
 ##' @export
 ##' @examples
 ##' data(observedW)

@@ -4,7 +4,9 @@
 ##' \code{syndromicW}) with all of its slots, by a start and end number of rows.
 ##'
 ##'
+##' @rdname subset-methods
 ##' @docType methods
+##' 
 ##' @keywords methods
 ##' @import methods
 ##' @examples

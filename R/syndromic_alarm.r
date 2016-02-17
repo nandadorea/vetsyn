@@ -217,10 +217,10 @@ if (class(message)!="NULL"){
 body[[length(body)+1]] <- list(paste("alarm for syndromes",print(syndromes.alarm),sep=":"))
 
 
-
+workdir <- getwd()
 
 if (pdf.report==TRUE){
-  workdir <- getwd()    
+      
       #set file.name
     if (class(file.name)=="NULL"){
       file.name <- paste((x@dates[row,1]),"pdf", sep=".")

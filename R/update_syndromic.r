@@ -279,19 +279,19 @@ setMethod('update_syndromic',
           }
     
     if (dim(x@alarms)[1]!=0){
-    alarms <- abind(x@alarms[1:end.rows,,],
+    alarms <- abind(x@alarms[1:end.rows,,,drop=FALSE],
                     array(NA,dim=c(dim(syndrome.counts)[1],dim(x@alarms)[2],dim(x@alarms)[3])),
                     along=1)
           }
     
            if (dim(x@UCL)[1]!=0){
-    UCL <- abind(x@UCL[1:end.rows,,],
+    UCL <- abind(x@UCL[1:end.rows,,,drop=FALSE],
                     array(NA,dim=c(dim(syndrome.counts)[1],dim(x@UCL)[2],dim(x@UCL)[3])),
                     along=1)
            }
     
             if (dim(x@LCL)[1]!=0){
-    LCL <- abind(x@LCL[1:end.rows,,],
+    LCL <- abind(x@LCL[1:end.rows,,,drop=FALSE],
                     array(NA,dim=c(dim(syndrome.counts)[1],dim(x@LCL)[2],dim(x@LCL)[3])),
                     along=1)    
             }
@@ -309,21 +309,21 @@ setMethod('update_syndromic',
         }
     
         if (dim(x@alarms)[1]!=0){
-    alarms <- abind(abind(x@alarms[1:end.rows,,],
+    alarms <- abind(abind(x@alarms[1:end.rows,,,drop=FALSE],
                           array(NA,dim=c(end.rows,add.columns,dim(x@alarms)[3])),along=2),
                     array(NA,dim=c(dim(syndrome.counts)[1],(dim(x@alarms)[2]+add.columns),dim(x@alarms)[3])),
                     along=1)
         }
     
     if (dim(x@UCL)[1]!=0){
-    UCL <- abind(abind(x@UCL[1:end.rows,,],
+    UCL <- abind(abind(x@UCL[1:end.rows,,,drop=FALSE],
                        array(NA,dim=c(end.rows,add.columns,dim(x@alarms)[3])),along=2),
                  array(NA,dim=c(dim(syndrome.counts)[1],(dim(x@UCL)[2]+add.columns),dim(x@UCL)[3])),
                  along=1)
     }
     
     if (dim(x@LCL)[1]!=0){
-      LCL <- abind(abind(x@LCL[1:end.rows,,],
+      LCL <- abind(abind(x@LCL[1:end.rows,,,drop=FALSE],
                        array(NA,dim=c(end.rows,add.columns,dim(x@alarms)[3])),along=2),
                  array(NA,dim=c(dim(syndrome.counts)[1],(dim(x@LCL)[2]+add.columns),dim(x@LCL)[3])),
                  along=1)
@@ -482,19 +482,19 @@ setMethod('update_syndromic',
                 }
                 
                 if (dim(x@alarms)[1]!=0){
-                  alarms <- abind(x@alarms[1:end.rows,,],
+                  alarms <- abind(x@alarms[1:end.rows,,,drop=FALSE],
                                   array(NA,dim=c(dim(syndrome.counts)[1],dim(x@alarms)[2],dim(x@alarms)[3])),
                                   along=1)
                 }
                 
                 if (dim(x@UCL)[1]!=0){
-                  UCL <- abind(x@UCL[1:end.rows,,],
+                  UCL <- abind(x@UCL[1:end.rows,,,drop=FALSE],
                                array(NA,dim=c(dim(syndrome.counts)[1],dim(x@UCL)[2],dim(x@UCL)[3])),
                                along=1)
                 }
                 
                 if (dim(x@LCL)[1]!=0){
-                  LCL <- abind(x@LCL[1:end.rows,,],
+                  LCL <- abind(x@LCL[1:end.rows,,,drop=FALSE],
                                array(NA,dim=c(dim(syndrome.counts)[1],dim(x@LCL)[2],dim(x@LCL)[3])),
                                along=1)    
                 }
@@ -512,21 +512,21 @@ setMethod('update_syndromic',
                 }
                 
                 if (dim(x@alarms)[1]!=0){
-                  alarms <- abind(abind(x@alarms[1:end.rows,,],
+                  alarms <- abind(abind(x@alarms[1:end.rows,,,drop=FALSE],
                                         array(NA,dim=c(end.rows,add.columns,dim(x@alarms)[3])),along=2),
                                   array(NA,dim=c(dim(syndrome.counts)[1],(dim(x@alarms)[2]+add.columns),dim(x@alarms)[3])),
                                   along=1)
                 }
                 
                 if (dim(x@UCL)[1]!=0){
-                  UCL <- abind(abind(x@UCL[1:end.rows,,],
+                  UCL <- abind(abind(x@UCL[1:end.rows,,,drop=FALSE],
                                      array(NA,dim=c(end.rows,add.columns,dim(x@alarms)[3])),along=2),
                                array(NA,dim=c(dim(syndrome.counts)[1],(dim(x@UCL)[2]+add.columns),dim(x@UCL)[3])),
                                along=1)
                 }
                 
                 if (dim(x@LCL)[1]!=0){
-                  LCL <- abind(abind(x@LCL[1:end.rows,,],
+                  LCL <- abind(abind(x@LCL[1:end.rows,,,drop=FALSE],
                                      array(NA,dim=c(end.rows,add.columns,dim(x@alarms)[3])),along=2),
                                array(NA,dim=c(dim(syndrome.counts)[1],(dim(x@LCL)[2]+add.columns),dim(x@LCL)[3])),
                                along=1)
@@ -684,19 +684,19 @@ setMethod('update_syndromic',
               }
               
               if (dim(x@alarms)[1]!=0){
-                alarms <- abind(x@alarms[1:end.rows,,],
+                alarms <- abind(x@alarms[1:end.rows,,,drop=FALSE],
                                 array(NA,dim=c(dim(syndrome.counts)[1],dim(x@alarms)[2],dim(x@alarms)[3])),
                                 along=1)
               }
               
               if (dim(x@UCL)[1]!=0){
-                UCL <- abind(x@UCL[1:end.rows,,],
+                UCL <- abind(x@UCL[1:end.rows,,,drop=FALSE],
                              array(NA,dim=c(dim(syndrome.counts)[1],dim(x@UCL)[2],dim(x@UCL)[3])),
                              along=1)
               }
               
               if (dim(x@LCL)[1]!=0){
-                LCL <- abind(x@LCL[1:end.rows,,],
+                LCL <- abind(x@LCL[1:end.rows,,,drop=FALSE],
                              array(NA,dim=c(dim(syndrome.counts)[1],dim(x@LCL)[2],dim(x@LCL)[3])),
                              along=1)    
               }
@@ -714,21 +714,21 @@ setMethod('update_syndromic',
               }
               
               if (dim(x@alarms)[1]!=0){
-                alarms <- abind(abind(x@alarms[1:end.rows,,],
+                alarms <- abind(abind(x@alarms[1:end.rows,,,drop=FALSE],
                                       array(NA,dim=c(end.rows,add.columns,dim(x@alarms)[3])),along=2),
                                 array(NA,dim=c(dim(syndrome.counts)[1],(dim(x@alarms)[2]+add.columns),dim(x@alarms)[3])),
                                 along=1)
               }
               
               if (dim(x@UCL)[1]!=0){
-                UCL <- abind(abind(x@UCL[1:end.rows,,],
+                UCL <- abind(abind(x@UCL[1:end.rows,,,drop=FALSE],
                                    array(NA,dim=c(end.rows,add.columns,dim(x@alarms)[3])),along=2),
                              array(NA,dim=c(dim(syndrome.counts)[1],(dim(x@UCL)[2]+add.columns),dim(x@UCL)[3])),
                              along=1)
               }
               
               if (dim(x@LCL)[1]!=0){
-                LCL <- abind(abind(x@LCL[1:end.rows,,],
+                LCL <- abind(abind(x@LCL[1:end.rows,,,drop=FALSE],
                                    array(NA,dim=c(end.rows,add.columns,dim(x@alarms)[3])),along=2),
                              array(NA,dim=c(dim(syndrome.counts)[1],(dim(x@LCL)[2]+add.columns),dim(x@LCL)[3])),
                              along=1)

@@ -284,8 +284,6 @@ y <- x
               } else{
                 dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
               }    
-              dimnames(y@alarms)[[3]][alarm.dim] <- "Shewhart"
-              
             }
             
             #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -296,8 +294,8 @@ y <- x
                               matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                               along=3)
               }
-              dimnames(y@alarms)[[3]][alarm.dim] <- "Shewhart"              
             }
+            dimnames(y@alarms)[[3]][alarm.dim] <- "Shewhart"              
             
             #all the same for UCL
             if (UCL!=FALSE){
@@ -308,8 +306,6 @@ y <- x
               } else{
                 dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
               }   
-              dimnames(y@UCL)[[3]][alarm.dim] <- "Shewhart"
-              
             }
             
             #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -320,8 +316,8 @@ y <- x
                                 matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                 along=3)
               }
-              dimnames(y@UCL)[[3]][alarm.dim] <- "Shewhart"              
             }
+            dimnames(y@UCL)[[3]][alarm.dim] <- "Shewhart"              
             }
             
             
@@ -330,8 +326,6 @@ y <- x
               if (dim(y@LCL)[1]==0){
                 setLCLD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
                 dimnames(y@LCL)[[2]] <- dimnames(y@observed)[[2]]
-                dimnames(y@LCL)[[3]][alarm.dim] <- "Shewhart"
-                
               }
               
               #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -342,8 +336,8 @@ y <- x
                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                along=3)
                 }
-                dimnames(y@LCL)[[3]][alarm.dim] <- "Shewhart"                
               }
+              dimnames(y@LCL)[[3]][alarm.dim] <- "Shewhart"                
             }            
             
            #if Baseline does not exist at all, fill it with NA for the dimensions required 
@@ -622,8 +616,6 @@ setMethod('shew_synd',
               } else{
                 dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
               }    
-              dimnames(y@alarms)[[3]][alarm.dim] <- "Shewhart"
-              
             }
             
             #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -634,8 +626,8 @@ setMethod('shew_synd',
                                 matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                 along=3)
               }
-              dimnames(y@alarms)[[3]][alarm.dim] <- "Shewhart"              
             }
+            dimnames(y@alarms)[[3]][alarm.dim] <- "Shewhart"              
             
             #all the same for UCL
             if (UCL!=FALSE){
@@ -646,8 +638,6 @@ setMethod('shew_synd',
                 } else{
                   dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
                 }   
-                dimnames(y@UCL)[[3]][alarm.dim] <- "Shewhart"
-                
               }
               
               #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -658,8 +648,8 @@ setMethod('shew_synd',
                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                along=3)
                 }
-                dimnames(y@UCL)[[3]][alarm.dim] <- "Shewhart"              
               }
+              dimnames(y@UCL)[[3]][alarm.dim] <- "Shewhart"              
             }
             
             
@@ -668,8 +658,6 @@ setMethod('shew_synd',
               if (dim(y@LCL)[1]==0){
                 setLCLW(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
                 dimnames(y@LCL)[[2]] <- dimnames(y@observed)[[2]]
-                dimnames(y@LCL)[[3]][alarm.dim] <- "Shewhart"
-                
               }
               
               #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -680,8 +668,8 @@ setMethod('shew_synd',
                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                along=3)
                 }
-                dimnames(y@LCL)[[3]][alarm.dim] <- "Shewhart"                
               }
+              dimnames(y@LCL)[[3]][alarm.dim] <- "Shewhart"                
             }            
             
             #if Baseline does not exist at all, fill it with NA for the dimensions required 

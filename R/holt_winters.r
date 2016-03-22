@@ -236,8 +236,6 @@ setMethod('holt_winters_synd',
                   } else{
                     dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
                   }              
-        
-              dimnames(y@alarms)[[3]][alarm.dim] <- "HoltWinters"
             }
             
             #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -248,8 +246,8 @@ setMethod('holt_winters_synd',
                               matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                               along=3)
               }
-              dimnames(y@alarms)[[3]][alarm.dim] <- "HoltWinters"
             }
+            dimnames(y@alarms)[[3]][alarm.dim] <- "HoltWinters"
             
             #all the same for UCL
             if (UCL!=FALSE){
@@ -260,8 +258,6 @@ setMethod('holt_winters_synd',
               } else{
                 dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
               }   
-              
-              dimnames(y@UCL)[[3]][alarm.dim] <- "HoltWinters"
             }
             
             #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -272,8 +268,8 @@ setMethod('holt_winters_synd',
                                 matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                 along=3)
               }
-              dimnames(y@UCL)[[3]][alarm.dim] <- "HoltWinters"
             }
+            dimnames(y@UCL)[[3]][alarm.dim] <- "HoltWinters"
             }
             
            #if Baseline does not exist at all, fill it with NA for the dimensions required 
@@ -402,7 +398,6 @@ setMethod('holt_winters_synd',
               } else{
                 dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
               }    
-              dimnames(y@alarms)[[3]][alarm.dim] <- "HoltWinters"
             }
             
             #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -413,8 +408,8 @@ setMethod('holt_winters_synd',
                                 matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                 along=3)
               }
-              dimnames(y@alarms)[[3]][alarm.dim] <- "HoltWinters"
             }
+            dimnames(y@alarms)[[3]][alarm.dim] <- "HoltWinters"
             
             #all the same for UCL
             if (UCL!=FALSE){
@@ -425,7 +420,6 @@ setMethod('holt_winters_synd',
                 } else{
                   dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
                 }   
-                dimnames(y@UCL)[[3]][alarm.dim] <- "HoltWinters"
               }
               
               #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -436,8 +430,8 @@ setMethod('holt_winters_synd',
                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                along=3)
                 }
-                dimnames(y@UCL)[[3]][alarm.dim] <- "HoltWinters"
               }
+              dimnames(y@UCL)[[3]][alarm.dim] <- "HoltWinters"
             }
             
             #if Baseline does not exist at all, fill it with NA for the dimensions required 

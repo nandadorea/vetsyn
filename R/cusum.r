@@ -281,8 +281,6 @@ setMethod('cusum_synd',
               } else{
                 dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
               }                  
-              dimnames(y@alarms)[[3]][alarm.dim] <- "CUSUM"
-              
             }
             
             #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -293,8 +291,8 @@ setMethod('cusum_synd',
                                 matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                 along=3)
               }
-              dimnames(y@alarms)[[3]][alarm.dim] <- "CUSUM"              
             }
+            dimnames(y@alarms)[[3]][alarm.dim] <- "CUSUM"              
             
             #all the same for UCL
             if (UCL!=FALSE){
@@ -305,8 +303,6 @@ setMethod('cusum_synd',
                 } else{
                   dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
                 }   
-                dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"
-                
               }
               
               #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -317,8 +313,8 @@ setMethod('cusum_synd',
                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                along=3)
                 }
-                dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"              
               }
+              dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"              
             }
             
             
@@ -327,8 +323,6 @@ setMethod('cusum_synd',
               if (dim(y@LCL)[1]==0){
                 setLCLD(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
                 dimnames(y@LCL)[[2]] <- dimnames(y@observed)[[2]]
-                dimnames(y@LCL)[[3]][alarm.dim] <- "CUSUM"
-                
               }
               
               #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -339,8 +333,8 @@ setMethod('cusum_synd',
                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                along=3)
                 }
-                dimnames(y@LCL)[[3]][alarm.dim] <- "CUSUM"                
               }
+              dimnames(y@LCL)[[3]][alarm.dim] <- "CUSUM"                
             }            
             
             #if Baseline does not exist at all, fill it with NA for the dimensions required 
@@ -636,8 +630,6 @@ setMethod('cusum_synd',
               } else{
                 dimnames(y@alarms)[[2]] <- dimnames(y@observed)[[2]]
               }                 
-              dimnames(y@alarms)[[3]][alarm.dim] <- "CUSUM"
-              
             }
             
             #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -648,8 +640,8 @@ setMethod('cusum_synd',
                                 matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                 along=3)
               }
-              dimnames(y@alarms)[[3]][alarm.dim] <- "CUSUM"              
             }
+            dimnames(y@alarms)[[3]][alarm.dim] <- "CUSUM"              
             
             #all the same for UCL
             if (UCL!=FALSE){
@@ -660,8 +652,6 @@ setMethod('cusum_synd',
                 } else{
                   dimnames(y@UCL)[[2]] <- dimnames(y@observed)[[2]]
                 }   
-                dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"
-                
               }
               
               #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -672,8 +662,8 @@ setMethod('cusum_synd',
                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                along=3)
                 }
-                dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"              
               }
+              dimnames(y@UCL)[[3]][alarm.dim] <- "CUSUM"              
             }
             
             
@@ -682,8 +672,6 @@ setMethod('cusum_synd',
               if (dim(y@LCL)[1]==0){
                 setLCLW(y)<-array(NA,dim=c(dim(y@observed)[1],dim(y@observed)[2],alarm.dim))
                 dimnames(y@LCL)[[2]] <- dimnames(y@observed)[[2]]
-                dimnames(y@LCL)[[3]][alarm.dim] <- "CUSUM"
-                
               }
               
               #if slot existed, but not up to alarm.dim, add the needed dimensions
@@ -694,8 +682,8 @@ setMethod('cusum_synd',
                                matrix(NA,nrow=dim(y@observed)[1],ncol=dim(y@observed)[2]),
                                along=3)
                 }
-                dimnames(y@LCL)[[3]][alarm.dim] <- "CUSUM"                
               }
+              dimnames(y@LCL)[[3]][alarm.dim] <- "CUSUM"                
             }            
             
             #if Baseline does not exist at all, fill it with NA for the dimensions required 

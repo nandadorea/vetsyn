@@ -218,6 +218,9 @@ setMethod('holt_winters_synd',
             }
             
             #syndromes index to be always numeric
+            if (is.null(syndromes)){
+              syndromes<-1:dim(x@observed)[2]
+            }
             if (class(syndromes)=="numeric") {
               syndromes.num <- syndromes
             }else{
@@ -384,6 +387,9 @@ setMethod('holt_winters_synd',
             }
             
             #syndromes index to be always numeric
+            if (is.null(syndromes)){
+              syndromes<-1:dim(x@observed)[2]
+            }
             if (class(syndromes)=="numeric") {
               syndromes.num <- syndromes
             }else{

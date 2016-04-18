@@ -255,6 +255,9 @@ setMethod('shew_synd',
         {
     
             ##check that syndromes is valid
+            if (is.null(syndromes)){
+              syndromes<-1:dim(x@observed)[2]
+            }
             if (class(syndromes)=="NULL"){
               syndromes <- colnames(x@observed)
             }else{
@@ -602,6 +605,9 @@ setMethod('shew_synd',
             }
             
             #syndromes index to be always numeric
+            if (is.null(syndromes)){
+              syndromes<-1:dim(x@observed)[2]
+            }
             if (class(syndromes)=="numeric") {
               syndromes.num <- syndromes
             }else{

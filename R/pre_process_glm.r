@@ -139,6 +139,9 @@ setMethod('pre_process_glm',
             
             #make sure syndrome list is always numeric
             #even if user gives as a list of names
+            if (is.null(syndromes)){
+              syndromes<-1:dim(x@observed)[2]
+            }
             if (class(syndromes)=="numeric") {
               syndromes.num <- syndromes
             }else{
@@ -264,6 +267,9 @@ setMethod('pre_process_glm',
             
             #make sure syndrome list is always numeric
             #even if user gives as a list of names
+            if (is.null(syndromes)){
+              syndromes<-1:dim(x@observed)[2]
+            }
             if (class(syndromes)=="numeric") {
               syndromes.num <- syndromes
             }else{

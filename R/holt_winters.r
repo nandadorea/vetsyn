@@ -221,7 +221,7 @@ setMethod('holt_winters_synd',
             if (is.null(syndromes)){
               syndromes<-1:dim(x@observed)[2]
             }
-            if (class(syndromes)=="numeric") {
+            if (class(syndromes)=="numeric"|class(syndromes)=="integer") {
               syndromes.num <- syndromes
             }else{
               syndromes.num <- match(syndromes,colnames(x@observed))
@@ -390,7 +390,7 @@ setMethod('holt_winters_synd',
             if (is.null(syndromes)){
               syndromes<-1:dim(x@observed)[2]
             }
-            if (class(syndromes)=="numeric") {
+            if (class(syndromes)=="numeric"|class(syndromes)=="integer") {
               syndromes.num <- syndromes
             }else{
               syndromes.num <- match(syndromes,colnames(x@observed))

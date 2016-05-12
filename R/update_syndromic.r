@@ -271,11 +271,11 @@ setMethod('update_syndromic',
   LCL <- array(dim=0)
   
     if (add.columns==0){
-    observed <- rbind(x@observed[1:end.rows,],syndrome.counts)
-    datesy <- rbind(x@dates[1:end.rows,],dates)
+    observed <- rbind(x@observed[1:end.rows,,drop=FALSE],syndrome.counts)
+    datesy <- rbind(x@dates[1:end.rows,,drop=FALSE],dates)
     
           if (dim(x@baseline)[1]!=0){
-    baseline <- rbind(x@baseline[1:end.rows,],syndrome.counts)
+    baseline <- rbind(x@baseline[1:end.rows,,drop=FALSE],syndrome.counts)
           }
     
     if (dim(x@alarms)[1]!=0){
@@ -298,13 +298,13 @@ setMethod('update_syndromic',
     
   } else{
     observed <- rbind(
-                  cbind(x@observed[1:end.rows,],matrix(0,nrow=end.rows,ncol=add.columns)),
+                  cbind(x@observed[1:end.rows,,drop=FALSE],matrix(0,nrow=end.rows,ncol=add.columns)),
                   syndrome.counts)
-    datesy <- rbind(x@dates[1:end.rows,],dates)
+    datesy <- rbind(x@dates[1:end.rows,,drop=FALSE],dates)
     
         if (dim(x@baseline)[1]!=0){
     baseline <- rbind(
-                  cbind(x@baseline[1:end.rows,],matrix(0,nrow=end.rows,ncol=add.columns)),
+                  cbind(x@baseline[1:end.rows,,drop=FALSE],matrix(0,nrow=end.rows,ncol=add.columns)),
                   syndrome.counts)
         }
     
@@ -474,11 +474,11 @@ setMethod('update_syndromic',
               LCL <- array(dim=0)
               
               if (add.columns==0){
-                observed <- rbind(x@observed[1:end.rows,],syndrome.counts)
-                datesy <- rbind(x@dates[1:end.rows,],dates)
+                observed <- rbind(x@observed[1:end.rows,,drop=FALSE],syndrome.counts)
+                datesy <- rbind(x@dates[1:end.rows,,drop=FALSE],dates)
                 
                 if (dim(x@baseline)[1]!=0){
-                  baseline <- rbind(x@baseline[1:end.rows,],syndrome.counts)
+                  baseline <- rbind(x@baseline[1:end.rows,,drop=FALSE],syndrome.counts)
                 }
                 
                 if (dim(x@alarms)[1]!=0){
@@ -501,13 +501,13 @@ setMethod('update_syndromic',
                 
               } else{
                 observed <- rbind(
-                  cbind(x@observed[1:end.rows,],matrix(0,nrow=end.rows,ncol=add.columns)),
+                  cbind(x@observed[1:end.rows,,drop=FALSE],matrix(0,nrow=end.rows,ncol=add.columns)),
                   syndrome.counts)
-                datesy <- rbind(x@dates[1:end.rows,],dates)
+                datesy <- rbind(x@dates[1:end.rows,,drop=FALSE],dates)
                 
                 if (dim(x@baseline)[1]!=0){
                   baseline <- rbind(
-                    cbind(x@baseline[1:end.rows,],matrix(0,nrow=end.rows,ncol=add.columns)),
+                    cbind(x@baseline[1:end.rows,,drop=FALSE],matrix(0,nrow=end.rows,ncol=add.columns)),
                     syndrome.counts)
                 }
                 
@@ -676,11 +676,11 @@ setMethod('update_syndromic',
             LCL <- array(dim=0)
             
             if (add.columns==0){
-              observed <- rbind(x@observed[1:end.rows,],syndrome.counts)
-              datesy <- rbind(x@dates[1:end.rows,],dates)
+              observed <- rbind(x@observed[1:end.rows,,drop=FALSE],syndrome.counts)
+              datesy <- rbind(x@dates[1:end.rows,,drop=FALSE],dates)
               
               if (dim(x@baseline)[1]!=0){
-                baseline <- rbind(x@baseline[1:end.rows,],syndrome.counts)
+                baseline <- rbind(x@baseline[1:end.rows,,drop=FALSE],syndrome.counts)
               }
               
               if (dim(x@alarms)[1]!=0){
@@ -703,13 +703,13 @@ setMethod('update_syndromic',
               
             } else{
               observed <- rbind(
-                cbind(x@observed[1:end.rows,],matrix(0,nrow=end.rows,ncol=add.columns)),
+                cbind(x@observed[1:end.rows,,drop=FALSE],matrix(0,nrow=end.rows,ncol=add.columns)),
                 syndrome.counts)
-              datesy <- rbind(x@dates[1:end.rows,],dates)
+              datesy <- rbind(x@dates[1:end.rows,,drop=FALSE],dates)
               
               if (dim(x@baseline)[1]!=0){
                 baseline <- rbind(
-                  cbind(x@baseline[1:end.rows,],matrix(0,nrow=end.rows,ncol=add.columns)),
+                  cbind(x@baseline[1:end.rows,,drop=FALSE],matrix(0,nrow=end.rows,ncol=add.columns)),
                   syndrome.counts)
               }
               

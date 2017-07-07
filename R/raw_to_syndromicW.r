@@ -200,7 +200,7 @@ raw_to_syndromicW <- function(id,
                              max.date,
                              sort=TRUE,
                              data=NULL,
-                             formula=NULL) {
+                             formula=vector()) {
   
   
   #account for use of "data="

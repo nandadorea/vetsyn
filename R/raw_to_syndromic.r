@@ -79,6 +79,14 @@
 ##' 1 day ahead)
 ##' @param data Optional argument. If used the other arguments can be specified
 ##' as column names within the dataset provided through this argument
+##' @param formula A character string (optional) specifying the regression formula to be used
+##'     when removing temporal patterns from each of the syndromes in @observed. For instance 
+##'     "dow+mon" when the regression formula should be " y~dow + mon", 
+##'     indicating that day-of-week and month should be modelled. The names of the variables
+##'     should exist in the columns of the slot @dates. Make sure that formulas' index match the
+##'     columns in observed (for instance the second formula should correspond to the second
+##'     syndrome, or second column in the observed matrix).This is often only filled after 
+##'     some analysis in the data, not at the time of object creation.
 ##'
 ##' @return an object of the class \code{syndromic} with the following slots:
 ##' (1) OBSERVED: A matrix with as many columns as syndromic groups
@@ -147,7 +155,8 @@ raw_to_syndromicD <- function(id,
                              remove.dow=FALSE,
                              add.to=0,
                              sort=TRUE,
-                             data=NULL) {
+                             data=NULL,
+                             formula=vector()) {
   
   
   #account for use of "data="

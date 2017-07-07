@@ -85,7 +85,7 @@ syndromicW <- function(observed,
                       alarms=array(dim=0), 
                       UCL=array(dim=0), 
                       LCL=array(dim=0),
-                      formula=NULL) {
+                      formula=vector()) {
   
   if (!missing("dates"))(dates <- as.data.frame(dates))
   

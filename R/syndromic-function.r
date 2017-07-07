@@ -94,7 +94,7 @@ syndromicD <- function(observed,
                       alarms=array(dim=0), 
                       UCL=array(dim=0), 
                       LCL=array(dim=0),
-                      formula=NULL) {
+                      formula=vector()) {
   
   if (!missing("dates"))(dates <- as.data.frame(dates))
   if (!missing("dates"))(dates[,1]<-as.Date (dates[,1], format = date.format))

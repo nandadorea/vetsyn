@@ -95,7 +95,7 @@ setClass('syndromicD',
                         alarms    = 'array',
                         UCL       = 'array',
                         LCL       = 'array',
-                        formula   = 'character'),
+                        formula   = 'vector'),
          validity = function(object) {
              retval <- NULL
              

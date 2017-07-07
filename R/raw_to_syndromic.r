@@ -79,13 +79,16 @@
 ##' 1 day ahead)
 ##' @param data Optional argument. If used the other arguments can be specified
 ##' as column names within the dataset provided through this argument
-##' @param formula A character string (optional) specifying the regression formula to be used
+##' @param formula A formula, or list of formulas, specifying the regression formula to be used
 ##'     when removing temporal patterns from each of the syndromes in @observed. For instance 
-##'     "dow+mon" when the regression formula should be " y~dow + mon", 
-##'     indicating that day-of-week and month should be modelled. The names of the variables
-##'     should exist in the columns of the slot @dates. Make sure that formulas' index match the
+##'     formula=y~dow+mon for a single syndrome, where regression must take into 
+##'     account the variables dow (day-of-week) and month;
+##'     or formula=c(y~dow, y~dow+mon) specifying two different formulas for two syndromes. 
+##'     The names of the variables given should exist in the columns of the slot @dates. 
+##'     Make sure that formulas' index match the
 ##'     columns in observed (for instance the second formula should correspond to the second
-##'     syndrome, or second column in the observed matrix).This is often only filled after 
+##'     syndrome, or second column in the observed matrix).You can provide NA for syndromes
+##'     which should not be associated with any formula. This parameter is often only filled after 
 ##'     some analysis in the data, not at the time of object creation.
 ##'
 ##' @return an object of the class \code{syndromic} with the following slots:
@@ -156,7 +159,7 @@ raw_to_syndromicD <- function(id,
                              add.to=0,
                              sort=TRUE,
                              data=NULL,
-                             formula=vector()) {
+                             formula=list()) {
   
   
   #account for use of "data="

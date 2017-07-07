@@ -63,13 +63,16 @@
 ##'     to record the maximum number that would have generated an alarm.
 ##'   }
 ##'   \item{formula}{
-##'     A character string (optional) specifying the regression formula to be used
+##'     A formula, or list of formulas, specifying the regression formula to be used
 ##'     when removing temporal patterns from each of the syndromes in @observed. For instance 
-##'     "dow+mon" when the regression formula should be " y~dow + mon", 
-##'     indicating that day-of-week and month should be modelled. The names of the variables
-##'     should exist in the columns of the slot @dates. Make sure that formulas' index match the
+##'     formula=y~dow+mon for a single syndrome, where regression must take into 
+##'     account the variables dow (day-of-week) and month;
+##'     or formula=c(y~dow, y~dow+mon) specifying two different formulas for two syndromes. 
+##'     The names of the variables given should exist in the columns of the slot @dates. 
+##'     Make sure that formulas' index match the
 ##'     columns in observed (for instance the second formula should correspond to the second
-##'     syndrome, or second column in the observed matrix).This is often only filled after 
+##'     syndrome, or second column in the observed matrix).You can provide NA for syndromes
+##'     which should not be associated with any formula. This parameter is often only filled after 
 ##'     some analysis in the data, not at the time of object creation.
 ##'   }
 ##'   }
@@ -95,7 +98,7 @@ setClass('syndromicD',
                         alarms    = 'array',
                         UCL       = 'array',
                         LCL       = 'array',
-                        formula   = 'vector'),
+                        formula   = 'list'),
          validity = function(object) {
              retval <- NULL
              

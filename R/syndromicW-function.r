@@ -52,7 +52,7 @@
 ##' @param LCL Lower control limit. See UCL above. 
 ##' @param formula A formula, or list of formulas, specifying the regression formula to be used
 ##'     when removing temporal patterns from each of the syndromes in @observed. For instance 
-##'     formula=y~dow+mon for a single syndrome, where regression must take into 
+##'     formula=list(y~dow+mon) for a single syndrome, where regression must take into 
 ##'     account the variables dow (day-of-week) and month;
 ##'     or formula=c(y~dow, y~dow+mon) specifying two different formulas for two syndromes. 
 ##'     The names of the variables given should exist in the columns of the slot @dates. 

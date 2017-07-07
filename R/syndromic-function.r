@@ -51,6 +51,15 @@
 ##' receiving by default an empty array. Methods within this package are then used
 ##' to create this slot from data on \code{observed}.
 ##' @param LCL Lower control limit. See UCL above. 
+##' @param formula A character string (optional) specifying the regression formula to be used
+##'     when removing temporal patterns from each of the syndromes in @observed. For instance 
+##'     "dow+mon" when the regression formula should be " y~dow + mon", 
+##'     indicating that day-of-week and month should be modelled. The names of the variables
+##'     should exist in the columns of the slot @dates. Make sure that formulas' index match the
+##'     columns in observed (for instance the second formula should correspond to the second
+##'     syndrome, or second column in the observed matrix).This is often only filled after 
+##'     some analysis in the data, not at the time of object creation.
+
 ##' 
 ##' @name syndromicD-function
 ##' @return an object of the class \code{syndromicD} with the slots
@@ -84,7 +93,8 @@ syndromicD <- function(observed,
                       baseline=matrix(nrow=0,ncol=0), 
                       alarms=array(dim=0), 
                       UCL=array(dim=0), 
-                      LCL=array(dim=0)) {
+                      LCL=array(dim=0),
+                      formula=NULL) {
   
   if (!missing("dates"))(dates <- as.data.frame(dates))
   if (!missing("dates"))(dates[,1]<-as.Date (dates[,1], format = date.format))
@@ -103,7 +113,7 @@ syndromicD <- function(observed,
       
   
   new('syndromicD', observed=observed, dates=dates, 
-      baseline=baseline, alarms=alarms, UCL=UCL, LCL=LCL)
+      baseline=baseline, alarms=alarms, UCL=UCL, LCL=LCL, formula=formula)
 }
 
 
@@ -163,6 +173,18 @@ setReplaceMethod(
   signature="syndromicD",
   definition=function(object,value){
     object@LCL <- value
+    validObject(object)      #VALIDITY CONTROL
+    return(object)
+  }
+)
+
+
+setGeneric("setformulaD<-",function(object,value){standardGeneric("setformulaD<-")})
+setReplaceMethod(
+  f="setformulaD",
+  signature="syndromicD",
+  definition=function(object,value){
+    object@formula <- value
     validObject(object)      #VALIDITY CONTROL
     return(object)
   }

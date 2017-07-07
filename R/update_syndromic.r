@@ -47,6 +47,14 @@
 ##' replace the old values (set to TRUE) or be ignored (set to FALSE)
 ##' @param data Optional argument. If used the other arguments can be specified
 ##' as column names within the dataset provided through this argument
+##' @param formula A character string (optional) specifying the regression formula to be used
+##'     when removing temporal patterns from each of the syndromes in @observed. For instance 
+##'     "dow+mon" when the regression formula should be " y~dow + mon", 
+##'     indicating that day-of-week and month should be modelled. The names of the variables
+##'     should exist in the columns of the slot @dates. Make sure that formulas' index match the
+##'     columns in observed (for instance the second formula should correspond to the second
+##'     syndrome, or second column in the observed matrix).This is often only filled after 
+##'     some analysis in the data, not at the time of object creation.
 ##'
 ##' @return an updated object of the class \code{syndromicD} with the following slots: 
 ##' (1) OBSERVED: The previous observed matrix is updated adding lines corresponding
@@ -337,6 +345,7 @@ setMethod('update_syndromic',
   setAlarmsD(y)<-alarms
   setUCLD(y)<-UCL
   setLCLD(y)<-LCL
+  setformulaD(y)<-x@formula
   
   return(y)
 }
@@ -540,6 +549,7 @@ setMethod('update_syndromic',
               setAlarmsW(y)<-alarms
               setUCLW(y)<-UCL
               setLCLW(y)<-LCL              
+              setformulaW(y)<-x@formula
               
               
               
@@ -742,6 +752,7 @@ setMethod('update_syndromic',
             setAlarmsW(y)<-alarms
             setUCLW(y)<-UCL
             setLCLW(y)<-LCL
+            setformulaW(y)<-x@formula
             
             }
             

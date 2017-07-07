@@ -62,6 +62,16 @@
 ##'     this dimension can be used
 ##'     to record the maximum number that would have generated an alarm.
 ##'   }
+##'   \item{formula}{
+##'     A character string (optional) specifying the regression formula to be used
+##'     when removing temporal patterns from each of the syndromes in @observed. For instance 
+##'     "dow+mon" when the regression formula should be " y~dow + mon", 
+##'     indicating that day-of-week and month should be modelled. The names of the variables
+##'     should exist in the columns of the slot @dates. Make sure that formulas' index match the
+##'     columns in observed (for instance the second formula should correspond to the second
+##'     syndrome, or second column in the observed matrix).This is often only filled after 
+##'     some analysis in the data, not at the time of object creation.
+##'   }
 ##'   }
 ##'   
 ##'   @name syndromicD-class
@@ -82,9 +92,10 @@ setClass('syndromicD',
          representation(observed  = 'matrix',
                         dates     = 'data.frame',
                         baseline  = 'matrix',
-                        alarms     = 'array',
+                        alarms    = 'array',
                         UCL       = 'array',
-                        LCL        = 'array'),
+                        LCL       = 'array',
+                        formula   = 'character'),
          validity = function(object) {
              retval <- NULL
              
@@ -106,13 +117,16 @@ setClass('syndromicD',
              if(length(object@alarms)>1L)   (l2 <- c(l2,dim(object@alarms)[2]))
              if(length(object@UCL)>1L)      (l2 <- c(l2,dim(object@UCL)[2]))
              if(length(object@LCL)>1L)      (l2 <- c(l2,dim(object@LCL)[2]))
+             if(length(object@formula)>1L)  (l2 <- c(l2,length(object@formula)[2]))
              
              l1 <- unique(l1)
              l2 <- unique(l2)
              
              if(!identical(length(l1), 1L)||!identical(length(l2), 1L)) {
-                 retval <- 'Dimensions of observed, dates, 
-                            baseline, alarms, UCL and LCL should be the same'
+                 retval <- 'Dimensions of observed, dates (only number of rows in date), 
+                            baseline, alarms, UCL and LCL should be the same; and 
+                            length of formula should be the same as the number of
+                            columns in those datasets (number of syndromes).'
              }
                   })
          }

@@ -415,85 +415,116 @@ for (syndrome in syndromes.num){
   
   
   for (tpoint in range){
-    start = tpoint-baseline.window-guard.band+1 #remember that guard.band INCLUDES tpoint, 
-    #(minimum is ONE)
-    end   = tpoint-guard.band
+    #if baseline for the syndrome in question is not available
+    #(filled with NA just to reach dimensions necessary), then
+    #for the syndrome in use replace with data from observed
+    if (sum(y@baseline[,syndrome],na.rm=TRUE)==0){
+      y@baseline[,syndrome]<-y@observed[,syndrome]
+    }
     
     
-    #first generate all data including tpoint:
-    days <- y@baseline[start:tpoint,syndrome]
-    
-    y@dates$month <- as.factor(y@dates$month)
-    y@dates$dow <- as.factor(y@dates$dow)
-    y@dates$year <- as.factor(y@dates$year)
-    
-    t = 1:length(days)
-    cos = cos(2*pi*t/frequency)
-    sin = sin(2*pi*t/frequency)
-    AR1<-y@baseline[(start-1):(tpoint-1),syndrome]
-    AR2<-y@baseline[(start-2):(tpoint-2),syndrome]
-    AR3<-y@baseline[(start-3):(tpoint-3),syndrome]
-    AR4<-y@baseline[(start-4):(tpoint-4),syndrome]
-    AR5<-y@baseline[(start-5):(tpoint-5),syndrome]
-    AR6<-y@baseline[(start-6):(tpoint-6),syndrome]
-    AR7<-y@baseline[(start-7):(tpoint-7),syndrome]
-    trend=t
-    
-    var <- data.frame(days = days,
-                      trend=t,
-                      cos,sin,
-                      AR1,AR2,AR3,AR4,AR5,AR6,AR7)
-    var <- cbind(var,y@dates[start:tpoint,])
-    
-    
-    m<-match(v,colnames(var))
-    m<-m[!is.na(m)]
-    var <- var[,m,drop=FALSE]
-    
-    
-    
-    #training
-    var.train <- var[1:(dim(var)[1]-guard.band),]
-    
-    #prediction
-    var.pred <- var[(dim(var)[1]-guard.band+1):(dim(var)[1]),]
-    
-    
-    
-    if (family=="nbinom"){
-      #require(MASS)
-      fit1     <- glm.nb(fn.formula, data=var.train)
-      
+    if(length(pre.process)==1){
+      pre.process.synd <- pre.process
     }else{
-      #distribution=family
-      fit1 <- glm(fn.formula, family=family, data=var.train)
+      pre.process.synd <- pre.process[[syndrome]]
     }
     
-    predict.bas <- predict.glm(fit1,type="response", data=var.train)
-    predict.new <- predict.glm(fit1, newdata=var.pred,type="response")
     
-    res1 <- var.train$days - predict.bas
-    res2 <- y@observed[(end+1):tpoint]-predict.new
     
-    to.cc <- c(res1,res2)
-    correct <- predict.new[guard.band]
-    
-  }else{
-    
-    if(tpoint==range[1]){
-      warning("You have not provided a valid pre-processing method,
-                              CUSUM will be applied to your raw data. This is not an error, just a warning to make
-                              sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
-    }
-    
-    start = tpoint-baseline.window-guard.band
-    end   = tpoint-1
-    
-    to.cc <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
-    correct <- 0
-    
-  }
-} 
+    if (pre.process.synd=="diff"){
+      
+      start = tpoint-baseline.window-guard.band-diff.window
+      end   = tpoint-1
+      
+      baseline <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
+      to.cc    <- c(rep(NA,diff.window),diff(baseline,diff.window))
+      
+      correct  <- y@baseline[(tpoint-diff.window),syndrome]  
+      
+      
+    } else {
+      if (pre.process.synd=="glm"){
+        
+        
+        start = tpoint-baseline.window-guard.band+1 #remember that guard.band INCLUDES tpoint, 
+        #(minimum is ONE)
+        end   = tpoint-guard.band
+        
+        
+        #first generate all data including tpoint:
+        days <- y@baseline[start:tpoint,syndrome]
+        
+        y@dates$month <- as.factor(y@dates$month)
+        y@dates$dow <- as.factor(y@dates$dow)
+        y@dates$year <- as.factor(y@dates$year)
+        
+        t = 1:length(days)
+        cos = cos(2*pi*t/frequency)
+        sin = sin(2*pi*t/frequency)
+        AR1<-y@baseline[(start-1):(tpoint-1),syndrome]
+        AR2<-y@baseline[(start-2):(tpoint-2),syndrome]
+        AR3<-y@baseline[(start-3):(tpoint-3),syndrome]
+        AR4<-y@baseline[(start-4):(tpoint-4),syndrome]
+        AR5<-y@baseline[(start-5):(tpoint-5),syndrome]
+        AR6<-y@baseline[(start-6):(tpoint-6),syndrome]
+        AR7<-y@baseline[(start-7):(tpoint-7),syndrome]
+        trend=t
+        
+        var <- data.frame(days = days,
+                          trend=t,
+                          cos,sin,
+                          AR1,AR2,AR3,AR4,AR5,AR6,AR7)
+        var <- cbind(var,y@dates[start:tpoint,])
+        
+        
+        m<-match(v,colnames(var))
+        m<-m[!is.na(m)]
+        var <- var[,m,drop=FALSE]
+        
+        
+        
+        #training
+        var.train <- var[1:(dim(var)[1]-guard.band),]
+        
+        #prediction
+        var.pred <- var[(dim(var)[1]-guard.band+1):(dim(var)[1]),]
+        
+        
+        
+        if (family=="nbinom"){
+          #require(MASS)
+          fit1     <- glm.nb(fn.formula, data=var.train)
+          
+        }else{
+          #distribution=family
+          fit1 <- glm(fn.formula, family=family, data=var.train)
+        }
+        
+        predict.bas <- predict.glm(fit1,type="response", data=var.train)
+        predict.new <- predict.glm(fit1, newdata=var.pred,type="response")
+        
+        res1 <- var.train$days - predict.bas
+        res2 <- y@observed[(end+1):tpoint]-predict.new
+        
+        to.cc <- c(res1,res2)
+        correct <- predict.new[guard.band]
+        
+      }else{
+        
+        if(tpoint==range[1]){
+          warning("You have not provided a valid pre-processing method,
+                  CUSUM will be applied to your raw data. This is not an error, just a warning to make
+                  sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
+        }
+        
+        start = tpoint-baseline.window-guard.band
+        end   = tpoint-1
+        
+        to.cc <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
+        correct <- 0
+        
+        }
+      } 
     
       for (l in 1:length(limit.sd)){
         #require(qcc)
@@ -749,79 +780,93 @@ setMethod('ewma_synd',
                   y@baseline[,syndrome]<-y@observed[,syndrome]
                 }
                 
-                
                 if (pre.process=="diff"){
                   
-                  start = tpoint-baseline.window-guard.band+1
-                  end   = tpoint-guard.band
-                  
-                  #first generate all data including tpoint:
-                  week <- y@baseline[start:tpoint,syndrome]
-                  t = 1:length(week)
-                  
-                  cos = cos(2*pi*t/frequency)
-                  sin = sin(2*pi*t/frequency)
-                  y@dates$year <- as.factor(y@dates$year)
-                  AR1<-y@baseline[(start-1):(tpoint-1),syndrome]
-                  AR2<-y@baseline[(start-2):(tpoint-2),syndrome]
-                  AR3<-y@baseline[(start-3):(tpoint-3),syndrome]
-                  AR4<-y@baseline[(start-4):(tpoint-4),syndrome]
-                  trend=t
-                  
-                  var <- data.frame(week = week,
-                                    trend=t,
-                                    cos,sin,
-                                    AR1,AR2,AR3,AR4)
-                  var <- cbind(var,y@dates[start:tpoint,])
-                  
-                  m<-match(v,colnames(var))
-                  m<-m[!is.na(m)]
-                  var <- var[,m,drop=FALSE]
-                  
-                  
-                  #training
-                  var.train <- var[1:(dim(var)[1]-guard.band),]
-                  
-                  #prediction
-                  var.pred <- var[(dim(var)[1]-guard.band+1):(dim(var)[1]),]
-                  
-                  
-                  
-                  
-                  if (family=="nbinom"){
-                    #require(MASS)
-                    fit1     <- glm.nb(fn.formula, data=var.train)
-                    
-                  }else{
-                    #distribution=family
-                    fit1 <- glm(fn.formula, family=family, data=var.train)
-                  }
-                  
-                  
-                  predict.bas <- predict.glm(fit1,type="response", data=var.train)
-                  predict.new <- predict.glm(fit1, newdata=var.pred,type="response")
-                  
-                  res1 <- var.train$days - predict.bas
-                  res2 <- y@observed[(end+1):tpoint]-predict.new
-                  
-                  to.cc <- c(res1,res2)
-                  correct <- predict.new[guard.band]
-                  
-                }else{
-                  if(tpoint==range[1]){
-                    warning("You have not provided a valid pre-processing method,
-                            CUSUM will be applied to your raw data. This is not an error, just a warning to make
-                            sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
-                  }
-                  
-                  start = tpoint-baseline.window-guard.band
+                  start = tpoint-baseline.window-guard.band-diff.window
                   end   = tpoint-1
                   
-                  to.cc <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
-                  correct <- 0
+                  baseline <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
+                  to.cc    <- c(rep(NA,diff.window),diff(baseline,diff.window))
                   
-                  }
-                }    
+                  correct  <- y@baseline[(tpoint-diff.window),syndrome]  
+                  
+                  
+                } else {
+                  if (pre.process=="glm"){
+                    
+                    
+                    start = tpoint-baseline.window-guard.band+1
+                    end   = tpoint-guard.band
+                    
+                    #first generate all data including tpoint:
+                    week <- y@baseline[start:tpoint,syndrome]
+                    t = 1:length(week)
+                    
+                    cos = cos(2*pi*t/frequency)
+                    sin = sin(2*pi*t/frequency)
+                    y@dates$year <- as.factor(y@dates$year)
+                    AR1<-y@baseline[(start-1):(tpoint-1),syndrome]
+                    AR2<-y@baseline[(start-2):(tpoint-2),syndrome]
+                    AR3<-y@baseline[(start-3):(tpoint-3),syndrome]
+                    AR4<-y@baseline[(start-4):(tpoint-4),syndrome]
+                    trend=t
+                    
+                    var <- data.frame(week = week,
+                                      trend=t,
+                                      cos,sin,
+                                      AR1,AR2,AR3,AR4)
+                    var <- cbind(var,y@dates[start:tpoint,])
+                    
+                    m<-match(v,colnames(var))
+                    m<-m[!is.na(m)]
+                    var <- var[,m,drop=FALSE]
+                    
+                    
+                    #training
+                    var.train <- var[1:(dim(var)[1]-guard.band),]
+                    
+                    #prediction
+                    var.pred <- var[(dim(var)[1]-guard.band+1):(dim(var)[1]),]
+                    
+                    
+                    
+                    
+                    if (family=="nbinom"){
+                      #require(MASS)
+                      fit1     <- glm.nb(fn.formula, data=var.train)
+                      
+                    }else{
+                      #distribution=family
+                      fit1 <- glm(fn.formula, family=family, data=var.train)
+                    }
+                    
+                    
+                    predict.bas <- predict.glm(fit1,type="response", data=var.train)
+                    predict.new <- predict.glm(fit1, newdata=var.pred,type="response")
+                    
+                    res1 <- var.train$days - predict.bas
+                    res2 <- y@observed[(end+1):tpoint]-predict.new
+                    
+                    to.cc <- c(res1,res2)
+                    correct <- predict.new[guard.band]
+                    
+                  }else{
+                    if(tpoint==range[1]){
+                      warning("You have not provided a valid pre-processing method,
+                              CUSUM will be applied to your raw data. This is not an error, just a warning to make
+                              sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
+                    }
+                    
+                    start = tpoint-baseline.window-guard.band
+                    end   = tpoint-1
+                    
+                    to.cc <- c(y@baseline[start:end,syndrome],y@observed[tpoint,syndrome])
+                    correct <- 0
+                    
+                    }
+                  }     
+                
+                
                 
                 for (l in 1:length(limit.sd)){
                   #require(qcc)

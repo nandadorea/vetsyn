@@ -13,13 +13,13 @@ ewma_synd(x, ...)
   baseline.window = 365, lambda = 0.2, limit.sd = c(2.5, 3, 3.5),
   guard.band = 7, correct.baseline = FALSE, alarm.dim = 2, UCL = 1,
   LCL = FALSE, pre.process = FALSE, diff.window = 7, family = "poisson",
-  formula = "dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7", frequency = 365)
+  formula = NULL, frequency = 365)
 
 \S4method{ewma_synd}{syndromicW}(x, syndromes = NULL, evaluate.window = 1,
   baseline.window = 52, lambda = 0.2, limit.sd = c(2.5, 3, 3.5),
   guard.band = 2, correct.baseline = FALSE, alarm.dim = 2, UCL = 1,
   LCL = FALSE, pre.process = FALSE, diff.window = 4, family = "poisson",
-  formula = "trend+sin+cos", frequency = 52)
+  formula = NULL, frequency = 52)
 }
 \arguments{
 \item{x}{a syndromic (\code{syndromicD} or \code{syndromicW}) object. 
@@ -95,9 +95,15 @@ apply the control-chart to the original, observed time series, using the
 data in the slot baseline as training (if the slot is empty, observed data will 
 be copied into it). Set to "diff" to apply simple differencing. Set to  "glm"
 to apply a regression model and deliver only the residuals to the control-chart.
-The next arguments set details of either method.}
-
-\item{diff.window}{only relevant if "pre.process" is set to "diff". 
+The next arguments set details of either method. 
+You can provide pre.process as a single
+value - for instance pre.process="diff" will apply differentiation to ALL syndromes being evaluated.
+Or you can provide it as a vector - for instance pre.process=c(FALSE,"diff",FALSE,"glm","glm") will
+not apply any pre-processing to the 1st and 3rd syndromes in the syndromic object, differentiation to the second,
+and regression to syndromes 4 and 5. PLEASE NOTE that even if you are evaluating only a few 
+of the syndromes, you need to provide pre.process as either a single value, or as a vector
+WITH SAME LENGTH AS THE NUMBER OF SYNDROMES IN THE SYNDROMIC OBJECT, even if not all will be evaluated 
+(you can just use FALSE for those not being evaluated, for instance).##' @param diff.window only relevant if "pre.process" is set to "diff". 
 Corresponds to the number of time units of differencing, default is
 7 (weekly differencing). Change to 5 if weekends do not contain weekend days.}
 
@@ -106,16 +112,13 @@ the GLM distribution family used, by default
 "poisson". if "nbinom" is used, the function
 glm.nb is used instead.}
 
-\item{formula}{the regression formula to be used. The following arguments
-are accepted for DAILY data (\code{syndromicD} class objects provided): 
-trend (for a monotonic trend), year, month, dow (day of week),
-sin, cos, Ar1 (auto-regressive for 1 days) to AR7. For WEEKLY data
-(\code{syndromicW} class objects provided): trend, sin, cos, year and 1 to 4 
-autoregressive variables.
-These elements can be combined
-into any formula. The default for DAILY data is 
-formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5" and for WEEKLY data
-"trend+sin+cos" See examples.}
+\item{formula}{a formula can be provided if you want to OVERRIDE the formula saved in the
+syndromic object, but the recommended use of the aberration detection algorithms is to have already
+carried out an evaluation of your time series, and saved the appropriate pre-processing formulas as a list 
+in the slot @formula using syndromic.object@formula <- list(formula1, formula2....).
+If you still wish to provide formulas as a direct argument to the function, make sure to provide as a list.
+You can get more details and examples on providing regression formulas in the help  for the
+function pre_process_glm (?pre_process_glm).}
 
 \item{frequency}{in case pre-processing is applied using "glm" AND the sin/cos functions 
 are used, the cycle of repetitions need to be set. The default is a yearly cycle
@@ -206,9 +209,11 @@ my.syndromicD <- ewma_synd(x=my.syndromicD,
                          alarm.dim=2,
                          pre.process="glm",
                          family="nbinom",
-                         formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5",
+                         formula=list(days~dow+sin+cos+AR1+AR2+AR3+AR4+AR5),
                          frequency=260)
-
+                         
+my.syndromicD@formula <- list(NA,days~dow+sin+cos+AR1+AR2+AR3+AR4+AR5,
+                             days~dow+sin+cos+AR1+AR2+AR3+AR4+AR5,NA,NA)
 my.syndromicD <- ewma_synd(x=my.syndromicD,
                           syndromes= c(1,2,4,5),
                           evaluate.window=30,
@@ -218,8 +223,9 @@ my.syndromicD <- ewma_synd(x=my.syndromicD,
                           guard.band=5,
                           correct.baseline=FALSE,
                           alarm.dim=2,
-                          pre.process="diff",
-                          diff.window=5)
+                          pre.process=c(FALSE,"glm","glm","diff","diff"),
+                          diff.window=5,
+                           frequency=260)
           ## WEEKLY
 data(lab.daily)
 my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
@@ -238,7 +244,7 @@ my.syndromicW <- ewma_synd(x=my.syndromicW,
                          alarm.dim=2,
                          pre.process="glm",
                          family="nbinom",
-                         formula="trend+sin+cos",
+                         formula=list(week~trend+sin+cos),
                          frequency=52)
 
 my.syndromicW <- ewma_synd(x=my.syndromicW,
@@ -250,7 +256,7 @@ my.syndromicW <- ewma_synd(x=my.syndromicW,
                           guard.band=2,
                           correct.baseline=FALSE,
                           alarm.dim=2,
-                          pre.process="diff",
+                          pre.process=c(FALSE,"glm","glm","diff","diff"),
                           diff.window=4)
 }
 \seealso{

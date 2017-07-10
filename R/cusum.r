@@ -517,9 +517,11 @@ setMethod('cusum_synd',
                     
                   }else{
                     
-                        warning("You have not provided a valid pre-processing method,
-              EWMA will be applied to your raw data. This is not an error, just a warning to make
+                   if(tpoint==range[1]){
+              warning("You have not provided a valid pre-processing method,
+              CUSUM will be applied to your raw data. This is not an error, just a warning to make
               sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
+                   }
 
                     start = tpoint-baseline.window-guard.band
                     end   = tpoint-1
@@ -865,10 +867,11 @@ setMethod('cusum_synd',
                     correct <- predict.new[guard.band]
                     
                     }else{
-                    
+                      if(tpoint==range[1]){
                         warning("You have not provided a valid pre-processing method,
-                            EWMA will be applied to your raw data. This is not an error, just a warning to make
+                            CUSUM will be applied to your raw data. This is not an error, just a warning to make
                                 sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
+                      }
                       
                     start = tpoint-baseline.window-guard.band
                     end   = tpoint-1

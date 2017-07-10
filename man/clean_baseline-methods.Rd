@@ -12,8 +12,7 @@ train outbreak-signal detection algorithms during prospective analysis.}
 clean_baseline(x, ...)
 
 \S4method{clean_baseline}{syndromicD}(x, syndromes = NULL,
-  family = "poisson", limit = 0.95,
-  formula = "dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7", frequency = 365,
+  family = "poisson", limit = 0.95, formula = NULL, frequency = 365,
   plot = TRUE, print.model = TRUE)
 
 \S4method{clean_baseline}{syndromicW}(x, syndromes = NULL,
@@ -39,13 +38,26 @@ glm.nb is used instead.}
 
 \item{limit}{the confidence interval to be used in identifying outliers.}
 
-\item{formula}{the regression formula to be used. The following arguments
-are accepted for DAILY data (\code{syndromicD}): trend (for a monotonic trend),
-month, dow (day of week), year,
-sin, cos, AR1 (auto-regressive for 1 days) to AR7. These elements can be combined
-into any formula. The default is formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5". See examples.}
-
-\item{frequency}{the frequency of repetition in the data, by default
+\item{formula}{the regression formula to be used, in the R formula format: y~x1+x2...
+If none is provided, the function looks for formulas in the @formula slot of the syndromic object.
+If a formula is provided when this function is called, then that formula is used. We
+recommend providing a formula to test various models, but once a model is chosen,
+we recommend saving that formula in the syndromic object using: 
+my.syndromic@formula <- list(formula1,formula2...), for as many syndromes as the syndromic object has (columns in observed).
+NA can be provided when a syndrome is not to be associated with a particular formula.
+Any variables (x1, x2...) must be given the same name they have in the
+slot @dates. When providing a formula, two options are possible: providing a single formula to be applied to all 
+syndromes, or providing the same number of formulas (in a list) as the number of syndromes in the observed object, 
+even if not of them will be used (see examples!)
+The variables that are standard in that slot for DAILY data (\code{syndromicD}) are: 
+trend (for a monotonic trend), year, month, dow (day of week),
+sin, cos, Ar1 (auto-regressive for 1 days) to AR7. For WEEKLY data
+(\code{syndromicW}): trend, sin, cos, year, and 1 to 4 
+autoregressive variables.
+These elements can be combined into any formula. 
+Since the @dates slot can be customized by the user, any variables in the dates 
+data.frame can be called into the formula
+##' @param frequency the frequency of repetition in the data, by default
 one year (365 for DAILY data (object provided belongs to the class
 \code{syndromicD}) and 52 for WEEK data (object provided belongs to the class
 \code{syndromicW}))}
@@ -85,43 +97,58 @@ my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                  add.to=c(2,1),
                                  data=lab.daily)
 my.syndromicD <- clean_baseline(my.syndromicD,
+                                formula=list(days~dow+month+year),
                                 frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
-                                formula="dow+month+year",
+                                formula=list(days~dow+month+year),
                                 frequency=260)
-my.syndromicD <- clean_baseline(my.syndromicD, formula="dow+sin+cos+trend",
+my.syndromicD <- clean_baseline(my.syndromicD, 
+                                formula=list(days~dow+month+year),
                                 frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes="Musculoskeletal",
+                              formula=list(days~dow+month+year),
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=c("GIT","Musculoskeletal"),
+                              formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
+                              days~dow+month,NA,NA))
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=3,
+                              formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
+                              days~dow+month,NA,NA))
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=c(1,3),
+                              formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
+                              days~dow+month,NA,NA)),
                               frequency=260)
 
 my.syndromicD <- clean_baseline(my.syndromicD,
                               family="nbinom",
+                              formula=list(days~dow+month),
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes="Musculoskeletal",
                               family="nbinom",
+                              formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7)
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=c("GIT","Musculoskeletal"),
                               family="nbinom",
+                              formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
+                              days~dow+month,NA,NA)
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=3,
                               family="nbinom",
+                              formula=list(days~dow+month),
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=c(1,3),
                               family="nbinom",
+                              formula=list(days~dow+month),
                               frequency=260)
 
 ## Examples for 'syndromicW'
@@ -130,22 +157,29 @@ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                  syndromes.var=Syndrome,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",
+                                 formula=list(NA,y~year,weeks~trend+sin+cos,NA,NA)
                                  data=lab.daily)
-my.syndromicW <- clean_baseline(my.syndromicW)
-my.syndromicW <- clean_baseline(my.syndromicW, formula="sin+cos")
+my.syndromicW <- clean_baseline(my.syndromicW,formula=list(NA,y~year,weeks~trend+sin+cos,NA,NA))
+my.syndromicW <- clean_baseline(my.syndromicW, formula=list(week~sin+cos))
 my.syndromicW <- clean_baseline(my.syndromicW,
-                              syndromes="Musculoskeletal")
+                              syndromes="Musculoskeletal",
+                              formula=list(week~sin+cos))
 my.syndromicW <- clean_baseline(my.syndromicW,
-                              syndromes=c("GIT","Musculoskeletal"))
+                              syndromes=c("GIT","Musculoskeletal"),
+                              formula=list(week~sin+cos))
 my.syndromicW <- clean_baseline(my.syndromicW,
-                              syndromes=3)
+                              syndromes=3,
+                              formula=list(week~sin+cos))
 my.syndromicW <- clean_baseline(my.syndromicW,
-                              syndromes=c(1,3))
+                              syndromes=c(1,3),
+                              formula=list(NA,y~year,weeks~trend+sin+cos,NA,NA))
 
 my.syndromicW <- clean_baseline(my.syndromicW,
-                              family="nbinom")
+                              family="nbinom",
+                              formula=list(week~sin+cos))
 my.syndromicW <- clean_baseline(my.syndromicW,
-                              syndromes="Musculoskeletal",family="nbinom")
+                              syndromes="Musculoskeletal",family="nbinom",
+                              formula=list(week~sin+cos))
 }
 \references{
 Fernanda C. Dorea, Crawford W. Revie, Beverly J. McEwen,

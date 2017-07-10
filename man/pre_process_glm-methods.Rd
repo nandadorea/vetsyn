@@ -102,18 +102,18 @@ pre_processed_data <- pre_process_glm(my.syndromicD,
                                      formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7))
 pre_processed_data <- pre_process_glm(my.syndromicD,
                               syndromes=c("GIT","Musculoskeletal"),
-                              formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,NA,
+                              formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
                               days~dow+month,NA,NA))
 pre_processed_data <- pre_process_glm(my.syndromicD,
                               syndromes=c("GIT","Musculoskeletal"),
-                              formula=y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7)
+                              formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7))
                               
 pre_processed_data <- pre_process_glm(my.syndromicD,
                               syndromes=3,
                                      formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7))
 pre_processed_data <- pre_process_glm(my.syndromicD,
-                              syndromes=c(1,3),
-                              formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,NA,
+                              syndromes=c(2,3),
+                              formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
                               days~dow+month,NA,NA))
 ##WEEKLY
 data(lab.daily)
@@ -127,13 +127,13 @@ pre_processed_data <- pre_process_glm(my.syndromicW,
                               formula=list(y~year))
 pre_processed_data <- pre_process_glm(my.syndromicW,
                               syndromes=c("GIT","Musculoskeletal"),
-                              formula=list(y~year,weeks~trend+sin+cos))
+                              formula=list(NA,y~year,weeks~trend+sin+cos,NA,NA))
 pre_processed_data <- pre_process_glm(my.syndromicW,
                               syndromes=3,
                               formula=list(y~year))
 pre_processed_data <- pre_process_glm(my.syndromicW,
                               syndromes=c(1,3),
-                              formula=list(y~year,weeks~trend+sin+cos))
+                              formula=list(y~year,NA,weeks~trend+sin+cos,NA,NA))
 
 }
 \references{

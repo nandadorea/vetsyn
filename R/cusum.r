@@ -453,7 +453,7 @@ setMethod('cusum_synd',
                     
                     
                     start = tpoint-baseline.window-guard.band+1 #remember that guard.band INCLUDES tpoint, 
-                                                                #think when it would be ZERO
+                                                                #(minimum is ONE)
                     end   = tpoint-guard.band
                     
                     

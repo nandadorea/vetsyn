@@ -229,13 +229,19 @@ setMethod('pre_process_glm',
               
               var <- var[,m,drop=FALSE]
               
-              
-             tryCatch(fn.formula=as.formula(paste0("days~",paste0(v,collapse="+"))),
-                      message="Formula assignment did not work properly, check that
+              if(length(v)==0){
+                stop("Formula assignment did not work properly, check that
                       you have provided the formula as a list, even if with only a single object,
-                      or if a true list is being provided, make sure there is a formula for 
-                      each of the syndromes in the syndromic object, or at least for the
-                      syndromes youa re asking to be evaluated")
+                     or if a true list is being provided, make sure there is a formula for 
+                     each of the syndromes in the syndromic object (you can assign NA as the formula for 
+                     syndromes you are not trying to evaluate, but you still need to provide 
+                     a formula for each syndrome, unless you provide a list with a single formula.
+                     See examples in the help for thie function")
+              }else{
+                fn.formula=as.formula(paste0("days~",paste0(v,collapse="+")))
+                }
+              
+           
               
               
               if (family=="nbinom"){
@@ -387,12 +393,18 @@ setMethod('pre_process_glm',
               var <- var[,m,drop=FALSE]
               
               
-              tryCatch(fn.formula=as.formula(paste0("week~",paste0(v,collapse="+"))),
-                       message="Formula assignment did not work properly, check that
-                       you have provided the formula as a list, even if with only a single object,
-                       or if a true list is being provided, make sure there is a formula for 
-                       each of the syndromes in the syndromic object, or at least for the
-                       syndromes youa re asking to be evaluated")
+              if(length(v)==0){
+                stop("Formula assignment did not work properly, check that
+                      you have provided the formula as a list, even if with only a single object,
+                     or if a true list is being provided, make sure there is a formula for 
+                     each of the syndromes in the syndromic object (you can assign NA as the formula for 
+                     syndromes you are not trying to evaluate, but you still need to provide 
+                     a formula for each syndrome, unless you provide a list with a single formula.
+                     See examples in the help for thie function")
+              }else{
+                fn.formula=as.formula(paste0("week~",paste0(v,collapse="+")))
+              }
+              
               
               if (family=="nbinom"){
                 #require(MASS)

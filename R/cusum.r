@@ -389,7 +389,7 @@ setMethod('cusum_synd',
                 y@baseline[,syndrome]<-y@observed[,syndrome]
               }
               
-              if (pre.process=="glm"){
+              if ((length(pre.process)==1&&pre.process=="glm")|length(pre.process)>1&&pre.process[syndrome]=="glm"){
               if(class(formula)=="NULL"){
                 formula.s <- x@formula[[syndrome]]
               }else{
@@ -752,8 +752,8 @@ setMethod('cusum_synd',
               }
               
               
-              if (pre.process=="glm"){
-              if(class(formula)=="NULL"){
+              if ((length(pre.process)==1&&pre.process=="glm")|length(pre.process)>1&&pre.process[syndrome]=="glm"){
+                if(class(formula)=="NULL"){
                 formula.s <- x@formula[[syndrome]]
               }else{
                 if(length(formula)>1){

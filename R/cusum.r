@@ -389,7 +389,7 @@ setMethod('cusum_synd',
                 y@baseline[,syndrome]<-y@observed[,syndrome]
               }
               
-              
+              if (pre.process=="glm"){
               if(class(formula)=="NULL"){
                 formula.s <- x@formula[[syndrome]]
               }else{
@@ -417,7 +417,7 @@ setMethod('cusum_synd',
               }else{
                 fn.formula=as.formula(paste0("days~",paste0(v[-1],collapse="+")))
               }
-              
+              }
               
               for (tpoint in range){
                 
@@ -752,6 +752,7 @@ setMethod('cusum_synd',
               }
               
               
+              if (pre.process=="glm"){
               if(class(formula)=="NULL"){
                 formula.s <- x@formula[[syndrome]]
               }else{
@@ -778,6 +779,7 @@ setMethod('cusum_synd',
                      See examples in the help for thie function")
               }else{
                 fn.formula=as.formula(paste0("week~",paste0(v[-1],collapse="+")))
+              }
               }
               
               

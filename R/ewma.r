@@ -780,7 +780,13 @@ setMethod('ewma_synd',
                   y@baseline[,syndrome]<-y@observed[,syndrome]
                 }
                 
-                if (pre.process=="diff"){
+                if(length(pre.process)==1){
+                  pre.process.synd <- pre.process
+                }else{
+                  pre.process.synd <- pre.process[[syndrome]]
+                }
+                
+                if (pre.process.synd=="diff"){
                   
                   start = tpoint-baseline.window-guard.band-diff.window
                   end   = tpoint-1
@@ -792,7 +798,7 @@ setMethod('ewma_synd',
                   
                   
                 } else {
-                  if (pre.process=="glm"){
+                  if (pre.process.synd=="glm"){
                     
                     
                     start = tpoint-baseline.window-guard.band+1

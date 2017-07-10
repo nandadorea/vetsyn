@@ -68,12 +68,13 @@
 ##'     formula=y~dow+mon for a single syndrome, where regression must take into 
 ##'     account the variables dow (day-of-week) and month;
 ##'     or formula=list(y~dow+mon) specifying two different formulas for two syndromes. 
-##'     The names of the variables given should exist in the columns of the slot @dates. 
-##'     Make sure that formulas' index match the
+##'     The names of the variables given should exist in the columns of the slot "dates". 
+##'     Make sure that formulas index match the
 ##'     columns in observed (for instance the second formula should correspond to the second
 ##'     syndrome, or second column in the observed matrix).You can provide NA for syndromes
 ##'     which should not be associated with any formula. This parameter is often only filled after 
 ##'     some analysis in the data, not at the time of object creation.
+##'     }
 ##'     }
 ##'   
 ##'

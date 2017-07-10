@@ -216,7 +216,7 @@ setMethod('pre_process_glm',
               if(length(formula)>1){
                 formula.c <- formula[[c]]
               }  else{
-                formula.c<-formula
+                formula.c<-formula[[1]]
               } 
               }
               
@@ -227,7 +227,7 @@ setMethod('pre_process_glm',
               m<-match(v,colnames(var))
               m<-m[!is.na(m)]
               
-              var <- var[,m]
+              var <- var[,m,drop=FALSE]
               
               
              fn.formula=as.formula(paste0("days~",paste0(v,collapse="+")))
@@ -368,7 +368,7 @@ setMethod('pre_process_glm',
                 if(length(formula)>1){
                   formula.c <- formula[[c]]
                 }  else{
-                  formula.c<-formula
+                  formula.c<-formula[[1]]
                 }
               }
               
@@ -379,7 +379,7 @@ setMethod('pre_process_glm',
               m<-match(v,colnames(var))
               m<-m[!is.na(m)]
               
-              var <- var[,m]
+              var <- var[,m,drop=FALSE]
               
               
               fn.formula=as.formula(paste0("week~",paste0(v,collapse="+")))             

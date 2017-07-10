@@ -13,13 +13,13 @@ cusum_synd(x, ...)
   baseline.window = 365, limit.sd = c(2.5, 3, 3.5), guard.band = 7,
   correct.baseline = FALSE, alarm.dim = 4, UCL = 1, LCL = FALSE,
   pre.process = FALSE, diff.window = 7, family = "poisson",
-  formula = "dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7", frequency = 365)
+  formula = NULL, frequency = 365, se.shift = 1)
 
 \S4method{cusum_synd}{syndromicW}(x, syndromes = NULL, evaluate.window = 1,
   baseline.window = 52, limit.sd = c(2.5, 3, 3.5), guard.band = 2,
   correct.baseline = FALSE, alarm.dim = 4, UCL = 1, LCL = FALSE,
   pre.process = FALSE, diff.window = 4, family = "poisson",
-  formula = "trend+sin+cos", frequency = 52)
+  formula = NULL, frequency = 52)
 }
 \arguments{
 \item{x}{a syndromic (\code{syndromicD} or \code{syndromicW}) object. 
@@ -54,7 +54,8 @@ of how many detection limits were met.}
 
 \item{guard.band}{The number of time units used to separate the current
 time unit evaluated and the baseline window. The default is 7 (assuming
-weekly data).}
+weekly data). If zero or FALSE, will be converted to ONE, which is the minimal
+separation between the current time point, and the historical data.}
 
 \item{correct.baseline}{besides detecting abnormal observations, the algorithm
 can also be used to correct the data, removing these observations and 
@@ -93,7 +94,15 @@ apply the control-chart to the original, observed time series, using the
 data in the slot baseline as training (if the slot is empty, observed data will 
 be copied into it). Set to "diff" to apply simple differencing. Set to  "glm"
 to apply a regression model and deliver only the residuals to the control-chart.
-The next arguments set details of either method.}
+The next arguments set details of either method. 
+You can provide pre.process as a single
+value - for instance pre.process="diff" will apply differentiation to ALL syndromes being evaluated.
+Or you can provide it as a vector - for instance pre.process=c(FALSE,"diff",FALSE,"glm","glm") will
+not apply any pre-processing to the 1st and 3rd syndromes in the syndromic object, differentiation to the second,
+and regression to syndromes 4 and 5. PLEASE NOTE that even if you are evaluating only a few 
+of the syndromes, you need to provide pre.process as either a single value, or as a vector
+WITH SAME LENGTH AS THE NUMBER OF SYNDROMES IN THE SYNDROMIC OBJECT, even if not all will be evaluated 
+(you can just use FALSE for those not being evaluated, for instance).}
 
 \item{diff.window}{only relevant if "pre.process" is set to "diff". 
 Corresponds to the number of time units of differencing, default is
@@ -104,20 +113,21 @@ the GLM distribution family used, by default
 \code{"poisson"}. if \code{"nbinom"} is used, the function
 glm.nb is used instead.}
 
-\item{formula}{the regression formula to be used. The following arguments
-are accepted for DAILY data (\code{syndromicD} class objects provided): 
-trend (for a monotonic trend), year, month, dow (day of week),
-sin, cos, Ar1 (auto-regressive for 1 days) to AR7. For WEEKLY data
-(\code{syndromicW} class objects provided): trend, sin, cos, year and 1 to 4 
-autoregressive variables.
-These elements can be combined
-into any formula. The default for DAILY data is 
-formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5" and for WEEKLY data
-"trend+sin+cos" See examples.}
+\item{formula}{a formula can be provided if you want to OVERRIDE the formula saved in the
+syndromic object, but the recommended use of the aberration detection algorithms is to have already
+carried out an evaluation of your time series, and saved the appropriate pre-processing formulas as a list 
+in the slot @formula using syndromic.object@formula <- list(formula1, formula2....).
+If you still wish to provide formulas as a direct argument to the function, make sure to provide as a list.
+You can get more details and examples on providing regression formulas in the help  for the
+function pre_process_glm (?pre_process_glm).}
 
 \item{frequency}{in case pre-processing is applied using "glm" AND the sin/cos functions 
 are used, the cycle of repetitions need to be set. The default is one year (
 365 days or 52 weeks).}
+
+\item{se.shift}{a parameter to be passed to the cusum function used internally (originally from the 
+qcc package).From the documentation of that package: "The amount of shift to detect in the process, 
+measured in standard errors of the summary statistics". The default is set to 1.}
 }
 \value{
 An object of the class \code{syndromic} which contains all 

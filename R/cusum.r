@@ -83,7 +83,8 @@
 ##' dimension should store the results of this algorithm.
 ##' @param guard.band The number of time units used to separate the current
 ##' time unit evaluated and the baseline window. The default is 7 (assuming
-##' weekly data). 
+##' weekly data). If zero or FALSE, will be converted to ONE, which is the minimal
+##' separation between the current time point, and the historical data.
 ##' @param correct.baseline besides detecting abnormal observations, the algorithm
 ##' can also be used to correct the data, removing these observations and 
 ##' substituting them by the limit of the confidence interval of the prediction
@@ -113,27 +114,35 @@
 ##' data in the slot baseline as training (if the slot is empty, observed data will 
 ##' be copied into it). Set to "diff" to apply simple differencing. Set to  "glm"
 ##' to apply a regression model and deliver only the residuals to the control-chart.
-##' The next arguments set details of either method.
+##' The next arguments set details of either method. 
+##' You can provide pre.process as a single
+##' value - for instance pre.process="diff" will apply differentiation to ALL syndromes being evaluated.
+##' Or you can provide it as a vector - for instance pre.process=c(FALSE,"diff",FALSE,"glm","glm") will
+##' not apply any pre-processing to the 1st and 3rd syndromes in the syndromic object, differentiation to the second,
+##' and regression to syndromes 4 and 5. PLEASE NOTE that even if you are evaluating only a few 
+##' of the syndromes, you need to provide pre.process as either a single value, or as a vector
+##' WITH SAME LENGTH AS THE NUMBER OF SYNDROMES IN THE SYNDROMIC OBJECT, even if not all will be evaluated 
+##' (you can just use FALSE for those not being evaluated, for instance).
 ##' @param diff.window only relevant if "pre.process" is set to "diff". 
 ##' Corresponds to the number of time units of differencing, default is
 ##' 7 (weekly differencing). Change to 5 if weekends do not contain weekend days.
 ##' @param family when using pre-processing using glm,
 ##' the GLM distribution family used, by default 
 ##' \code{"poisson"}. if \code{"nbinom"} is used, the function
-##' glm.nb is used instead.
-##' @param formula the regression formula to be used. The following arguments
-##' are accepted for DAILY data (\code{syndromicD} class objects provided): 
-##' trend (for a monotonic trend), year, month, dow (day of week),
-##' sin, cos, Ar1 (auto-regressive for 1 days) to AR7. For WEEKLY data
-##' (\code{syndromicW} class objects provided): trend, sin, cos, year and 1 to 4 
-##' autoregressive variables.
-##' These elements can be combined
-##' into any formula. The default for DAILY data is 
-##' formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5" and for WEEKLY data
-##' "trend+sin+cos" See examples.
+##' glm.nb is used instead. 
+##' @param formula a formula can be provided if you want to OVERRIDE the formula saved in the
+##' syndromic object, but the recommended use of the aberration detection algorithms is to have already
+##' carried out an evaluation of your time series, and saved the appropriate pre-processing formulas as a list 
+##' in the slot @formula using syndromic.object@formula <- list(formula1, formula2....).
+##' If you still wish to provide formulas as a direct argument to the function, make sure to provide as a list.
+##' You can get more details and examples on providing regression formulas in the help  for the
+##' function pre_process_glm (?pre_process_glm).
 ##' @param frequency in case pre-processing is applied using "glm" AND the sin/cos functions 
 ##' are used, the cycle of repetitions need to be set. The default is one year (
 ##' 365 days or 52 weeks).
+##' @param se.shift a parameter to be passed to the cusum function used internally (originally from the 
+##' qcc package).From the documentation of that package: "The amount of shift to detect in the process, 
+##' measured in standard errors of the summary statistics". The default is set to 1.
 ##' 
 ##' @seealso pre_process_glm
 ##' @seealso ewma_synd
@@ -246,8 +255,9 @@ setMethod('cusum_synd',
                     pre.process=FALSE,
                     diff.window=7,
                     family="poisson",
-                    formula="dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7",
-                    frequency=365
+                    formula=NULL,
+                    frequency=365,
+                    se.shift=1
           )
 {
             
@@ -269,6 +279,15 @@ setMethod('cusum_synd',
             }else{
               syndromes.num <- match(syndromes,colnames(x@observed))
             }
+            
+            #checking that a formula is available
+            if (class(formula)=="NULL"&&length(x@formula)<dim(x@observed)[2]){
+              stop("the number of regression formulas saved on the syndromic object,
+                   on @formula, is not equal to the number of syndromes in the object,
+                   and no formula(s) have been provided in the function call")
+            }
+            
+            if(guard.band<1)(guard.band<-1)
             
             #pulling to a new object to modify directly in the object
             y <- x            
@@ -373,7 +392,15 @@ setMethod('cusum_synd',
                 }
                 
                 
-                if (pre.process=="diff"){
+                if(length(pre.process)==1){
+                  pre.process.synd <- pre.process
+                }else{
+                  pre.process.synd <- pre.process[[syndrome]]
+                }
+                
+                
+                
+                if (pre.process.synd=="diff"){
                   
                   start = tpoint-baseline.window-guard.band-diff.window
                   end   = tpoint-1
@@ -385,121 +412,104 @@ setMethod('cusum_synd',
                   
                   
                 } else {
-                  if (pre.process=="glm"){
+                  if (pre.process.synd=="glm"){
                     
                     
-                    start = tpoint-baseline.window-guard.band
-                    end   = tpoint-1
+                    start = tpoint-baseline.window-guard.band+1 #remember that guard.band INCLUDES tpoint, 
+                                                                #think when it would be ZERO
+                    end   = tpoint-guard.band
                     
                     
-                    #attach(y@dates[start:end,],warn.conflicts=FALSE)
+                    #first generate all data including tpoint:
+                    days <- y@baseline[start:tpoint,syndrome]
                     
-                    days <- y@baseline[start:end,syndrome]
+                    y@dates$month <- as.factor(y@dates$month)
+                    y@dates$dow <- as.factor(y@dates$dow)
+                    y@dates$year <- as.factor(y@dates$year)
+                    
                     t = 1:length(days)
-                    month = as.factor(y@dates$month[start:end])
-                    dow <- as.factor(y@dates$dow[start:end])
                     cos = cos(2*pi*t/frequency)
                     sin = sin(2*pi*t/frequency)
-                    year <- as.factor(y@dates$year[start:end])
-                    AR1<-y@baseline[(start-1):(end-1),syndrome]
-                    AR2<-y@baseline[(start-2):(end-2),syndrome]
-                    AR3<-y@baseline[(start-3):(end-3),syndrome]
-                    AR4<-y@baseline[(start-4):(end-4),syndrome]
-                    AR5<-y@baseline[(start-5):(end-5),syndrome]
-                    AR6<-y@baseline[(start-6):(end-6),syndrome]
-                    AR7<-y@baseline[(start-7):(end-7),syndrome]
+                    AR1<-y@baseline[(start-1):(tpoint-1),syndrome]
+                    AR2<-y@baseline[(start-2):(tpoint-2),syndrome]
+                    AR3<-y@baseline[(start-3):(tpoint-3),syndrome]
+                    AR4<-y@baseline[(start-4):(tpoint-4),syndrome]
+                    AR5<-y@baseline[(start-5):(tpoint-5),syndrome]
+                    AR6<-y@baseline[(start-6):(tpoint-6),syndrome]
+                    AR7<-y@baseline[(start-7):(tpoint-7),syndrome]
                     trend=t
                     
-                    if(length(y@dates$holidays)>0){
-      holidays <- y@dates$holidays[start:end]
-    }
-    if(length(y@dates$afterholidays)>0){
-      afterholidays <- y@dates$afterholidays[start:end]
-    }
+                    var <- data.frame(days = days,
+                                      trend=t,
+                                      cos,sin,
+                                      AR1,AR2,AR3,AR4,AR5,AR6,AR7)
+                    var <- cbind(var,y@dates[start:tpoint,])
                     
                     
-                    fn.formula=as.formula(paste0("days~",formula))
                     
-                    
-                    #####for prediction part
-                    t.new = c((t[length(t)-guard.band+2]:t[length(t)]),(t[length(t)]+1))
-                    month.new = as.factor(y@dates$month[(tpoint-guard.band+1):(tpoint)])
-                    dow.new <- as.factor(y@dates$dow[(tpoint-guard.band+1):(tpoint)])
-                    cos.new = cos(2*pi*t.new/frequency)
-                    sin.new = sin(2*pi*t.new/frequency)
-                    year.new <- as.factor(y@dates$year[(tpoint-guard.band+1):(tpoint)])
-                    AR1.new<-y@baseline[(tpoint-guard.band):(tpoint-1),syndrome]
-                    AR2.new<-y@baseline[(tpoint-1-guard.band):(tpoint-2),syndrome]
-                    AR3.new<-y@baseline[(tpoint-2-guard.band):(tpoint-3),syndrome]
-                    AR4.new<-y@baseline[(tpoint-3-guard.band):(tpoint-4),syndrome]
-                    AR5.new<-y@baseline[(tpoint-4-guard.band):(tpoint-5),syndrome]
-                    AR6.new<-y@baseline[(tpoint-5-guard.band):(tpoint-6),syndrome]
-                    AR7.new<-y@baseline[(tpoint-6-guard.band):(tpoint-7),syndrome]
-                    
-                    new.data <- data.frame(t.new,month.new,dow.new,cos.new,sin.new,year.new,
-                                           AR1.new,AR2.new,AR3.new,AR4.new,AR5.new,
-                                           AR6.new,AR7.new)
-                    colnames(new.data) <- c("trend","month","dow","cos","sin","year",
-                                            "AR1","AR2","AR3","AR4","AR5",
-                                            "AR6","AR7")
-                    
-    
-    if(length(y@dates$holidays)>0){
-       holidays.new <- y@dates$holidays[(tpoint-guard.band+1):(tpoint)]
-      new.data <- cbind(new.data,holidays=holidays.new)
-    }
-    if(length(y@dates$afterholidays)>0){
-      afterholidays.new <- y@dates$afterholidays[(tpoint-guard.band+1):(tpoint)]
-      new.data <- cbind(new.data,afterholidays=afterholidays.new)
-    }
-    
-                    
-                    regular=colnames(new.data)
-                    formula <- str_replace_all(formula, pattern=" ", replacement="")
-                    formula.items <- strsplit(formula,split="[+]")[[1]]
-                    
-                    
-                    if (length(which(is.na(match(formula.items,regular))==TRUE))>0){
-                      new <- which(is.na(match(formula.items,regular))==TRUE)
-                      
-                      for (n in new){
-                        assign(paste0(formula.items[n],".new"),
-                               with(y@dates,
-                                    get(formula.items[n])[(tpoint-guard.band+1):(tpoint)])
-                        )
-                        
-                        colnames2 <- c(colnames(new.data),formula.items[n])
-                        new.data <- cbind(new.data,get(paste0(formula.items[n],".new")))
-                        colnames(new.data) <- colnames2
-                        
-                      }
+                    if(class(formula)=="NULL"){
+                      formula.c <- x@formula[[c]]
+                    }else{
+                      if(length(formula)>1){
+                        formula.c <- formula[[c]]
+                      }  else{
+                        formula.c<-formula[[1]]
+                      } 
                     }
                     
+                    
+                    v<-all.vars(formula.c)
+                    v[[1]]<-"days"
+                    v<-v[!is.na(v)]
+                    m<-match(v,colnames(var))
+                    m<-m[!is.na(m)]
+                    
+                    var <- var[,m,drop=FALSE]
+                    
+                    if(length(v)==0){
+                      stop("Formula assignment did not work properly, check that
+                           you have provided the formula as a list, even if with only a single object,
+                           or if a true list is being provided, make sure there is a formula for 
+                           each of the syndromes in the syndromic object (you can assign NA as the formula for 
+                           syndromes you are not trying to evaluate, but you still need to provide 
+                           a formula for each syndrome, unless you provide a list with a single formula.
+                           See examples in the help for thie function")
+                    }else{
+                      fn.formula=as.formula(paste0("days~",paste0(v[-1],collapse="+")))
+                    }
+                    
+                    
+                    #training
+                    var.train <- var[1:(dim(var)[1]-guard.band),]
+                    
+                    #prediction
+                    var.pred <- var[(dim(var)[1]-guard.band+1):(dim(var)[1]),]
                     
                     
                     
                     if (family=="nbinom"){
                       #require(MASS)
-                      fit1     <- glm.nb(fn.formula)
+                      fit1     <- glm.nb(fn.formula, data=var.train)
                       
                     }else{
                       #distribution=family
-                      fit1 <- glm(fn.formula, family=family)
+                      fit1 <- glm(fn.formula, family=family, data=var.train)
                     }
                     
-                    predict.bas <- predict.glm(fit1,type="response")
-                    predict.new <- predict.glm(fit1, newdata=new.data,type="response")
+                    predict.bas <- predict.glm(fit1,type="response", data=var.train)
+                    predict.new <- predict.glm(fit1, newdata=var.pred,type="response")
                     
-                    to.cc <- days - predict.bas
-                    to.cc <- c(to.cc,
-                               (y@observed[tpoint] - predict.new[guard.band]) )
+                    res1 <- var.train$days - predict.bas
+                    res2 <- y@observed[(end+1):tpoint]-predict.new
+                    
+                    to.cc <- c(res1,res2)
                     correct <- predict.new[guard.band]
                     
                   }else{
                     
                         warning("You have not provided a valid pre-processing method,
-              EWMA will be applied to your raw data - 
-            acceptable methods are glm or diff, see help")
+              EWMA will be applied to your raw data. This is not an error, just a warning to make
+              sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
 
                     start = tpoint-baseline.window-guard.band
                     end   = tpoint-1
@@ -515,7 +525,8 @@ setMethod('cusum_synd',
                   cusum1 = cusum(to.cc,
                                  center=mean(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
                                  std.dev=sd(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
-                                 decision.interval=limit.sd[l],plot=FALSE)
+                                 decision.interval=limit.sd[l],plot=FALSE,
+                                 se.shift = se.shift)
                   
                   
                   
@@ -604,7 +615,7 @@ setMethod('cusum_synd',
                     pre.process=FALSE,
                     diff.window=4,
                     family="poisson",
-                    formula="trend+sin+cos",
+                    formula=NULL,
                     frequency=52
           )
 {
@@ -627,6 +638,15 @@ setMethod('cusum_synd',
             }else{
               syndromes.num <- match(syndromes,colnames(x@observed))
             }
+            
+            #checking that a formula is available
+            if (class(formula)=="NULL"&&length(x@formula)<dim(x@observed)[2]){
+              stop("the number of regression formulas saved on the syndromic object,
+                   on @formula, is not equal to the number of syndromes in the object,
+                   and no formula(s) have been provided in the function call")
+            }
+            
+            if(guard.band<1)(guard.band<-1)
             
             #pulling to a new object to modify directly in the object
             y <- x            
@@ -746,89 +766,96 @@ setMethod('cusum_synd',
                   if (pre.process=="glm"){
                     
                     
-                    start = tpoint-baseline.window-guard.band
-                    end   = tpoint-1
+                    start = tpoint-baseline.window-guard.band+1
+                    end   = tpoint-guard.band
                     
-                    #attach(y@dates[start:end,],warn.conflicts=FALSE)
-                    
-                    week <- y@baseline[start:end,syndrome]
+                    #first generate all data including tpoint:
+                    week <- y@baseline[start:tpoint,syndrome]
                     t = 1:length(week)
                     
                     cos = cos(2*pi*t/frequency)
                     sin = sin(2*pi*t/frequency)
-                    year <- as.factor(y@dates$year[start:end])
-                    AR1<-y@baseline[(start-1):(end-1),syndrome]
-                    AR2<-y@baseline[(start-2):(end-2),syndrome]
-                    AR3<-y@baseline[(start-3):(end-3),syndrome]
-                    AR4<-y@baseline[(start-4):(end-4),syndrome]
+                    y@dates$year <- as.factor(y@dates$year)
+                    AR1<-y@baseline[(start-1):(tpoint-1),syndrome]
+                    AR2<-y@baseline[(start-2):(tpoint-2),syndrome]
+                    AR3<-y@baseline[(start-3):(tpoint-3),syndrome]
+                    AR4<-y@baseline[(start-4):(tpoint-4),syndrome]
                     trend=t
                     
-                    fn.formula=as.formula(paste0("week~",formula))
+                    var <- data.frame(week = week,
+                                      trend=t,
+                                      cos,sin,
+                                      AR1,AR2,AR3,AR4)
+                    var <- cbind(var,y@dates[start:tpoint,])
                     
                     
-                    #####for prediction part
-                    t.new = c((t[length(t)-guard.band+2]:t[length(t)]),(t[length(t)]+1))
-                    cos.new = cos(2*pi*t.new/frequency)
-                    sin.new = sin(2*pi*t.new/frequency)
-                    year.new <- as.factor(y@dates$year[(tpoint-guard.band+1):(tpoint)])
-                    AR1.new<-y@baseline[(tpoint-guard.band):(tpoint-1),syndrome]
-                    AR2.new<-y@baseline[(tpoint-1-guard.band):(tpoint-2),syndrome]
-                    AR3.new<-y@baseline[(tpoint-2-guard.band):(tpoint-3),syndrome]
-                    AR4.new<-y@baseline[(tpoint-3-guard.band):(tpoint-4),syndrome]
                     
-                    
-                    new.data <- data.frame(t.new,cos.new,sin.new,year.new,
-                                           AR1.new,AR2.new,AR3.new,AR4.new)
-                    colnames(new.data) <- c("trend","cos","sin","year",
-                                            "AR1","AR2","AR3","AR4")
-                    
-                    
-                    regular=colnames(new.data)
-                    formula <- str_replace_all(formula, pattern=" ", replacement="")
-                    formula.items <- strsplit(formula,split="[+]")[[1]]
-                    
-                    
-                    if (length(which(is.na(match(formula.items,regular))==TRUE))>0){
-                      new <- which(is.na(match(formula.items,regular))==TRUE)
-                      
-                      for (n in new){
-                        assign(paste0(formula.items[n],".new"),
-                               with(y@dates,
-                                    get(formula.items[n])[(tpoint-guard.band+1):(tpoint)])
-                        )
-                        
-                        colnames2 <- c(colnames(new.data),formula.items[n])
-                        new.data <- cbind(new.data,get(paste0(formula.items[n],".new")))
-                        colnames(new.data) <- colnames2
-                        
-                      }
+                    if(class(formula)=="NULL"){
+                      formula.c <- x@formula[[c]]
+                    }else{
+                      if(length(formula)>1){
+                        formula.c <- formula[[c]]
+                      }  else{
+                        formula.c<-formula[[1]]
+                      } 
                     }
+                    
+                    
+                    v<-all.vars(formula.c)
+                    v[[1]]<-"week"
+                    v<-v[!is.na(v)]
+                    m<-match(v,colnames(var))
+                    m<-m[!is.na(m)]
+                    
+                    var <- var[,m,drop=FALSE]
+                    
+                    if(length(v)==0){
+                      stop("Formula assignment did not work properly, check that
+                           you have provided the formula as a list, even if with only a single object,
+                           or if a true list is being provided, make sure there is a formula for 
+                           each of the syndromes in the syndromic object (you can assign NA as the formula for 
+                           syndromes you are not trying to evaluate, but you still need to provide 
+                           a formula for each syndrome, unless you provide a list with a single formula.
+                           See examples in the help for thie function")
+                    }else{
+                      fn.formula=as.formula(paste0("week~",paste0(v[-1],collapse="+")))
+                    }
+                    
+                    
+                    #training
+                    var.train <- var[1:(dim(var)[1]-guard.band),]
+                    
+                    #prediction
+                    var.pred <- var[(dim(var)[1]-guard.band+1):(dim(var)[1]),]
+                    
                     
                     
                     
                     if (family=="nbinom"){
                       #require(MASS)
-                      fit1     <- glm.nb(fn.formula)
+                      fit1     <- glm.nb(fn.formula, data=var.train)
                       
                     }else{
                       #distribution=family
-                      fit1 <- glm(fn.formula, family=family)
+                      fit1 <- glm(fn.formula, family=family, data=var.train)
                     }
                     
-                    predict.bas <- predict.glm(fit1,type="response")
-                    predict.new <- predict.glm(fit1, newdata=new.data,type="response")
                     
-                    to.cc <- week - predict.bas
-                    to.cc <- c(to.cc,
-                               (y@observed[tpoint] - predict.new[guard.band]) )
+                    predict.bas <- predict.glm(fit1,type="response", data=var.train)
+                    predict.new <- predict.glm(fit1, newdata=var.pred,type="response")
+                    
+                    res1 <- var.train$days - predict.bas
+                    res2 <- y@observed[(end+1):tpoint]-predict.new
+                    
+                    to.cc <- c(res1,res2)
                     correct <- predict.new[guard.band]
                     
-                  }else{
+                    }else{
                     
                         warning("You have not provided a valid pre-processing method,
-              EWMA will be applied to your raw data - 
-            acceptable methods are glm or diff, see help")
-
+                            EWMA will be applied to your raw data. This is not an error, just a warning to make
+                                sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
+                      
                     start = tpoint-baseline.window-guard.band
                     end   = tpoint-1
                     
@@ -843,7 +870,8 @@ setMethod('cusum_synd',
                   cusum1 = cusum(to.cc,
                                  center=mean(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
                                  std.dev=sd(to.cc[1:(length(to.cc)-guard.band)],na.rm=TRUE),
-                                 decision.interval=limit.sd[l],plot=FALSE)
+                                 decision.interval=limit.sd[l],plot=FALSE,
+                                 se.shift = se.shift)
                   
                   
                     

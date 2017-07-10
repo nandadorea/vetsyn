@@ -184,4 +184,3 @@ syndromic_page(x=my.syndromicW2,
                 scale=9) 
 }
 \keyword{methods}
-

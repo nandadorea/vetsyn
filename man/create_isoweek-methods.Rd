@@ -26,4 +26,3 @@ dates <- data.frame (week=1:10, year=2014)
     dates <- cbind(ISOweek,dates)
 
 }
-

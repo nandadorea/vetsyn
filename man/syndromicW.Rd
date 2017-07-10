@@ -7,7 +7,7 @@
 syndromicW(observed, dates = data.frame(), min.week = NULL,
   max.week = NULL, min.year = NULL, max.year = NULL,
   baseline = matrix(nrow = 0, ncol = 0), alarms = array(dim = 0),
-  UCL = array(dim = 0), LCL = array(dim = 0))
+  UCL = array(dim = 0), LCL = array(dim = 0), formula = list())
 }
 \arguments{
 \item{observed}{A \code{matrix} with the observed data}
@@ -52,6 +52,18 @@ receiving by default an empty array. Methods within this package are then used
 to create this slot from data on \code{observed}.}
 
 \item{LCL}{Lower control limit. See UCL above.}
+
+\item{formula}{A formula, or list of formulas, specifying the regression formula to be used
+when removing temporal patterns from each of the syndromes in @observed. For instance 
+formula=list(y~dow+mon) for a single syndrome, where regression must take into 
+account the variables dow (day-of-week) and month;
+or formula=c(y~dow, y~dow+mon) specifying two different formulas for two syndromes. 
+The names of the variables given should exist in the columns of the slot @dates. 
+Make sure that formulas' index match the
+columns in observed (for instance the second formula should correspond to the second
+syndrome, or second column in the observed matrix).You can provide NA for syndromes
+which should not be associated with any formula. This parameter is often only filled after 
+some analysis in the data, not at the time of object creation.}
 }
 \value{
 an object of the class \code{syndromicW} with the slots
@@ -83,4 +95,3 @@ my.syndromicW <- syndromicW(observed,min.week=1, min.year=2011,
 
 
 }
-

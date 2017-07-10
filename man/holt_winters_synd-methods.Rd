@@ -219,4 +219,3 @@ shew_synd
 cusum_synd
 }
 \keyword{methods}
-

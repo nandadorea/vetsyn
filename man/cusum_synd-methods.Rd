@@ -258,4 +258,3 @@ holt_winters_synd
 shew_synd
 }
 \keyword{methods}
-

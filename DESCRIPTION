@@ -67,4 +67,4 @@ Collate:
     'raw_to_syndromicW.r'
     'shew.r'
     'update_syndromic.r'
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

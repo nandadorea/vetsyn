@@ -7,7 +7,7 @@
 \usage{
 raw_to_syndromicW(id, syndromes.var, syndromes.name, dates.var,
   date.format = "\%d/\%m/\%Y", min.date, max.date, sort = TRUE,
-  data = NULL)
+  data = NULL, formula = list())
 }
 \arguments{
 \item{id}{indicates a variable (or multiple variables) which should
@@ -51,6 +51,18 @@ in the dataset or provided in syndromes.name.}
 
 \item{data}{Optional argument. If used the other arguments can be specified
 as column names within the dataset provided through this argument}
+
+\item{formula}{A formula, or list of formulas, specifying the regression formula to be used
+when removing temporal patterns from each of the syndromes in @observed. For instance 
+formula=list(y~dow+mon) for a single syndrome, where regression must take into 
+account the variables dow (day-of-week) and month;
+or formula=c(y~dow, y~dow+mon) specifying two different formulas for two syndromes. 
+The names of the variables given should exist in the columns of the slot @dates. 
+Make sure that formulas' index match the
+columns in observed (for instance the second formula should correspond to the second
+syndrome, or second column in the observed matrix).You can provide NA for syndromes
+which should not be associated with any formula. This parameter is often only filled after 
+some analysis in the data, not at the time of object creation.}
 }
 \value{
 an object of the class \code{syndromicW} with the following slots:
@@ -197,4 +209,3 @@ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                    min.date="2010-W50-1",
                                    data=lab.weekly)
 }
-

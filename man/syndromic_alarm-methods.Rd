@@ -164,4 +164,3 @@ syndromic_alarm(x=my.syndromicW,
                               
 }
 \keyword{methods}
-

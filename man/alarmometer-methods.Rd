@@ -39,4 +39,3 @@ alarmometer(score=2,scale=9)
 alarmometer(score=9,scale=12)
 
 }
-

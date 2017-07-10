@@ -46,4 +46,3 @@ columns <- dim(my.syndromicW)[2]
 print(columns)
 
 }
-

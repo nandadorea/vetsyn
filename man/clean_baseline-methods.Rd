@@ -156,4 +156,3 @@ surveillance. Preventive Veterinary Medicine.
 DOI: 10.1016/j.prevetmed.2012.10.010.
 }
 \keyword{methods}
-

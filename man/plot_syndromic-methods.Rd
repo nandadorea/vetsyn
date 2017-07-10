@@ -87,4 +87,3 @@ plot_syndromic(x=my.syndromicW,
               
 }
 \keyword{methods}
-

@@ -27,4 +27,3 @@ dataset have been altered to ensure privacy.
 \author{
 National Veterinary Institute of Sweden (SVA), 2013
 }
-

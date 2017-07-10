@@ -257,4 +257,3 @@ cusum_synd
 holt_winters_synd
 }
 \keyword{methods}
-

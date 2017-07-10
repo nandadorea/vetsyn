@@ -263,4 +263,3 @@ ewma_synd
 holt_winters_synd
 }
 \keyword{methods}
-

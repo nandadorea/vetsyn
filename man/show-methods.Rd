@@ -24,5 +24,5 @@ Show information for a syndromic object.
 }
 }
 }
-\keyword{methods}
 
+\keyword{methods}

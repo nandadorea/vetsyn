@@ -25,4 +25,3 @@ For daily data please use \code{syndromic()}.
 \author{
 National Veterinary Institute of Sweden (SVA), 2013
 }
-

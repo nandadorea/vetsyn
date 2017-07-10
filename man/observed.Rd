@@ -24,4 +24,3 @@ transformed into a syndromic object using the function \code{syndromic()}.
 \author{
 National Veterinary Institute of Sweden (SVA), 2013
 }
-

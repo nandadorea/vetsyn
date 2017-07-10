@@ -67,6 +67,18 @@ replace the old values (set to TRUE) or be ignored (set to FALSE)}
 
 \item{data}{Optional argument. If used the other arguments can be specified
 as column names within the dataset provided through this argument}
+
+\item{formula}{A formula, or list of formulas, specifying the regression formula to be used
+when removing temporal patterns from each of the syndromes in @observed. For instance 
+formula=list(y~dow+mon) for a single syndrome, where regression must take into 
+account the variables dow (day-of-week) and month;
+or formula=c(y~dow, y~dow+mon) specifying two different formulas for two syndromes. 
+The names of the variables given should exist in the columns of the slot @dates. 
+Make sure that formulas' index match the
+columns in observed (for instance the second formula should correspond to the second
+syndrome, or second column in the observed matrix).You can provide NA for syndromes
+which should not be associated with any formula. This parameter is often only filled after 
+some analysis in the data, not at the time of object creation.}
 }
 \value{
 an updated object of the class \code{syndromicD} with the following slots: 
@@ -133,4 +145,3 @@ my.syndromicW <- update_syndromic(x=my.syndromicW,
                                  replace.dates=TRUE,
                                  data=lab.weekly.update)##'
 }
-

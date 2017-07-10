@@ -10,13 +10,12 @@
 pre_process_glm(x, ...)
 
 \S4method{pre_process_glm}{syndromicD}(x, slot = "observed",
-  syndromes = NULL, family = "poisson",
-  formula = "dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7", frequency = 365,
+  syndromes = NULL, family = "poisson", formula = NULL, frequency = 365,
   print.model = TRUE, plot = TRUE)
 
 \S4method{pre_process_glm}{syndromicW}(x, slot = "observed",
-  syndromes = NULL, family = "poisson", formula = "trend+sin+cos",
-  frequency = 52, print.model = TRUE, plot = TRUE)
+  syndromes = NULL, family = "poisson", formula = NULL, frequency = 52,
+  print.model = TRUE, plot = TRUE)
 }
 \arguments{
 \item{x}{a syndromic (\code{syndromicD} or \code{syndromicW})
@@ -40,16 +39,25 @@ in the observed matrix. See examples.}
 "poisson". if "nbinom" is used, the function
 glm.nb is used instead.}
 
-\item{formula}{the regression formula to be used. The following arguments
-are accepted for DAILY data (\code{syndromicD} class objects provided): 
+\item{formula}{the regression formula to be used, in the R formula format: y~x1+x2...
+If none is provided, the function looks for formulas in the @formula slot of the syndromic object.
+If a formula is provided when this function is called, then that formula is used. We
+recommend providing a formula to test various models, but once a model is chosen,
+we recommend saving that formula in the syndromic object using: 
+my.syndromic@formula <- list(formula1,formula2...), for as many syndromes as the syndromic object has (columns in observed).
+NA can be provided when a syndrome is not to be associated with a particular formula.
+Any variables (x1, x2...) must be given the same name they have in the
+slot @dates. When providing a formula, two options are possible: providing a single formula to be applied to all 
+syndromes, or providing the same number of formulas (in a list) as the number of syndromes in the observed object, 
+even if not of them will be used (see examples!)
+The variables that are standard in that slot for DAILY data (\code{syndromicD}) are: 
 trend (for a monotonic trend), year, month, dow (day of week),
 sin, cos, Ar1 (auto-regressive for 1 days) to AR7. For WEEKLY data
-(\code{syndromicW} class objects provided): trend, sin, cos, year and 1 to 4 
+(\code{syndromicW}): trend, sin, cos, year, and 1 to 4 
 autoregressive variables.
-These elements can be combined
-into any formula. The default for DAILY data is 
-formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5" and for WEEKLY data
-"trend+sin+cos" See examples.}
+These elements can be combined into any formula. 
+Since the @dates slot can be customized by the user, any variables in the dates 
+data.frame can be called into the formula}
 
 \item{frequency}{in case pre-processing is applied using "glm" AND the sin/cos functions 
 are used, the cycle of repetitions need to be set. The default is a year
@@ -89,18 +97,24 @@ my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
                                  remove.dow=c(6,0),
                                  add.to=c(2,1),
                                  data=lab.daily)
-pre_processed_data <- pre_process_glm(my.syndromicD)
 pre_processed_data <- pre_process_glm(my.syndromicD,
-                              syndromes="Musculoskeletal")
+                              syndromes="Musculoskeletal",
+                                     formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7))
 pre_processed_data <- pre_process_glm(my.syndromicD,
-                              syndromes=c("GIT","Musculoskeletal"))
+                              syndromes=c("GIT","Musculoskeletal"),
+                              formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,NA,
+                              days~dow+month,NA,NA))
 pre_processed_data <- pre_process_glm(my.syndromicD,
-                              syndromes=3)
+                              syndromes=c("GIT","Musculoskeletal"),
+                              formula=y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7)
+                              
 pre_processed_data <- pre_process_glm(my.syndromicD,
-                              syndromes=c(1,3))
-
+                              syndromes=3,
+                                     formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7))
 pre_processed_data <- pre_process_glm(my.syndromicD,
-                              family="nbinom")
+                              syndromes=c(1,3),
+                              formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,NA,
+                              days~dow+month,NA,NA))
 ##WEEKLY
 data(lab.daily)
 my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
@@ -108,19 +122,19 @@ my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
                                  dates.var=DateofSubmission,
                                  date.format="\%d/\%m/\%Y",
                                  data=lab.daily)
-pre_processed_data <- pre_process_glm(my.syndromicW)
 pre_processed_data <- pre_process_glm(my.syndromicW,
-                              syndromes="Musculoskeletal")
+                              syndromes="Musculoskeletal",
+                              formula=list(y~year))
 pre_processed_data <- pre_process_glm(my.syndromicW,
-                              syndromes=c("GIT","Musculoskeletal"))
+                              syndromes=c("GIT","Musculoskeletal"),
+                              formula=list(y~year,weeks~trend+sin+cos))
 pre_processed_data <- pre_process_glm(my.syndromicW,
-                              syndromes=3)
+                              syndromes=3,
+                              formula=list(y~year))
 pre_processed_data <- pre_process_glm(my.syndromicW,
-                              syndromes=c(1,3))
+                              syndromes=c(1,3),
+                              formula=list(y~year,weeks~trend+sin+cos))
 
-pre_processed_data <- pre_process_glm(my.syndromicW,
-                              family="nbinom")
-pre_processed_data <- pre_process_glm(my.syndromicW,slot="baseline")
 }
 \references{
 Fernanda C. Dorea, Crawford W. Revie, Beverly J. McEwen, 
@@ -131,4 +145,3 @@ surveillance. Preventive Veterinary Medicine.
 DOI: 10.1016/j.prevetmed.2012.10.010.
 }
 \keyword{methods}
-

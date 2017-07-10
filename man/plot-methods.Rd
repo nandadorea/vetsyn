@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot,syndromicW-method}
 \alias{plot,syndromicW-method}
+\alias{plot,syndromicW-method}
 \title{Plot}
 \usage{
 \S4method{plot}{syndromicW}(x, syndromes = NULL, window = 52,
@@ -48,5 +49,5 @@ Show information for the syndromic object.
 }
 }
 }
-\keyword{methods}
 
+\keyword{methods}

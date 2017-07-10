@@ -112,15 +112,15 @@ my.syndromicD <- clean_baseline(my.syndromicD,
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=c("GIT","Musculoskeletal"),
                               formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
-                              days~dow+month,NA,NA))
+                              days~dow+month,NA,NA),
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=3,
                               formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
-                              days~dow+month,NA,NA))
+                              days~dow+month,NA,NA),
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
-                              syndromes=c(1,3),
+                              syndromes=c(2,3),
                               formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
                               days~dow+month,NA,NA)),
                               frequency=260)
@@ -132,13 +132,13 @@ my.syndromicD <- clean_baseline(my.syndromicD,
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes="Musculoskeletal",
                               family="nbinom",
-                              formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7)
+                              formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7),
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=c("GIT","Musculoskeletal"),
                               family="nbinom",
                               formula=list(NA,y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,
-                              days~dow+month,NA,NA)
+                              days~dow+month,NA,NA),
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
                               syndromes=3,
@@ -146,7 +146,7 @@ my.syndromicD <- clean_baseline(my.syndromicD,
                               formula=list(days~dow+month),
                               frequency=260)
 my.syndromicD <- clean_baseline(my.syndromicD,
-                              syndromes=c(1,3),
+                              syndromes=c(2,3),
                               family="nbinom",
                               formula=list(days~dow+month),
                               frequency=260)

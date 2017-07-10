@@ -28,16 +28,25 @@
 ##' @param family the GLM distribution family used, by default 
 ##' "poisson". if "nbinom" is used, the function
 ##' glm.nb is used instead.
-##' @param formula the regression formula to be used. The following arguments
-##' are accepted for DAILY data (\code{syndromicD} class objects provided): 
+##' @param formula the regression formula to be used, in the R formula format: y~x1+x2...
+##' If none is provided, the function looks for formulas in the @formula slot of the syndromic object.
+##' If a formula is provided when this function is called, then that formula is used. We
+##' recommend providing a formula to test various models, but once a model is chosen,
+##' we recommend saving that formula in the syndromic object using: 
+##' my.syndromic@formula <- list(formula1,formula2...), for as many syndromes as the syndromic object has (columns in observed).
+##' NA can be provided when a syndrome is not to be associated with a particular formula.
+##' Any variables (x1, x2...) must be given the same name they have in the
+##' slot @dates. When providing a formula, two options are possible: providing a single formula to be applied to all 
+##' syndromes, or providing the same number of formulas (in a list) as the number of syndromes in the observed object, 
+##' even if not of them will be used (see examples!)
+##' The variables that are standard in that slot for DAILY data (\code{syndromicD}) are: 
 ##' trend (for a monotonic trend), year, month, dow (day of week),
 ##' sin, cos, Ar1 (auto-regressive for 1 days) to AR7. For WEEKLY data
-##' (\code{syndromicW} class objects provided): trend, sin, cos, year and 1 to 4 
+##' (\code{syndromicW}): trend, sin, cos, year, and 1 to 4 
 ##' autoregressive variables.
-##' These elements can be combined
-##' into any formula. The default for DAILY data is 
-##' formula="dow+sin+cos+Ar1+Ar2+AR3+AR4+AR5" and for WEEKLY data
-##' "trend+sin+cos" See examples.
+##' These elements can be combined into any formula. 
+##' Since the @dates slot can be customized by the user, any variables in the dates 
+##' data.frame can be called into the formula
 ##' @param frequency in case pre-processing is applied using "glm" AND the sin/cos functions 
 ##' are used, the cycle of repetitions need to be set. The default is a year
 ##' (365 days or 52 weeks).
@@ -70,18 +79,24 @@
 ##'                                  remove.dow=c(6,0),
 ##'                                  add.to=c(2,1),
 ##'                                  data=lab.daily)
-##'pre_processed_data <- pre_process_glm(my.syndromicD)
 ##'pre_processed_data <- pre_process_glm(my.syndromicD,
-##'                               syndromes="Musculoskeletal")
+##'                               syndromes="Musculoskeletal",
+##'                                      formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7))
 ##'pre_processed_data <- pre_process_glm(my.syndromicD,
-##'                               syndromes=c("GIT","Musculoskeletal"))
+##'                               syndromes=c("GIT","Musculoskeletal"),
+##'                               formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,NA,
+##'                               days~dow+month,NA,NA))
 ##'pre_processed_data <- pre_process_glm(my.syndromicD,
-##'                               syndromes=3)
+##'                               syndromes=c("GIT","Musculoskeletal"),
+##'                               formula=y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7)
+##'                               
 ##'pre_processed_data <- pre_process_glm(my.syndromicD,
-##'                               syndromes=c(1,3))
-##'
+##'                               syndromes=3,
+##'                                      formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7))
 ##'pre_processed_data <- pre_process_glm(my.syndromicD,
-##'                               family="nbinom")
+##'                               syndromes=c(1,3),
+##'                               formula=list(y~dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7,NA,
+##'                               days~dow+month,NA,NA))
 ##' ##WEEKLY
 ##'data(lab.daily)
 ##'my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
@@ -89,19 +104,20 @@
 ##'                                  dates.var=DateofSubmission,
 ##'                                  date.format="%d/%m/%Y",
 ##'                                  data=lab.daily)
-##'pre_processed_data <- pre_process_glm(my.syndromicW)
 ##'pre_processed_data <- pre_process_glm(my.syndromicW,
-##'                               syndromes="Musculoskeletal")
+##'                               syndromes="Musculoskeletal",
+##'                               formula=list(y~year))
 ##'pre_processed_data <- pre_process_glm(my.syndromicW,
-##'                               syndromes=c("GIT","Musculoskeletal"))
+##'                               syndromes=c("GIT","Musculoskeletal"),
+##'                               formula=list(y~year,weeks~trend+sin+cos))
 ##'pre_processed_data <- pre_process_glm(my.syndromicW,
-##'                               syndromes=3)
+##'                               syndromes=3,
+##'                               formula=list(y~year))
 ##'pre_processed_data <- pre_process_glm(my.syndromicW,
-##'                               syndromes=c(1,3))
+##'                               syndromes=c(1,3),
+##'                               formula=list(y~year,weeks~trend+sin+cos))
 ##'
-##'pre_processed_data <- pre_process_glm(my.syndromicW,
-##'                               family="nbinom")
-##'pre_processed_data <- pre_process_glm(my.syndromicW,slot="baseline")
+
                              
 setGeneric('pre_process_glm',
            signature = 'x',
@@ -116,7 +132,7 @@ setMethod('pre_process_glm',
                     slot="observed",
                     syndromes=NULL,
                     family="poisson",
-                    formula="dow+sin+cos+year+AR1+AR2+AR3+AR4+AR5+AR6+AR7",
+                    formula=NULL,
                     frequency=365,
                     print.model=TRUE,
                     plot=TRUE)
@@ -148,6 +164,16 @@ setMethod('pre_process_glm',
               syndromes.num <- match(syndromes,colnames(x@observed))
             }
             
+            
+            #checking that a formula is available
+            if (class(formula)=="NULL"&&length(x@formula)<dim(x@observed)[2]){
+                stop("the number of regression formulas saved on the syndromic object,
+                     on @formula, is not equal to the number of syndromes in the object,
+                     and no formula(s) have been provided in the function call")
+            }
+            
+            
+            
             #pulling data from the object to work out of the object
             if (slot=="baseline"){
               observed.matrix <- x@baseline
@@ -161,15 +187,11 @@ setMethod('pre_process_glm',
             for (c in syndromes.num){      
               loop=loop+1
               
-              #attach(x@dates,warn.conflicts=FALSE)
               
               days = observed.matrix[,c]
               t = 1:length(days)
-              month = as.factor(x@dates$month)
-              dow <- as.factor(x@dates$dow)
-              cos = cos (2*pi*t/frequency)
+               cos = cos (2*pi*t/frequency)
               sin = sin (2*pi*t/frequency)
-              year <- as.factor(x@dates$year)
               AR1<-c(days[1],days[1:(length(days)-1)])
               AR2<-c(days[1:2],days[1:(length(days)-2)])
               AR3<-c(days[1:3],days[1:(length(days)-3)])
@@ -177,28 +199,50 @@ setMethod('pre_process_glm',
               AR5<-c(days[1:5],days[1:(length(days)-5)])
               AR6<-c(days[1:6],days[1:(length(days)-6)])
               AR7<-c(days[1:7],days[1:(length(days)-7)])
-              trend=t
               
-              if(length(x@dates$holidays)>0){
-      holidays <- x@dates$holidays
-    }
-    if(length(x@dates$afterholidays)>0){
-      afterholidays <- x@dates$afterholidays
-    }
+              var <- data.frame(days = days,
+                                trend=t,
+                                cos,sin,
+                                AR1,AR2,AR3,AR4,AR5,AR6,AR7)
+              var <- cbind(var,x@dates)
+              var$month <- as.factor(var$month)
+              var$dow <- as.factor(var$dow)
+              var$year <- as.factor(var$year)
               
-              fn.formula=as.formula(paste0("days~",formula))
+
+              if(class(formula)==NULL){
+                formula.c <- x@formula[[c]]
+              }else{
+              if(length(formula)>1){
+                formula.c <- formula[[c]]
+              }  else{
+                formula.c<-formula
+              } 
+              }
+              
+              
+              v<-all.vars(formula.c)
+              v[[1]]<-NA
+              v<-v[!is.na(v)]
+              m<-match(v,colnames(var))
+              m<-m[!is.na(m)]
+              
+              var <- var[,m]
+              
+              
+             fn.formula=as.formula(paste0("days~",paste0(v,collapse="+")))
               
               
               if (family=="nbinom"){
                 #require(MASS)
-                fit1     <- glm.nb(fn.formula)  
+                fit1     <- glm.nb(fn.formula, data=var)  
                 predict1 <- predict(fit1, type="response", se.fit=TRUE)
                 series   <- predict1$fit
                 
               }else{
                 #distribution=family            
                 
-                fit1 <- glm(fn.formula, family=family)
+                fit1 <- glm(fn.formula, family=family, data=var)
                 predict1 <- predict(fit1, type="response", se.fit=TRUE)
                 series   <- predict1$fit
               }    
@@ -237,13 +281,15 @@ setMethod('pre_process_glm',
 ##' @rdname pre_process_glm-methods
 ##' @export
 
+# weekly ----
+
 setMethod('pre_process_glm',
           signature(x = 'syndromicW'),
           function (x,
                     slot="observed",
                     syndromes=NULL,
                     family="poisson",
-                    formula="trend+sin+cos",
+                    formula=NULL, 
                     frequency=52,
                     print.model=TRUE,
                     plot=TRUE)
@@ -276,6 +322,13 @@ setMethod('pre_process_glm',
               syndromes.num <- match(syndromes,colnames(x@observed))
             }
             
+            #checking that a formula is available
+            if (class(formula)=="NULL"&&length(x@formula)<dim(x@observed)[2]){
+              stop("the number of regression formulas saved on the syndromic object,
+                   on @formula, is not equal to the number of syndromes in the object,
+                   and no formula(s) have been provided in the function call")
+            }
+            
             #pulling data from the object to work out of the object
             if (slot=="baseline"){
               observed.matrix <- x@baseline
@@ -289,34 +342,59 @@ setMethod('pre_process_glm',
             for (c in syndromes.num){      
               loop=loop+1
               
-              #attach(x@dates,warn.conflicts=FALSE)
-              
-              
+             
               week = observed.matrix[,c]
               t = 1:length(week)
               cos = cos (2*pi*t/frequency)
               sin = sin (2*pi*t/frequency)
-              year <- as.factor(x@dates$year)
+              
               AR1<-c(week[1],week[1:(length(week)-1)])
               AR2<-c(week[1:2],week[1:(length(week)-2)])
               AR3<-c(week[1:3],week[1:(length(week)-3)])
               AR4<-c(week[1:4],week[1:(length(week)-4)])
-              trend=t
               
-              fn.formula=as.formula(paste0("week~",formula))
+              var <- data.frame(week = week,
+                                trend=t,
+                                cos,sin,
+                                AR1,AR2,AR3,AR4)
+              var <- cbind(var,x@dates)
+              var$year <- as.factor(var$year)
               
+              
+              
+              if(class(formula)==NULL){
+                formula.c <- x@formula[[c]]
+              }else{
+                if(length(formula)>1){
+                  formula.c <- formula[[c]]
+                }  else{
+                  formula.c<-formula
+                }
+              }
+              
+              
+              v<-all.vars(formula.c)
+              v[[1]]<-NA
+              v<-v[!is.na(v)]
+              m<-match(v,colnames(var))
+              m<-m[!is.na(m)]
+              
+              var <- var[,m]
+              
+              
+              fn.formula=as.formula(paste0("week~",paste0(v,collapse="+")))             
               
               
               if (family=="nbinom"){
                 #require(MASS)
-                fit1     <- glm.nb(fn.formula)  
+                fit1     <- glm.nb(fn.formula, data=var)  
                 predict1 <- predict(fit1, type="response", se.fit=TRUE)
                 series   <- predict1$fit
                 
               }else{
                 #distribution=family            
                 
-                fit1 <- glm(fn.formula, family=family)
+                fit1 <- glm(fn.formula, family=family, data=var)
                 predict1 <- predict(fit1, type="response", se.fit=TRUE)
                 series   <- predict1$fit
               }    

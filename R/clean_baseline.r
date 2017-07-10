@@ -280,7 +280,7 @@ setMethod('clean_baseline',
        
        
        v<-all.vars(formula.c)
-       v[[1]]<-NA
+       v[[1]]<-"days"
        v<-v[!is.na(v)]
        m<-match(v,colnames(var))
        m<-m[!is.na(m)]
@@ -296,7 +296,7 @@ setMethod('clean_baseline',
               a formula for each syndrome, unless you provide a list with a single formula.
               See examples in the help for thie function")
        }else{
-         fn.formula=as.formula(paste0("days~",paste0(v,collapse="+")))
+         fn.formula=as.formula(paste0("days~",paste0(v[-1],collapse="+")))
        }
 
 
@@ -460,7 +460,7 @@ setMethod('clean_baseline',
        
        
        v<-all.vars(formula.c)
-       v[[1]]<-NA
+       v[[1]]<-"week"
        v<-v[!is.na(v)]
        m<-match(v,colnames(var))
        m<-m[!is.na(m)]
@@ -477,7 +477,7 @@ setMethod('clean_baseline',
               a formula for each syndrome, unless you provide a list with a single formula.
               See examples in the help for thie function")
        }else{
-         fn.formula=as.formula(paste0("week~",paste0(v,collapse="+")))
+         fn.formula=as.formula(paste0("week~",paste0(v[-1],collapse="+")))
        }
        
       if (family=="nbinom"){

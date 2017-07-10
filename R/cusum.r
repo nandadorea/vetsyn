@@ -404,8 +404,7 @@ setMethod('cusum_synd',
               v<-all.vars(formula.s)
               v[[1]]<-"days"
               v<-v[!is.na(v)]
-              m<-match(v,colnames(var))
-              m<-m[!is.na(m)]
+              
               
               if(length(v)==0){
                 stop("Formula assignment did not work properly, check that
@@ -484,6 +483,8 @@ setMethod('cusum_synd',
                     var <- cbind(var,y@dates[start:tpoint,])
                     
                     
+                    m<-match(v,colnames(var))
+                    m<-m[!is.na(m)]
                     var <- var[,m,drop=FALSE]
                     
                     
@@ -765,8 +766,7 @@ setMethod('cusum_synd',
               v<-all.vars(formula.s)
               v[[1]]<-"week"
               v<-v[!is.na(v)]
-              m<-match(v,colnames(var))
-              m<-m[!is.na(m)]
+              
               
               if(length(v)==0){
                 stop("Formula assignment did not work properly, check that
@@ -829,7 +829,8 @@ setMethod('cusum_synd',
                                       AR1,AR2,AR3,AR4)
                     var <- cbind(var,y@dates[start:tpoint,])
                     
-                    
+                    m<-match(v,colnames(var))
+                    m<-m[!is.na(m)]
                       var <- var[,m,drop=FALSE]
                     
                     

@@ -197,36 +197,40 @@ to the regular cusum() algorithm are:
  ## Examples DAILY data
 data(lab.daily)
 my.syndromicD <- raw_to_syndromicD (id=SubmissionID,
-                                 syndromes.var=Syndrome,
-                                 dates.var=DateofSubmission,
-                                 date.format="\%d/\%m/\%Y",
-                                 remove.dow=c(6,0),
-                                 add.to=c(2,1),
-                                 data=lab.daily)
+                                   syndromes.var=Syndrome,
+                                   dates.var=DateofSubmission,
+                                   date.format="\%d/\%m/\%Y",
+                                   remove.dow=c(6,0),
+                                   add.to=c(2,1),
+                                   data=lab.daily)
 my.syndromicD <- cusum_synd(x=my.syndromicD,
-                         syndromes="Musculoskeletal",
-                         evaluate.window=30,
-                         baseline.window=260,
-                         limit.sd=c(2.5,3,3.5),
-                         guard.band=5,
-                         correct.baseline=FALSE,
-                         alarm.dim=4,
-                         pre.process="glm",
-                         family="nbinom",
-                         formula="dow+sin+cos+AR1+AR2+AR3+AR4+AR5",
-                         frequency=260)
+                           syndromes="Musculoskeletal",
+                           evaluate.window=30,
+                           baseline.window=260,
+                           limit.sd=c(2.5,3,3.5),
+                           guard.band=5,
+                           correct.baseline=FALSE,
+                           alarm.dim=4,
+                           pre.process="glm",
+                           family="poisson",
+                           formula=list(days~dow+sin+cos+AR1+AR2+AR3+AR4+AR5),
+                           frequency=260)
+
+my.syndromicD@formula <- list(NA,days~dow+sin+cos+AR1+AR2+AR3+AR4+AR5,
+                             days~dow+sin+cos+AR1+AR2+AR3+AR4+AR5,NA,NA)
 
 my.syndromicD <- cusum_synd(x=my.syndromicD,
-                          syndromes= c(1,2,4,5),
-                          evaluate.window=30,
-                          baseline.window=260,
-                          limit.sd=c(2.5,3,3.5),
-                          guard.band=5,
-                          correct.baseline=FALSE,
-                          alarm.dim=4,
-                          pre.process="diff",
-                          diff.window=5)
-                          
+                           syndromes= c(1,2,4,5),
+                           evaluate.window=30,
+                           baseline.window=260,
+                           limit.sd=c(2.5,3,3.5),
+                           guard.band=5,
+                           correct.baseline=FALSE,
+                           alarm.dim=4,
+                           pre.process=c(FALSE,"glm","glm","diff","diff"),
+                           diff.window=5,
+                           frequency=260)                      
+                           
 ## Examples WEEKLY data
 data(lab.daily)
 my.syndromicW <- raw_to_syndromicW (id=SubmissionID,
@@ -244,8 +248,11 @@ my.syndromicW <- cusum_synd(x=my.syndromicW,
                          alarm.dim=4,
                          pre.process="glm",
                          family="nbinom",
-                         formula="trend+sin+cos",
+                         formula=list(week~trend+sin+cos),
                          frequency=52)
+                         
+my.syndromicW@formula <- list(NA,week~trend+sin+cos,
+                             week~trend+sin+cos,NA,NA)
 
 my.syndromicW <- cusum_synd(x=my.syndromicW,
                           syndromes= c(1,2,4,5),
@@ -255,7 +262,7 @@ my.syndromicW <- cusum_synd(x=my.syndromicW,
                           guard.band=2,
                           correct.baseline=FALSE,
                           alarm.dim=4,
-                          pre.process="diff",
+                          pre.process=c(FALSE,"glm","glm","diff","diff"),
                           diff.window=4)
 }
 \seealso{

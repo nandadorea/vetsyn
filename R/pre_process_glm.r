@@ -210,7 +210,7 @@ setMethod('pre_process_glm',
               var$year <- as.factor(var$year)
               
 
-              if(class(formula)==NULL){
+              if(class(formula)=="NULL"){
                 formula.c <- x@formula[[c]]
               }else{
               if(length(formula)>1){

@@ -630,7 +630,8 @@ setMethod('cusum_synd',
                     diff.window=4,
                     family="poisson",
                     formula=NULL,
-                    frequency=52
+                    frequency=52,
+                    se.shift=1
           )
 {
             

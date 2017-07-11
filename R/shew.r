@@ -512,7 +512,7 @@ for (syndrome in syndromes.num){
         predict.new <- predict.glm(fit1, newdata=var.pred,type="response")
         
         res1 <- var.train$days - predict.bas
-        res2 <- y@observed[(end+1):tpoint]-predict.new
+        res2 <- y@observed[(end+1):tpoint,syndrome]-predict.new
         
         to.cc <- c(res1,res2)
         correct <- predict.new[guard.band]
@@ -858,8 +858,8 @@ setMethod('shew_synd',
                     predict.bas <- predict.glm(fit1,type="response", data=var.train)
                     predict.new <- predict.glm(fit1, newdata=var.pred,type="response")
                     
-                    res1 <- var.train$days - predict.bas
-                    res2 <- y@observed[(end+1):tpoint]-predict.new
+                    res1 <- var.train$week - predict.bas
+                    res2 <- y@observed[(end+1):tpoint,syndrome]-predict.new
                     
                     to.cc <- c(res1,res2)
                     correct <- predict.new[guard.band]

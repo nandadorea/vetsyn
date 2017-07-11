@@ -452,7 +452,7 @@ setMethod('clean_baseline',
        
        
        
-       if(class(formula)==NULL){
+       if(class(formula)=="NULL"){
          formula.c <- x@formula[[c]]
        }else{
          if(length(formula)>1){

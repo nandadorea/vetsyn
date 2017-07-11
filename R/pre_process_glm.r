@@ -344,6 +344,7 @@ setMethod('pre_process_glm',
                    is not provided, the function looks for one in the slot @formula of the syndromic object. See help")
             }
             
+            
             #pulling data from the object to work out of the object
             if (slot=="baseline"){
               observed.matrix <- x@baseline
@@ -377,7 +378,7 @@ setMethod('pre_process_glm',
               
               
               
-              if(class(formula)==NULL){
+              if(class(formula)=="NULL"){
                 formula.c <- x@formula[[c]]
               }else{
                 if(length(formula)>1){

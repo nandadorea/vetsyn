@@ -521,7 +521,7 @@ for (syndrome in syndromes.num){
         
         if(tpoint==range[1]){
           warning("You have not provided a valid pre-processing method,
-                  CUSUM will be applied to your raw data. This is not an error, just a warning to make
+                  XBAR will be applied to your raw data. This is not an error, just a warning to make
                   sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
         }
         
@@ -867,7 +867,7 @@ setMethod('shew_synd',
                   }else{
                     if(tpoint==range[1]){
                       warning("You have not provided a valid pre-processing method,
-                              CUSUM will be applied to your raw data. This is not an error, just a warning to make
+                              XBAR will be applied to your raw data. This is not an error, just a warning to make
                               sure this was the intended behaviour. Acceptable methods are glm or diff, see help")
                     }
                     

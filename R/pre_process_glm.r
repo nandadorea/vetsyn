@@ -334,7 +334,7 @@ setMethod('pre_process_glm',
             }
             
             #checking that a formula is available
-            if (class(formula)=="NULL"&&length(x@formula)<dim(x@observed)[2]){
+            if (class(formula)=="NULL"&length(x@formula)<dim(x@observed)[2]){
               stop("the number of regression formulas saved on the syndromic object,
                    on @formula, is not equal to the number of syndromes in the object,
                    and no formula(s) have been provided in the function call")

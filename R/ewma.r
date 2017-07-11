@@ -219,7 +219,8 @@
 ##'                          family="nbinom",
 ##'                          formula=list(week~trend+sin+cos),
 ##'                          frequency=52)
-##'
+##'my.syndromicW@formula <- list(NA,week~trend+sin+cos,
+##'                          week~trend+sin+cos,NA,NA)
 ##'my.syndromicW <- ewma_synd(x=my.syndromicW,
 ##'                           syndromes= c(1,2,4,5),
 ##'                           evaluate.window=10,

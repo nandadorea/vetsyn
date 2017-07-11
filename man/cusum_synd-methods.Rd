@@ -19,7 +19,7 @@ cusum_synd(x, ...)
   baseline.window = 52, limit.sd = c(2.5, 3, 3.5), guard.band = 2,
   correct.baseline = FALSE, alarm.dim = 4, UCL = 1, LCL = FALSE,
   pre.process = FALSE, diff.window = 4, family = "poisson",
-  formula = NULL, frequency = 52)
+  formula = NULL, frequency = 52, se.shift = 1)
 }
 \arguments{
 \item{x}{a syndromic (\code{syndromicD} or \code{syndromicW}) object. 

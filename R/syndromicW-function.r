@@ -182,7 +182,7 @@ setReplaceMethod(
   f="setformulaW",
   signature="syndromicW",
   definition=function(object,value){
-    object@LCL <- value
+    object@formula <- value
     validObject(object)      #VALIDITY CONTROL
     return(object)
   }

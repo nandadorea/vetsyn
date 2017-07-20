@@ -580,7 +580,7 @@ for (syndrome in syndromes.num){
         if (correct.baseline==l){
           y@baseline[tpoint,syndrome]<- y@observed[tpoint,syndrome]
           if (y@observed[tpoint,syndrome]>max(0,UCL.value)){
-            y@baseline[tpoint,syndrome] <- max(0,UCL.value)
+            y@baseline[tpoint,syndrome] <- max(0,round(UCL.value))
           }
         }
         
@@ -925,7 +925,7 @@ setMethod('shew_synd',
                   if (correct.baseline==l){
                     y@baseline[tpoint,syndrome]<- y@observed[tpoint,syndrome]
                     if (y@observed[tpoint,syndrome]>max(0,UCL.value)){
-                      y@baseline[tpoint,syndrome] <- max(0,UCL.value)
+                      y@baseline[tpoint,syndrome] <- max(0,round(UCL.value))
                     }
                   }
                   

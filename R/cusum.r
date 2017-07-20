@@ -594,7 +594,7 @@ setMethod('cusum_synd',
                     y@baseline[tpoint,syndrome]<- y@observed[tpoint,syndrome]
                     if (length(cusum1$violations$upper)>0&&
                           cusum1$violations$upper[length(cusum1$violations$upper)]==length(to.cc)){
-                      y@baseline[tpoint,syndrome] <- max(0,UCL.value)
+                      y@baseline[tpoint,syndrome] <- max(0,round(UCL.value))
                     }
                   }
                   
@@ -953,7 +953,7 @@ setMethod('cusum_synd',
                     y@baseline[tpoint,syndrome]<- y@observed[tpoint,syndrome]
                     if (length(cusum1$violations$upper)>0&&
                           cusum1$violations$upper[length(cusum1$violations$upper)]==length(to.cc)){
-                      y@baseline[tpoint,syndrome] <- max(0,UCL.value)
+                      y@baseline[tpoint,syndrome] <- max(0,round(UCL.value))
                     }
                   }
                   

@@ -343,7 +343,7 @@ for (syndrome in syndromes.num){
       if (correct.baseline==l){
         y@baseline[tpoint,syndrome]<- y@observed[tpoint,syndrome]
             if (as.double(y@observed[tpoint,syndrome])>max(0,as.double(pred[nahead,2]))){
-              y@baseline[tpoint,syndrome] <- max(0,as.double(pred[nahead,2]))
+              y@baseline[tpoint,syndrome] <- max(0,round(as.double(pred[nahead,2])))
         }
       }
     
@@ -510,7 +510,7 @@ setMethod('holt_winters_synd',
                   if (correct.baseline==l){
                     y@baseline[tpoint,syndrome]<- y@observed[tpoint,syndrome]
                     if (as.double(y@observed[tpoint,syndrome])>max(0,as.double(pred[nahead,2]))){
-                      y@baseline[tpoint,syndrome] <- max(0,as.double(pred[nahead,2]))
+                      y@baseline[tpoint,syndrome] <- max(0,round(as.double(pred[nahead,2])))
                     }
                   }
                   

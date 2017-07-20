@@ -188,7 +188,7 @@ setMethod('clean_baseline',
        if (class(syndromes)=="NULL"){
          syndromes <- colnames(x@observed)
          }else{
-         if (class(syndromes)!="character"&&class(syndromes)!="numeric") {
+         if ((!is.character(syndromes))&&(!is.numeric(syndromes))) {
      stop("if provided, argument syndromes must be a character or numeric vector")
            }
          }
@@ -204,8 +204,8 @@ setMethod('clean_baseline',
        syndromes<-1:dim(x@observed)[2]
      }
      
-       if (class(syndromes)=="numeric"|class(syndromes)=="integer") {
-       syndromes.num <- syndromes
+            if (is.numeric(syndromes)) {
+              syndromes.num <- syndromes
        }else{
          syndromes.num <- match(syndromes,colnames(x@observed))
        }
@@ -382,7 +382,7 @@ setMethod('clean_baseline',
        if (class(syndromes)=="NULL"){
          syndromes <- colnames(x@observed)
          }else{
-         if (class(syndromes)!="character"&&class(syndromes)!="numeric") {
+         if ((!is.character(syndromes))&&(!is.numeric(syndromes))) {
      stop("if provided, argument syndromes must be a character or numeric vector")
            }
          }
@@ -397,8 +397,8 @@ setMethod('clean_baseline',
      if (is.null(syndromes)){
        syndromes<-1:dim(x@observed)[2]
      }
-       if (class(syndromes)=="numeric"|class(syndromes)=="integer") {
-       syndromes.num <- syndromes
+            if (is.numeric(syndromes)) {
+              syndromes.num <- syndromes
        }else{
          syndromes.num <- match(syndromes,colnames(x@observed))
        }

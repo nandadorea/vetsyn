@@ -71,7 +71,7 @@ setMethod("plot","syndromicW",
             
             #make sure syndrome list is always numeric
             #even if user gives as a list of names
-            if (class(syndromes)=="numeric"||class(syndromes)=="integer") {
+            if (is.numeric(syndromes)) {
               syndromes.num <- syndromes
             }else{
               syndromes.num <- match(syndromes,colnames(x@observed))
@@ -234,7 +234,7 @@ setMethod("plot","syndromicW",
             
             #make sure syndrome list is always numeric
             #even if user gives as a list of names
-            if (class(syndromes)=="numeric"||class(syndromes)=="integer") {
+            if (is.numeric(syndromes)) {
               syndromes.num <- syndromes
             }else{
               syndromes.num <- match(syndromes,colnames(x@observed))

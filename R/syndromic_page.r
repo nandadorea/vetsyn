@@ -14,6 +14,11 @@
 ##' @param x a syndromic (\code{syndromicD} 
 ##' or \code{syndromicW}) object.
 ##' @param ... Additional arguments to the method.
+##' @param syndromes an optional parameter, if not specified, all
+##' columns in the slot observed of the \code{syndromic} object
+##' will be used. The user can choose to restrict the analyses to 
+##' a few syndromic groups listing their name or column position
+##' in the observed matrix. 
 ##' @param tpoints.display This is used to choose how many days of alarms to display. The
 ##' normal for daily data (syndromic object provided is form the class \code{syndromicD} )
 ##' is to show the entire last week (so 7 or 5 days, depending on whether weekends are
@@ -195,6 +200,7 @@ setMethod('syndromic_page',
             }
             if (is.numeric(syndromes)) {
               syndromes.num <- syndromes
+              syndromes <- colnames(x@observed)[syndromes.num]
             }else{
               syndromes.num <- match(syndromes,colnames(x@observed))
             }
@@ -274,7 +280,7 @@ if(data.page==TRUE){
   data.tables1 = list()
   data.tables2 = list()
     
-  for (syndrome in syndromes.num){
+  for (syndrome in 1:length(syndromes.num)){
 data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&
                 (as.Date(data[,dates.var], format=date.format)==x@dates[dim(x@dates)[1],1])),
                 ]
@@ -300,7 +306,7 @@ cat('<a name="top"></a>\n', file=html)
 
 alarms.table<-rep(0,length(syndromes)*(tpoints.display+1))
 dim(alarms.table)<-c(length(syndromes),(tpoints.display+1))   
-rownames(alarms.table)<- colnames(x@observed[syndromes.num])
+rownames(alarms.table)<- colnames(x@observed)[syndromes.num]
 for (j in 1:length(syndromes.num)){
   alarms.table[j,1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,syndromes.num[j]])
   alarms.table[j,(tpoints.display+1)]   <- limit[syndromes.num[j]]
@@ -309,7 +315,7 @@ for (j in 1:length(syndromes.num)){
 
 counts.table<-rep(0,length(syndromes)*(tpoints.display))
 dim(counts.table)<-c(length(syndromes),(tpoints.display))
-rownames(counts.table)<- colnames(x@observed[syndromes.num])
+rownames(counts.table)<- colnames(x@observed)[syndromes.num]
 for (j in 1:length(syndromes.num)){
   counts.table[j,1:tpoints.display] <- 
     round(x@observed[(end-(tpoints.display-1)):end,syndromes.num[j]])  
@@ -401,7 +407,7 @@ graphics.off()
 
 setwd(workdir.html)
 
-for (p in syndromes.num){
+for (p in 1:length(syndromes.num)){
   anchor = paste('<a name=" ',syndromes[p],'"></a>\n',sep="")
   cat(anchor, file=html)
   cat(sprintf('<h3 align="center">%s</h3>\n', paste(file.name, syndromes[p],(x@dates[dim(x@dates)[1],1]), sep=" ")), file=html)
@@ -433,7 +439,7 @@ if (data.page==TRUE){
   #setwd(workdir.html2)
   
   
-  for (syndrome in syndromes.num){
+  for (syndrome in 1:length(syndromes.num)){
     html <- file(paste0("html2\\",file.name,syndrome,".html"), "w+")
     
     
@@ -533,6 +539,7 @@ setMethod('syndromic_page',
             }
             if (is.numeric(syndromes)) {
               syndromes.num <- syndromes
+              syndromes <- colnames(x@observed)[syndromes.num]
             }else{
               syndromes.num <- match(syndromes,colnames(x@observed))
             }
@@ -616,7 +623,7 @@ setMethod('syndromic_page',
               
               if (date.format=="ISOweek"){
                 
-                for (syndrome in syndromes.num){
+                for (syndrome in 1:length(syndromes.num)){
                   
                   #making sure ISOweek format is recognized in both sets of data:
                   week.var.data <- as.character(data[,dates.var])
@@ -651,7 +658,7 @@ setMethod('syndromic_page',
                 year.x <- as.numeric(substr(as.character(week.var.x),1,4))
                 week.var.x <- create_isoweek(week.x,year.x,reference.day=1)
                         
-              for (syndrome in syndromes.num){
+              for (syndrome in length(syndromes.num)){
                 data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
                                                        (date2ISOweek(as.Date(data[,dates.var], format=date.format))
                                                         ==week.var.x[dim(x@dates)[1]])),
@@ -681,7 +688,7 @@ setMethod('syndromic_page',
             
             alarms.table<-rep(0,length(syndromes)*(tpoints.display+1))
             dim(alarms.table)<-c(length(syndromes),(tpoints.display+1))
-            rownames(alarms.table)<- colnames(x@observed[syndromes.num])
+            rownames(alarms.table)<- colnames(x@observed)[syndromes.num]
             for (j in 1:length(syndromes.num)){
               alarms.table[j,1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,syndromes.num[j]])
               alarms.table[j,(tpoints.display+1)]   <- limit[syndromes.num[j]]
@@ -690,7 +697,7 @@ setMethod('syndromic_page',
             
             counts.table<-rep(0,length(syndromes)*(tpoints.display))
             dim(counts.table)<-c(length(syndromes),(tpoints.display))
-            rownames(counts.table)<- colnames(x@observed[syndromes.num])
+            rownames(counts.table)<- colnames(x@observed)[syndromes.num]
             for (j in length(syndromes.num)){
               counts.table[j,1:tpoints.display] <- round(x@observed[(end-(tpoints.display-1)):end,syndromes.num[j]])  
             }
@@ -781,7 +788,7 @@ setMethod('syndromic_page',
             
             setwd(workdir.html)
             
-            for (p in syndromes.num){
+            for (p in length(syndromes.num)){
               anchor = paste('<a name=" ',syndromes[p],'"></a>\n',sep="")
               cat(anchor, file=html)
               cat(sprintf('<h3 align="center">%s</h3>\n', paste(file.name, syndromes[p],(x@dates[dim(x@dates)[1],1]), sep=" ")), file=html)
@@ -813,7 +820,7 @@ setMethod('syndromic_page',
               #setwd(workdir.html2)
               
               
-              for (syndrome in syndromes.num){
+              for (syndrome in length(syndromes.num)){
                 html <- file(paste0("html2\\",file.name,syndrome,".html"), "w+")
                 
                 

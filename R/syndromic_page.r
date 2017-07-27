@@ -497,6 +497,7 @@ on.exit(setwd(workdir),add=TRUE)
 setMethod('syndromic_page',
           signature(x = 'syndromicW'),
           function (x,
+                    syndromes=NULL,
                     tpoints.display=4,
                     window=52,
                     baseline=TRUE,

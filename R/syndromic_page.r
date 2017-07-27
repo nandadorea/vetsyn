@@ -309,7 +309,7 @@ for (j in 1:length(syndromes.num)){
 
 counts.table<-rep(0,length(syndromes)*(tpoints.display))
 dim(counts.table)<-c(length(syndromes),(tpoints.display))
-rownames(counts.table)<- <- colnames(x@observed[syndromes.num])
+rownames(counts.table)<- colnames(x@observed[syndromes.num])
 for (j in 1:length(syndromes.num)){
   counts.table[j,1:tpoints.display] <- 
     round(x@observed[(end-(tpoints.display-1)):end,syndromes.num[j]])  
@@ -680,7 +680,7 @@ setMethod('syndromic_page',
             
             alarms.table<-rep(0,length(syndromes)*(tpoints.display+1))
             dim(alarms.table)<-c(length(syndromes),(tpoints.display+1))
-            rownames(alarms.table)<- <- colnames(x@observed[syndromes.num])
+            rownames(alarms.table)<- colnames(x@observed[syndromes.num])
             for (j in 1:length(syndromes.num)){
               alarms.table[j,1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,syndromes.num[j]])
               alarms.table[j,(tpoints.display+1)]   <- limit[syndromes.num[j]]
@@ -689,7 +689,7 @@ setMethod('syndromic_page',
             
             counts.table<-rep(0,length(syndromes)*(tpoints.display))
             dim(counts.table)<-c(length(syndromes),(tpoints.display))
-            rownames(counts.table)<- <- colnames(x@observed[syndromes.num])
+            rownames(counts.table)<- colnames(x@observed[syndromes.num])
             for (j in length(syndromes.num)){
               counts.table[j,1:tpoints.display] <- round(x@observed[(end-(tpoints.display-1)):end,syndromes.num[j]])  
             }

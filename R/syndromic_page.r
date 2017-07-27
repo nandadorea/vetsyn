@@ -158,6 +158,7 @@ setGeneric('syndromic_page',
 setMethod('syndromic_page',
           signature(x = 'syndromicD'),
           function (x,
+                    syndromes=NULL,
                     tpoints.display=7,
                     window=365,
                     baseline=TRUE,
@@ -179,6 +180,24 @@ setMethod('syndromic_page',
                      arrow.colors=c("green","orange","tomato","red"))
         {
     
+            ##check that syndromes is valid
+            if (class(syndromes)=="NULL"){
+              syndromes <- colnames(x@observed)
+            }else{
+              if ((!is.character(syndromes))&&(!is.numeric(syndromes))) {
+                stop("if provided, argument syndromes must be a character or numeric vector")
+              }
+            }
+            
+            #syndromes index to be always numeric
+            if (is.null(syndromes)){
+              syndromes<-1:dim(x@observed)[2]
+            }
+            if (is.numeric(syndromes)) {
+              syndromes.num <- syndromes
+            }else{
+              syndromes.num <- match(syndromes,colnames(x@observed))
+            }
             
             ##check that limit is valid
             if (length(limit)==1){
@@ -213,8 +232,8 @@ setMethod('syndromic_page',
 
 
       ##define syndromes
-          syndromes <- colnames(x@observed)
-          syndromes.num <- 1:dim(x@observed)[2]
+          #syndromes <- colnames(x@observed)
+          #syndromes.num <- 1:dim(x@observed)[2]
 
         #window of plotting
         end<-dim(x@observed)[1]

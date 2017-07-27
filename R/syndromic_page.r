@@ -299,19 +299,19 @@ cat('<a name="top"></a>\n', file=html)
 
 
 alarms.table<-rep(0,length(syndromes)*(tpoints.display+1))
-dim(alarms.table)<-c(length(syndromes),(tpoints.display+1))
-rownames(alarms.table)<- syndromes
+dim(alarms.table)<-c(length(syndromes),(tpoints.display+1))   
+rownames(alarms.table)<- colnames(x@observed[syndromes.num])
 for (j in 1:length(syndromes.num)){
-  alarms.table[syndromes.num[j],1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,syndromes.num[j]])
-  alarms.table[syndromes.num[j],(tpoints.display+1)]   <- limit[syndromes.num[j]]
+  alarms.table[j,1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,syndromes.num[j]])
+  alarms.table[j,(tpoints.display+1)]   <- limit[syndromes.num[j]]
 }
 
 
 counts.table<-rep(0,length(syndromes)*(tpoints.display))
 dim(counts.table)<-c(length(syndromes),(tpoints.display))
-rownames(counts.table)<- syndromes
+rownames(counts.table)<- <- colnames(x@observed[syndromes.num])
 for (j in 1:length(syndromes.num)){
-  counts.table[syndromes.num[j],1:tpoints.display] <- 
+  counts.table[j,1:tpoints.display] <- 
     round(x@observed[(end-(tpoints.display-1)):end,syndromes.num[j]])  
 }
 
@@ -517,6 +517,24 @@ setMethod('syndromic_page',
                     fill.colors=c("yellow2","orange","tomato"),
                     arrow.colors=c("green","orange","tomato","red"))
 {
+            ##check that syndromes is valid
+            if (class(syndromes)=="NULL"){
+              syndromes <- colnames(x@observed)
+            }else{
+              if ((!is.character(syndromes))&&(!is.numeric(syndromes))) {
+                stop("if provided, argument syndromes must be a character or numeric vector")
+              }
+            }
+            
+            #syndromes index to be always numeric
+            if (is.null(syndromes)){
+              syndromes<-1:dim(x@observed)[2]
+            }
+            if (is.numeric(syndromes)) {
+              syndromes.num <- syndromes
+            }else{
+              syndromes.num <- match(syndromes,colnames(x@observed))
+            }
             
             
             ##check that limit is valid
@@ -552,8 +570,8 @@ setMethod('syndromic_page',
             
             
             ##define syndromes
-            syndromes <- colnames(x@observed)
-            syndromes.num <- 1:dim(x@observed)[2]
+            #syndromes <- colnames(x@observed)
+            #syndromes.num <- 1:dim(x@observed)[2]
             
             #window of plotting
             end<-dim(x@observed)[1]
@@ -662,18 +680,18 @@ setMethod('syndromic_page',
             
             alarms.table<-rep(0,length(syndromes)*(tpoints.display+1))
             dim(alarms.table)<-c(length(syndromes),(tpoints.display+1))
-            rownames(alarms.table)<- syndromes
-            for (j in syndromes.num){
-              alarms.table[j,1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,j])
-              alarms.table[j,(tpoints.display+1)]   <- limit[j]
+            rownames(alarms.table)<- <- colnames(x@observed[syndromes.num])
+            for (j in 1:length(syndromes.num)){
+              alarms.table[j,1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,syndromes.num[j]])
+              alarms.table[j,(tpoints.display+1)]   <- limit[syndromes.num[j]]
             }
             
             
             counts.table<-rep(0,length(syndromes)*(tpoints.display))
             dim(counts.table)<-c(length(syndromes),(tpoints.display))
-            rownames(counts.table)<- syndromes
-            for (j in syndromes.num){
-              counts.table[j,1:tpoints.display] <- round(x@observed[(end-(tpoints.display-1)):end,j])  
+            rownames(counts.table)<- <- colnames(x@observed[syndromes.num])
+            for (j in length(syndromes.num)){
+              counts.table[j,1:tpoints.display] <- round(x@observed[(end-(tpoints.display-1)):end,syndromes.num[j]])  
             }
             
             colors.table = rep (color.null,length(counts.table))

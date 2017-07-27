@@ -718,7 +718,7 @@ setMethod('syndromic_page',
             
             cat("<tr>\n", file=html)
             cat(sprintf("<td></td>\n<td colspan=\"2\"><center><b>Today</b></center></td>\n<td>____</td>\n
-                        <td colspan=\"%s\"><center><b>Previous Days History</b></center></td>\n",
+                        <td colspan=\"%s\"><center><b>Previous Week History</b></center></td>\n",
                         (tpoints.display-1)), file=html)
             cat("</tr>\n", file=html)
             
@@ -727,7 +727,7 @@ setMethod('syndromic_page',
             cat("<tr>\n", file=html)
             if (tpoints.display>2){
               for (d in 2:(tpoints.display-1)){
-                col.head <- paste0(col.head,"<td>_D-",d,"_</td>\n")
+                col.head <- paste0(col.head,"<td>_W-",d,"_</td>\n")
               }  
             }
             cat(paste0("<td></td>\n<td>Syndromic cases</td>\n<td><b>Alarm Today</b></td>\n<td></td>\n",

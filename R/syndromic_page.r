@@ -658,7 +658,7 @@ setMethod('syndromic_page',
                 year.x <- as.numeric(substr(as.character(week.var.x),1,4))
                 week.var.x <- create_isoweek(week.x,year.x,reference.day=1)
                         
-              for (syndrome in length(syndromes.num)){
+              for (syndrome in 1:length(syndromes.num)){
                 data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
                                                        (date2ISOweek(as.Date(data[,dates.var], format=date.format))
                                                         ==week.var.x[dim(x@dates)[1]])),
@@ -698,7 +698,7 @@ setMethod('syndromic_page',
             counts.table<-rep(0,length(syndromes)*(tpoints.display))
             dim(counts.table)<-c(length(syndromes),(tpoints.display))
             rownames(counts.table)<- colnames(x@observed)[syndromes.num]
-            for (j in length(syndromes.num)){
+            for (j in 1:length(syndromes.num)){
               counts.table[j,1:tpoints.display] <- round(x@observed[(end-(tpoints.display-1)):end,syndromes.num[j]])  
             }
             
@@ -788,7 +788,7 @@ setMethod('syndromic_page',
             
             setwd(workdir.html)
             
-            for (p in length(syndromes.num)){
+            for (p in 1:length(syndromes.num)){
               anchor = paste('<a name=" ',syndromes[p],'"></a>\n',sep="")
               cat(anchor, file=html)
               cat(sprintf('<h3 align="center">%s</h3>\n', paste(file.name, syndromes[p],(x@dates[dim(x@dates)[1],1]), sep=" ")), file=html)
@@ -820,7 +820,7 @@ setMethod('syndromic_page',
               #setwd(workdir.html2)
               
               
-              for (syndrome in length(syndromes.num)){
+              for (syndrome in 1:length(syndromes.num)){
                 html <- file(paste0("html2\\",file.name,syndrome,".html"), "w+")
                 
                 

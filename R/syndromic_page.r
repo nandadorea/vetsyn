@@ -19,6 +19,12 @@
 ##' will be used. The user can choose to restrict the analyses to 
 ##' a few syndromic groups listing their name or column position
 ##' in the observed matrix. 
+##' @param pretty.labels an optional parameter specifying the name of the syndromes 
+##' to add to reports. For instance, if the syndromes have been labelled in the data
+##' as "Rep" and "Resp", these will end up being the column names for the syndromic object. 
+##' But if the names to appear in the report are "Reproductive" and "Respiratory", 
+##' these labels can be provided here.Please make sure to provide as many labels as 
+##' the number of syndromes listed in "syndromes".
 ##' @param tpoints.display This is used to choose how many days of alarms to display. The
 ##' normal for daily data (syndromic object provided is form the class \code{syndromicD} )
 ##' is to show the entire last week (so 7 or 5 days, depending on whether weekends are
@@ -178,6 +184,7 @@ setMethod('syndromic_page',
                     dates.var=NULL,
                     syndromes.var=NULL,
                     color.null="F8F8FF",
+                    pretty.labels=NULL,
                     color.low="F8FF2F",
                     color.alarm="FF0000",
                      scale=9, 
@@ -203,6 +210,12 @@ setMethod('syndromic_page',
               syndromes <- colnames(x@observed)[syndromes.num]
             }else{
               syndromes.num <- match(syndromes,colnames(x@observed))
+            }
+            
+            if(is.null(pretty.labels)){
+              pretty.labels <- syndromes
+            }else{
+              pretty.labels <- as.haracter(pretty.labels)
             }
             
             ##check that limit is valid
@@ -306,7 +319,7 @@ cat('<a name="top"></a>\n', file=html)
 
 alarms.table<-rep(0,length(syndromes)*(tpoints.display+1))
 dim(alarms.table)<-c(length(syndromes),(tpoints.display+1))   
-rownames(alarms.table)<- colnames(x@observed)[syndromes.num]
+rownames(alarms.table)<- pretty.labels
 for (j in 1:length(syndromes.num)){
   alarms.table[j,1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,syndromes.num[j]])
   alarms.table[j,(tpoints.display+1)]   <- limit[syndromes.num[j]]
@@ -315,7 +328,7 @@ for (j in 1:length(syndromes.num)){
 
 counts.table<-rep(0,length(syndromes)*(tpoints.display))
 dim(counts.table)<-c(length(syndromes),(tpoints.display))
-rownames(counts.table)<- colnames(x@observed)[syndromes.num]
+rownames(counts.table)<- pretty.labels
 for (j in 1:length(syndromes.num)){
   counts.table[j,1:tpoints.display] <- 
     round(x@observed[(end-(tpoints.display-1)):end,syndromes.num[j]])  
@@ -408,9 +421,9 @@ graphics.off()
 setwd(workdir.html)
 
 for (p in 1:length(syndromes.num)){
-  anchor = paste('<a name=" ',syndromes[p],'"></a>\n',sep="")
+  anchor = paste('<a name=" ',pretty.labels[p],'"></a>\n',sep="")
   cat(anchor, file=html)
-  cat(sprintf('<h3 align="center">%s</h3>\n', paste(file.name, syndromes[p],(x@dates[dim(x@dates)[1],1]), sep=" ")), file=html)
+  cat(sprintf('<h3 align="center">%s</h3>\n', paste(file.name, pretty.labels[p],(x@dates[dim(x@dates)[1],1]), sep=" ")), file=html)
   cat("<p align=\"center\">\n", file=html)
   cat("<img src=\"",paste("figures//",file.name,sprintf("%03d", p),".png",sep=""),"\"/>\n", file=html)
   cat("</p>\n", file=html)
@@ -445,13 +458,13 @@ if (data.page==TRUE){
     
     cat("<html>\n", file=html)
     cat("<head>\n", file=html)
-    cat(sprintf("<title>%s</title>\n", paste(file.name,syndromes[syndrome],sep=" ")), file=html)
+    cat(sprintf("<title>%s</title>\n", paste(file.name,pretty.labels[syndrome],sep=" ")), file=html)
     cat("</head>\n", file=html)
     
     cat("<body>\n", file=html)
     
     cat(sprintf('<h1 align="center">%s</h1>\n', 
-                paste(file.name,syndromes[syndrome],x@dates[dim(x@dates)[1],1],sep=" - ")), file=html)
+                paste(file.name,pretty.labels[syndrome],x@dates[dim(x@dates)[1],1],sep=" - ")), file=html)
     
     cat(paste0("<a href=\"../",file.name,".html\">Go back to ",file.name, " main page</a>\n"),
                file=html)
@@ -504,6 +517,7 @@ setMethod('syndromic_page',
           signature(x = 'syndromicW'),
           function (x,
                     syndromes=NULL,
+                    pretty.labels=NULL,
                     tpoints.display=4,
                     window=52,
                     baseline=TRUE,
@@ -544,6 +558,11 @@ setMethod('syndromic_page',
               syndromes.num <- match(syndromes,colnames(x@observed))
             }
             
+            if(is.null(pretty.labels)){
+              pretty.labels <- syndromes
+            }else{
+              pretty.labels <- as.haracter(pretty.labels)
+            }
             
             ##check that limit is valid
             if (length(limit)==1){
@@ -688,7 +707,7 @@ setMethod('syndromic_page',
             
             alarms.table<-rep(0,length(syndromes)*(tpoints.display+1))
             dim(alarms.table)<-c(length(syndromes),(tpoints.display+1))
-            rownames(alarms.table)<- colnames(x@observed)[syndromes.num]
+            rownames(alarms.table)<- pretty.labels
             for (j in 1:length(syndromes.num)){
               alarms.table[j,1:tpoints.display] <- (alarms.sum[(end-(tpoints.display-1)):end,syndromes.num[j]])
               alarms.table[j,(tpoints.display+1)]   <- limit[syndromes.num[j]]
@@ -697,7 +716,7 @@ setMethod('syndromic_page',
             
             counts.table<-rep(0,length(syndromes)*(tpoints.display))
             dim(counts.table)<-c(length(syndromes),(tpoints.display))
-            rownames(counts.table)<- colnames(x@observed)[syndromes.num]
+            rownames(counts.table)<- pretty.labels
             for (j in 1:length(syndromes.num)){
               counts.table[j,1:tpoints.display] <- round(x@observed[(end-(tpoints.display-1)):end,syndromes.num[j]])  
             }
@@ -789,9 +808,9 @@ setMethod('syndromic_page',
             setwd(workdir.html)
             
             for (p in 1:length(syndromes.num)){
-              anchor = paste('<a name=" ',syndromes[p],'"></a>\n',sep="")
+              anchor = paste('<a name=" ',pretty.labels[p],'"></a>\n',sep="")
               cat(anchor, file=html)
-              cat(sprintf('<h3 align="center">%s</h3>\n', paste(file.name, syndromes[p],(x@dates[dim(x@dates)[1],1]), sep=" ")), file=html)
+              cat(sprintf('<h3 align="center">%s</h3>\n', paste(file.name, pretty.labels[p],(x@dates[dim(x@dates)[1],1]), sep=" ")), file=html)
               cat("<p align=\"center\">\n", file=html)
               cat("<img src=\"",paste("figures//",file.name,sprintf("%03d", p),".png",sep=""),"\"/>\n", file=html)
               cat("</p>\n", file=html)
@@ -826,13 +845,13 @@ setMethod('syndromic_page',
                 
                 cat("<html>\n", file=html)
                 cat("<head>\n", file=html)
-                cat(sprintf("<title>%s</title>\n", paste(file.name,syndromes[syndrome],sep=" ")), file=html)
+                cat(sprintf("<title>%s</title>\n", paste(file.name,pretty.labels[syndrome],sep=" ")), file=html)
                 cat("</head>\n", file=html)
                 
                 cat("<body>\n", file=html)
                 
                 cat(sprintf('<h1 align="center">%s</h1>\n', 
-                            paste(file.name,syndromes[syndrome],x@dates[dim(x@dates)[1],1],sep=" - ")), file=html)
+                            paste(file.name,pretty.labels[syndrome],x@dates[dim(x@dates)[1],1],sep=" - ")), file=html)
                 
                 cat(paste0("<a href=\"../",file.name,".html\">Go back to ",file.name, " main page</a>\n"),
                     file=html)

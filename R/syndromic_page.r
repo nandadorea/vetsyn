@@ -170,6 +170,7 @@ setMethod('syndromic_page',
           signature(x = 'syndromicD'),
           function (x,
                     syndromes=NULL,
+                    pretty.labels=NULL,
                     tpoints.display=7,
                     window=365,
                     baseline=TRUE,
@@ -184,7 +185,6 @@ setMethod('syndromic_page',
                     dates.var=NULL,
                     syndromes.var=NULL,
                     color.null="F8F8FF",
-                    pretty.labels=NULL,
                     color.low="F8FF2F",
                     color.alarm="FF0000",
                      scale=9, 
@@ -215,7 +215,7 @@ setMethod('syndromic_page',
             if(is.null(pretty.labels)){
               pretty.labels <- syndromes
             }else{
-              pretty.labels <- as.haracter(pretty.labels)
+              pretty.labels <- as.character(pretty.labels)
             }
             
             ##check that limit is valid
@@ -561,7 +561,7 @@ setMethod('syndromic_page',
             if(is.null(pretty.labels)){
               pretty.labels <- syndromes
             }else{
-              pretty.labels <- as.haracter(pretty.labels)
+              pretty.labels <- as.character(pretty.labels)
             }
             
             ##check that limit is valid

@@ -175,9 +175,7 @@ setMethod("plot","syndromicD",
                         
                         
                       }
-
 )
-
 
 ##' @rdname plot-methods
 ##' @export

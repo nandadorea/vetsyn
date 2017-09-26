@@ -39,13 +39,14 @@
 ##' @rdname plot-methods
 ##' @export
 
-setMethod("plot","syndromicW",
-          function (x, syndromes=NULL,
-                    window=52,
-                    baseline=FALSE,
-                    UCL=1,
-                    algorithms=NULL,
-                    limit=NULL)
+setMethod("plot","syndromicD",
+                      function (x,
+                      syndromes=NULL,
+                      window=365,
+                      baseline=TRUE,
+                      UCL=1,
+                      algorithms=NULL,
+                      limit=1)
           {
             
             
@@ -205,7 +206,7 @@ setMethod("plot","syndromicW",
 setMethod("plot","syndromicW",
           function (x, syndromes=NULL,
                     window=52,
-                    baseline=FALSE,
+                    baseline=TRUE,
                     UCL=1,
                     algorithms=NULL,
                     limit=NULL)

@@ -19,7 +19,8 @@ dates_df <- function (min.date, max.date,
       weekday[dow==0|dow==6] <- 0
   dates <- as.data.frame(dates.v)
   colnames(dates) <- "dates"
-  dates <- cbind(dates, mday, month, year, yday, week, dow, weekday)
+  dates <- cbind(dates, mday, as.factor(month), as.factor(year), 
+                 yday, week, as.factor(dow), weekday)
 
   return(dates)
 

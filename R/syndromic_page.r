@@ -196,7 +196,7 @@ setMethod('syndromic_page',
             if (class(syndromes)=="NULL"){
               syndromes <- colnames(x@observed)
             }else{
-              if ((!is.character(syndromes))&&(!is.numeric(syndromes))) {
+              if ((!is.character(syndromes))&(!is.numeric(syndromes))) {
                 stop("if provided, argument syndromes must be a character or numeric vector")
               }
             }
@@ -241,7 +241,7 @@ setMethod('syndromic_page',
 
 
       
-      if(length(algorithms)==1&&algorithms!=0){
+      if(length(algorithms)==1&algorithms!=0){
         n.algos <- 1
       }else{
         n.algos<-dim(alarms.array)[3]
@@ -542,7 +542,7 @@ setMethod('syndromic_page',
             if (class(syndromes)=="NULL"){
               syndromes <- colnames(x@observed)
             }else{
-              if ((!is.character(syndromes))&&(!is.numeric(syndromes))) {
+              if ((!is.character(syndromes))&(!is.numeric(syndromes))) {
                 stop("if provided, argument syndromes must be a character or numeric vector")
               }
             }
@@ -587,7 +587,7 @@ setMethod('syndromic_page',
             
             
             
-            if(length(algorithms)==1&&algorithms!=0){
+            if(length(algorithms)==1&algorithms!=0){
               n.algos <- 1
             }else{
               n.algos<-dim(alarms.array)[3]
@@ -658,10 +658,10 @@ setMethod('syndromic_page',
                   
                   
                   
-                  data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
+                  data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&
                                                          (week.var.data==week.var.x[dim(x@dates)[1]])),
                                                  ]
-                  data.tables2[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
+                  data.tables2[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&
                                                          (week.var.data>(week.var.x[dim(x@dates)[1]-tpoints.display]))),
                                                  ]
                 }
@@ -678,13 +678,13 @@ setMethod('syndromic_page',
                 week.var.x <- create_isoweek(week.x,year.x,reference.day=1)
                         
               for (syndrome in 1:length(syndromes.num)){
-                data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
-                                                       (date2ISOweek(as.Date(data[,dates.var], format=date.format))
-                                                        ==week.var.x[dim(x@dates)[1]])),
+                data.tables1[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&
+                                                       (str_sub(as.character(date2ISOweek(as.Date(data[,dates.var], format=date.format))),1,8)
+                                                        ==str_sub(as.character(week.var.x[dim(x@dates)[1]]),1,8))),
                                                ]
-                data.tables2[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&&
-                                                       (date2ISOweek(as.Date(data[,dates.var], format=date.format))
-                                                        >(week.var.x[dim(x@dates)[1]-tpoints.display]))),
+                data.tables2[[syndrome]]<-data[which(data[,syndromes.var]==syndromes[syndrome]&
+                                                       (str_sub(as.character(date2ISOweek(as.Date(data[,dates.var], format=date.format))),1,8)
+                                                        %in%str_sub(as.character(week.var.x[((dim(x@dates)[1]-tpoints.display+1):dim(x@dates)[1])]),1,8))),
                                                ]
               }
             }
@@ -856,7 +856,7 @@ setMethod('syndromic_page',
                 cat(paste0("<a href=\"../",file.name,".html\">Go back to ",file.name, " main page</a>\n"),
                     file=html)
                 
-                cat(sprintf('<h3 align="center">%s</h3>\n', "Data from last day"), file=html)
+                cat(sprintf('<h3 align="center">%s</h3>\n', "Data from last WEEK"), file=html)
                 cat(print(xtable(data.tables1[[syndrome]],digits=0), type="html"), file=html)
                 
                 cat("<TABLE border=\"0\">\n", file=html)
@@ -869,7 +869,7 @@ setMethod('syndromic_page',
                 cat("</table>\n", file=html)
                 
                 
-                cat(sprintf('<h3 align="center">%s</h3>\n', "Data from the last week"), file=html)
+                cat(sprintf('<h3 align="center">%s</h3>\n', paste("Data from the last",tpoints.display, "WEEKS",sep=" ")), file=html)
                 cat(print(xtable(data.tables2[[syndrome]],digits=0), type="html"), file=html)
                 
                 cat("<TABLE border=\"0\">\n", file=html)

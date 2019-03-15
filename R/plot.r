@@ -226,7 +226,7 @@ setMethod("plot","syndromicW",
               
               algo.names<-dimnames(x@alarms)[[3]]
               #algorithms to be used
-              if (class(algorithms)=="NULL"&!is.na(dim(x@alarms)[3]) {
+              if (class(algorithms)=="NULL"&!is.na(dim(x@alarms)[3])) {
                 alarms.array <- x@alarms
                 algorithms <- 1:dim(x@alarms)[3]
               }else{

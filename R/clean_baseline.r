@@ -372,7 +372,7 @@ setMethod('clean_baseline',
                     syndromes=NULL,
                     family="poisson",
                     limit=0.95,
-                    formula="year+sin+cos",
+                    formula=NULL,
                     plot=TRUE,
                     print.model=TRUE,
                     frequency=52)
@@ -411,7 +411,7 @@ setMethod('clean_baseline',
                    in the syndromic object (even if not all are being evaluated at this time). If a formula
                    is not provided, the function looks for one in the slot @formula of the syndromic object. See help")
             }
-
+            
        #pulling data from the object to work out of the object
       observed.matrix=x@observed
 

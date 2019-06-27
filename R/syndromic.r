@@ -120,7 +120,7 @@ setClass('syndromicD',
              if(length(object@alarms)>1L)   (l2 <- c(l2,dim(object@alarms)[2]))
              if(length(object@UCL)>1L)      (l2 <- c(l2,dim(object@UCL)[2]))
              if(length(object@LCL)>1L)      (l2 <- c(l2,dim(object@LCL)[2]))
-             if(length(object@formula)>1L)  (l2 <- c(l2,length(object@formula)[2]))
+             if(length(object@formula)>1L)  (l2 <- c(l2,length(object@formula)))
              
              l1 <- unique(l1)
              l2 <- unique(l2)

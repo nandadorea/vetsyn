@@ -286,16 +286,14 @@ setMethod('shew_synd',
             }
             
             #checking that a formula is available
-                      if(pre.process!=FALSE){
-            if ((class(formula)=="character")|(class(formula)=="NULL"&&length(x@formula)<dim(x@observed)[2])){
+            if ((pre.process!=FALSE)&((class(formula)=="character")|(class(formula)=="NULL"&&length(x@formula)<dim(x@observed)[2]))){
               stop("Formula needs to be provided as a LIST, each element in the
             FORMULA format (y~x1 + x2...) (as per update in july 2017). You can provide a
             single formula, or a list of formulas with as many elements as the number of syndromes
             in the syndromic object (even if not all are being evaluated at this time). If a formula
            is not provided, the function looks for one in the slot @formula of the syndromic object. See help")
             }
-                                 }
-            
+
             if(guard.band<1)(guard.band<-1)
             
             
@@ -634,7 +632,7 @@ setMethod('shew_synd',
             }
             
             #checking that a formula is available
-            if ((class(formula)=="character")|(class(formula)=="NULL"&&length(x@formula)<dim(x@observed)[2])){
+            if ((pre.process!=FALSE)&((class(formula)=="character")|(class(formula)=="NULL"&&length(x@formula)<dim(x@observed)[2]))){
               stop("Formula needs to be provided as a LIST, each element in the
                    FORMULA format (y~x1 + x2...) (as per update in july 2017). You can provide a
                    single formula, or a list of formulas with as many elements as the number of syndromes
